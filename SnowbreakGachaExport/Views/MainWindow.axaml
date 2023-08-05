@@ -7,7 +7,7 @@
         MinWidth="1200"
         x:Class="SnowbreakGachaExport.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/LittleSun.ico"
         Title="SnowbreakGachaExportTool"
         TransparencyLevelHint="AcrylicBlur"
         Background="Transparent"

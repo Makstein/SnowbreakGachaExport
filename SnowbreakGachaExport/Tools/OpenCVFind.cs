@@ -27,9 +27,12 @@ public class OpenCVFind
 
             Cv2.MatchTemplate(screenShot, arrowMat, result, TemplateMatchModes.CCoeffNormed);
 
+            double minVal;
+            double maxVal;
             var minLoc = new Point(0, 0);
             var maxLoc = new Point(0, 0);
-            Cv2.MinMaxLoc(result, out minLoc, out maxLoc);
+            Cv2.MinMaxLoc(result, out minVal, out maxVal, out minLoc, out maxLoc);
+            if (maxVal < 0.91) return new Point(0, 0);
             
             // Compare current page and last page, if same, then done
             var currentPage = WindowOperate.GetPageScreenshot(maxLoc.X, maxLoc.Y, arrowMat.Cols).ToMat()
