@@ -11,7 +11,7 @@ public class TesseractOperate
         try
         {
             string? text;
-            using (var engine = new TesseractEngine(@"./TessData", "chi_sim", EngineMode.Default))
+            using (var engine = new TesseractEngine(@"./TessData", "chi_sim+eng+jpn", EngineMode.Default))
             {
                 using (var page = engine.Process(bitmap))
                 {
