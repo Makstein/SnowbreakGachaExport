@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SnowbreakGachaExport.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+        MinWidth="1200"
+        x:Class="SnowbreakGachaExport.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SnowbreakGachaExportTool"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.ColumnSpan="3"
+                    VerticalAlignment="Top" Margin="15 35">
+            <Button Content="Refresh" Padding="15 5"
+                    Command="{Binding RefreshCommand}"
+                    CommandParameter="{Binding ElementName=WindowBox, Path=SelectedIndex}" />
+            <ComboBox Margin="10 0 0 0" ItemsSource="{Binding WindowTitleList}"
+                      SelectedIndex="0" MinWidth="120" x:Name="WindowBox" />
+            <Button Content="AddTestData" Command="{Binding TestDataAddCommand}"
+                    Margin="10 0 0 0" Padding="15 5"/>
+        </StackPanel>
+        
+        <Grid RowDefinitions="* 10" Margin="5 80 5 5">
+            <Grid ColumnDefinitions="* * * *">
+                
+                <Grid Column="0">
+                    <ContentControl Content="{Binding CommonCharacterLogView}"/>
+                </Grid>
+                
+                <Grid Column="1">
+                    <ContentControl Content="{Binding SpecialCharacterLogView}"/>
+                </Grid>
+                
+                <Grid Column="2">
+                    <ContentControl Content="{Binding CommonWeaponLogView}"/>
+                </Grid>
+                
+                <Grid Column="3">
+                    <ContentControl Content="{Binding SpecialWeaponLogView}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Panel>
+</Window>
