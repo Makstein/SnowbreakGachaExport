@@ -6,7 +6,17 @@ Snwobreak: Containment Zone Gacha Exporter, based on OpenCV and Tesseract, it ma
 
 OpencvとTesseractをベースにしたガチャ履歴のエクスポートツール、デザインはスノウブレイクをベースに、理論的にはガチャ履歴の表示があるゲームであれば、どんなゲームでも使えるように調整されている、現在はまだ開発中で、履歴の読み込みと簡単な表示機能しか完成していない、現在は保存とエクスポートができない、ガチャは1つしかカウントできない、バグも多いかもしれない。
 
+--- 
+
+## Requirements
+
+.Net 7.0 Runtime
+
+--- 
+
 ## 使用
+
+![](./Document//Images/Display.png)
 
 - **注意：程序需要以管理员身份运行**
   
