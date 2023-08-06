@@ -18,11 +18,11 @@ OpencvとTesseractをベースにしたガチャ履歴のエクスポートツ�
 
 ![](./Document//Images/Display.png)
 
-- **注意：程序需要以管理员身份运行**
+- **注意：程序需要以管理员身份运行，需要在1080p下运行**
   
-  **ATTENTION: Run As Adiministor is Required**
+  **ATTENTION: Run As Adiministor is Required, 1080p needed**
   
-  **注: プログラムは管理者として実行する必要があります**
+  **注: プログラムは管理者として実行する必要があります, 1080p**
   
   --- 
 
