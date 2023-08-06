@@ -55,7 +55,7 @@ public class PoolLogControlViewModel : ViewModelBase
 
     public void UpdateList(IEnumerable<HistoryItem> newList)
     {
-        LogList = new List<HistoryItem>(newList);
+        LogList = new List<HistoryItem>(newList.Reverse());
 
         var bFIndPurple = true;
         for (var i = _logList.Count - 1; i >= 0; --i)

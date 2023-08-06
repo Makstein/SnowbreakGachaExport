@@ -8,15 +8,18 @@ public enum ItemType
 
 public class HistoryItem
 {
+    public string ID { get; }
     public string Name { get; }
     public ItemType Type { get; }
     public int Star { get; }
-    public int Count { get; } = 0;
+    public string Time { get; }
 
-    public HistoryItem(string name = "", ItemType type = ItemType.Weapon, int star = 4)
+    public HistoryItem(string name = "", string time = "", ItemType type = ItemType.Weapon, int star = 4)
     {
         Name = name;
         Type = type;
         Star = star;
+        Time = time;
+        ID = name + time;
     }
 }

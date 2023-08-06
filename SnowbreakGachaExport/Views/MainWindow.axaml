@@ -37,8 +37,13 @@
                     CommandParameter="{Binding ElementName=WindowBox, Path=SelectedIndex}" />
             <ComboBox Margin="10 0 0 0" ItemsSource="{Binding WindowTitleList}"
                       SelectedIndex="0" MinWidth="120" x:Name="WindowBox" />
-            <Button Content="AddTestData" Command="{Binding TestDataAddCommand}"
-                    Margin="10 0 0 0" Padding="15 5"/>
+            <TextBlock Text="Select Banner:" VerticalAlignment="Center" Margin="15 0 0 0"/>
+            <ComboBox MinWidth="100" Margin="10 0 0 0" SelectedIndex="{Binding BannerSelectedIndex}">
+                <ComboBoxItem Content="Common Character Banner"/>
+                <ComboBoxItem Content="Event Character Banner"/>
+                <ComboBoxItem Content="Common Weapon Banner"/>
+                <ComboBoxItem Content="Event Weapon Banner"/>
+            </ComboBox>
         </StackPanel>
         
         <Grid RowDefinitions="* 10" Margin="5 80 5 5">

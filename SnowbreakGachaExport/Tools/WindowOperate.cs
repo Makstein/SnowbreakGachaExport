@@ -119,6 +119,27 @@ public class WindowOperate
         }
     }
 
+    public static Bitmap GetItemTimeScreenshot(int x, int y, int height)
+    {
+        try
+        {
+            var rc = new Rectangle(x + 1000, y, 300, height);
+            var bitmap = new Bitmap(rc.Width, rc.Height, PixelFormat.Format32bppArgb);
+            
+            using var g = Graphics.FromImage(bitmap);
+            g.CopyFromScreen(rc.X, rc.Y, 0, 0, rc.Size, CopyPixelOperation.SourceCopy);
+            
+            bitmap.Save("./Images/ItemTime.png", ImageFormat.Png);
+            
+            return bitmap;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
     public static Bitmap GetCharacterNameScreenshot(int x, int y, int height)
     {
         try
