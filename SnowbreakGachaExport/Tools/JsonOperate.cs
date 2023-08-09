@@ -2,7 +2,6 @@
 using System.IO;
 using Avalonia.Extensions.Controls;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SnowbreakGachaExport.Models;
 using SnowbreakGachaExport.Models.Global;
 
@@ -16,8 +15,7 @@ public static class JsonOperate
         var path = Path.Combine(UserPaths.DataPath, UserPaths.GachaJsonName);
         if (!File.Exists(path))
         {
-            MessageBox.Show("错误", "缺少Json文件，无法执行");
-            return null;
+            File.Create(path);
         }
 
         var jsonString = File.ReadAllText(path);
@@ -31,7 +29,7 @@ public static class JsonOperate
         var path = Path.Combine(UserPaths.DataPath, UserPaths.GachaJsonName);
         if (!File.Exists(path))
         {
-            MessageBox.Show("错误", "缺少Json文件，无法执行");
+            MessageBox.Show("错误", "缺少Json文件，无法保存");
             return;
         }
 

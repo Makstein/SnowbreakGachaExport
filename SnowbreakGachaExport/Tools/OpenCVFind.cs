@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using SnowbreakGachaExport.Models;
@@ -9,13 +7,13 @@ using Point = OpenCvSharp.Point;
 
 namespace SnowbreakGachaExport.Tools;
 
-public class OpenCVFind
+public static class OpenCVFind
 {
     private const string nextPageArrowImagePath = "./Images/NextPageArrow.png";
     private const string fiveStarImagePath = "./Images/5Star_Big.png";
     private const string fourStarImagePath = "./Images/4Star_Big.png";
     private const string threeStarImagePath = "./Images/3Star_Big.png";
-    private static Mat? lastPage = null;
+    private static Mat? lastPage;
 
     public static Point FindNextPageArrow()
     {
@@ -28,11 +26,7 @@ public class OpenCVFind
 
             Cv2.MatchTemplate(screenShot, arrowMat, result, TemplateMatchModes.CCoeffNormed);
 
-            double minVal;
-            double maxVal;
-            var minLoc = new Point(0, 0);
-            var maxLoc = new Point(0, 0);
-            Cv2.MinMaxLoc(result, out minVal, out maxVal, out minLoc, out maxLoc);
+            Cv2.MinMaxLoc(result, out _, out var maxVal, out _, out var maxLoc);
             if (maxVal < 0.91) return new Point(0, 0);
 
             // Compare current page and last page, if same, then done
@@ -70,19 +64,7 @@ public class OpenCVFind
 
             var screenShot = WindowOperate.GetScreenShot().ToMat().CvtColor(ColorConversionCodes.RGBA2RGB);
 
-            Console.WriteLine("5:");
-            var list = FindItem(fiveStarMat, screenShot);
-            var resList = list.Select(item => new HistoryItem(item.Item1, item.Item2, itemType, 5)).ToList();
-
-            Console.WriteLine("4:");
-            list = FindItem(fourStarMat, screenShot);
-            resList.AddRange(list.Select(item => new HistoryItem(item.Item1, item.Item2, itemType, 4)).ToList());
-
-            Console.WriteLine("3:");
-            list = FindItem(threeStarMat, screenShot);
-            resList.AddRange(list.Select(item => new HistoryItem(item.Item1, item.Item2, star:3)).ToList());
-
-            return resList;
+            return FindItem(screenShot, fiveStarMat, fourStarMat, threeStarMat, itemType);
         }
         catch (Exception e)
         {
@@ -91,49 +73,108 @@ public class OpenCVFind
         }
     }
 
-    private static IEnumerable<(string?, string?)> FindItem(Mat starImage, Mat screenshot)
+    /// <summary>
+    /// 从上到下循环查找抽卡记录
+    /// </summary>
+    /// <param name="screenshot"></param>
+    /// <param name="fiveStar"></param>
+    /// <param name="fourStar"></param>
+    /// <param name="threeStar"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    private static IEnumerable<HistoryItem> FindItem(Mat screenshot, Mat fiveStar, Mat fourStar, Mat threeStar,
+        ItemType type)
     {
         try
         {
-            var list = new List<(string? name, string? time)>(); // List to return
+            var resList = new List<HistoryItem>();
+            const double threshold = 0.91;
 
-            var res = new Mat();
-            double minVal;
-            double maxVal;
-            Point minLoc = new(0, 0);
-            Point maxLoc = new(0, 0);
-            const double threshold = 0.95;
+            var goldRes = new Mat();
+            Cv2.MatchTemplate(screenshot, fiveStar, goldRes, TemplateMatchModes.CCoeffNormed);
+            Cv2.MinMaxLoc(goldRes, out _, out double maxGoldVal);
 
-            Cv2.MatchTemplate(screenshot, starImage, res, TemplateMatchModes.CCoeffNormed);
-            Cv2.MinMaxLoc(res, out minVal, out maxVal, out minLoc, out maxLoc);
-            if (maxVal < threshold) return list;
+            var purpleRes = new Mat();
+            Cv2.MatchTemplate(screenshot, fourStar, purpleRes, TemplateMatchModes.CCoeffNormed);
+            Cv2.MinMaxLoc(purpleRes, out _, out double maxPurpleVal);
 
-            Cv2.Normalize(res, res, 0, 1, NormTypes.MinMax, -1);
+            var blueRes = new Mat();
+            Cv2.MatchTemplate(screenshot, threeStar, blueRes, TemplateMatchModes.CCoeffNormed);
+            Cv2.MinMaxLoc(blueRes, out _, out double maxBlueVal);
 
-            for (var i = 1; i < res.Rows - starImage.Rows; i += starImage.Rows)
+            for (var i = 1;; i += 70) // 70 代表每条抽卡记录大约高度（内容 + 上下空白一半）
             {
-                for (var j = 1; j < res.Cols - starImage.Cols; j += starImage.Cols)
+                if (i > goldRes.Rows - fiveStar.Rows && i > purpleRes.Rows - fourStar.Rows &&
+                    i > blueRes.Rows - threeStar.Rows) // 到达所有记录底部
                 {
-                    Rect rij = new(j, i, starImage.Cols, starImage.Rows);
-                    Mat rijRes = new(res, rij);
-                    Cv2.MinMaxLoc(rijRes, out minVal, out maxVal, out minLoc, out maxLoc);
-                    if (maxVal > threshold)
+                    break;
+                }
+
+                if (maxGoldVal > threshold && i < goldRes.Rows - fiveStar.Rows) // 本页有金色物品且当前未超出范围
+                {
+                    var goldIRect = new Rect(0, i, goldRes.Cols, fiveStar.Rows); // 截取当前一条记录
+                    var goldIRes = new Mat(goldRes, goldIRect);
+
+                    // 获得当前记录范围内的最大相似值和最相似坐标值
+                    Cv2.MinMaxLoc(goldIRes, out _, out var goldIMaxValue, out _, out var goldIMaxLoc);
+
+                    // 当前范围内是金色物品
+                    if (goldIMaxValue > threshold)
                     {
-                        var bitmap =
-                            WindowOperate.GetCharacterNameScreenshot(j + maxLoc.X, i + maxLoc.Y, starImage.Rows);
-                        var timeBitMap =
-                            WindowOperate.GetItemTimeScreenshot(j + maxLoc.X, i + maxLoc.Y, starImage.Rows);
-                        list.Add((TesseractOperate.GetTextFromBitmap(bitmap),
-                            TesseractOperate.GetIntegerFromBitmap(timeBitMap)));
+                        var nameBitmap =
+                            WindowOperate.GetCharacterNameScreenshot(goldIMaxLoc.X, i + goldIMaxLoc.Y, fiveStar.Rows);
+                        var timeBitmap =
+                            WindowOperate.GetItemTimeScreenshot(goldIMaxLoc.X, i + goldIMaxLoc.Y, fiveStar.Rows);
+                        var nameTime = TesseractOperate.GetNameAndTime(nameBitmap, timeBitmap);
+
+                        resList.Add(new HistoryItem(nameTime.name, nameTime.time, type, 5));
+                        continue;
                     }
+                }
+
+                if (maxPurpleVal > threshold && i < purpleRes.Rows - fourStar.Rows) // 当前未超出范围且本页有紫色物品
+                {
+                    var purpleIRect = new Rect(0, i, purpleRes.Cols, fourStar.Rows);
+                    var purpleIRes = new Mat(purpleRes, purpleIRect);
+                    Cv2.MinMaxLoc(purpleIRes, out _, out var purpleIMaxValue, out _, out var purpleIMaxLoc);
+
+                    // 当前范围内是紫色物品
+                    if (purpleIMaxValue > threshold)
+                    {
+                        var nameBitmap =
+                            WindowOperate.GetCharacterNameScreenshot(purpleIMaxLoc.X, i + purpleIMaxLoc.Y, fourStar.Rows);
+                        var timeBitmap =
+                            WindowOperate.GetItemTimeScreenshot(purpleIMaxLoc.X, i + purpleIMaxLoc.Y, fourStar.Rows);
+                        var nameTime = TesseractOperate.GetNameAndTime(nameBitmap, timeBitmap);
+
+                        resList.Add(new HistoryItem(nameTime.name, nameTime.time, type));
+                        continue;
+                    }
+                }
+
+                if (maxBlueVal > threshold && i < blueRes.Rows - threeStar.Rows) // 当前未超出范围且本页有蓝色物品
+                {
+                    var blueIRect = new Rect(0, i, blueRes.Cols, threeStar.Rows);
+                    var blueIRes = new Mat(blueRes, blueIRect);
+                    Cv2.MinMaxLoc(blueIRes, out _,  out var blueIMaxVal, out _, out Point blueIMaxLoc);
+
+                    if (blueIMaxVal < threshold) continue;
+                    // 当前范围内是蓝色物品
+                    var nameBitmap =
+                        WindowOperate.GetCharacterNameScreenshot(blueIMaxLoc.X, i + blueIMaxLoc.Y, threeStar.Rows);
+                    var timeBitmap =
+                        WindowOperate.GetItemTimeScreenshot(blueIMaxLoc.X, i + blueIMaxLoc.Y, threeStar.Rows);
+                    var nameTime = TesseractOperate.GetNameAndTime(nameBitmap, timeBitmap);
+
+                    resList.Add(new HistoryItem(nameTime.name, nameTime.time, type, 3));
                 }
             }
 
-            return list;
+            return resList;
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error in FIndItem" + e);
+            Console.WriteLine(e);
             throw;
         }
     }

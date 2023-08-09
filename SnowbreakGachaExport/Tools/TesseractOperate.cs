@@ -50,4 +50,37 @@ public static class TesseractOperate
             throw; 
         }
     }
+
+    public static (string name, string time) GetNameAndTime(Bitmap nameBitmap, Bitmap timeBitmap)
+    {
+        try
+        {
+            using var engine = new TesseractEngine("./TessData", "chi_sim+eng+jpn", EngineMode.Default);
+            StringBuilder nameText;
+            StringBuilder timeText;
+            using (var namePage = engine.Process(nameBitmap))
+            {
+                nameText = new StringBuilder(namePage.GetText());
+                nameText = nameText.Replace("|", "").Replace(" ", "").Replace("\r\n", "")
+                    .Replace("\r", "").Replace("\n", "").Replace("景-", "晴-")
+                    .Replace("翠帯", "绷带").Replace("②", "2").Replace("①", "").Replace("⑥", "6")
+                    .Replace("③", "3").Replace("④", "4").Replace("⑤", "5").Replace("⑦", "7")
+                    .Replace("⑧", "8").Replace("⑨", "9");
+                Console.WriteLine(nameText);
+            }
+            engine.SetVariable("tessedit_char_whitelist", "0123456789");
+            using (var timePage = engine.Process(timeBitmap))
+            {
+                timeText = new StringBuilder(timePage.GetText());
+                timeText = timeText.Replace("|", "").Replace(" ", "").Replace("\r\n", "")
+                    .Replace("\r", "").Replace("\n", "");
+            }
+            return (nameText.ToString(), timeText.ToString());
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

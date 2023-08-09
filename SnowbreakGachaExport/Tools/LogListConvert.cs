@@ -15,12 +15,12 @@ public class LogListConvert : IValueConverter
         if (value is not List<HistoryItem> list) return null;
         
         var res = new List<FiveStarItem>();
-        var lastFive = 0;
+        var lastFive = -1;
         for (var i = 0; i < list.Count; i++)
         {
             if (list[i].Star != 5) continue;
             
-            res.Add(new FiveStarItem(list[i].Name, i - lastFive + 1));
+            res.Add(new FiveStarItem(list[i].Name, i - lastFive));
             lastFive = i;
         }
 

@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia.Extensions.Controls;
-using DynamicData;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ReactiveUI;
 using SnowbreakGachaExport.Models;
 using SnowbreakGachaExport.Tools;
 using SnowbreakGachaExport.Views.Controls;
-using OpenCvSharp;
-using SnowbreakGachaExport.Models.Global;
+using MsBox.Avalonia;
 
 namespace SnowbreakGachaExport.ViewModels;
 
@@ -136,6 +130,8 @@ public class MainWindowViewModel : ViewModelBase
             _bannerLogVmName[BannerSelectedIndex].UpdateList(_cacheDic[_bannerName[BannerSelectedIndex]]);
             JsonOperate.Save(_cacheDic!);
             WindowOperate.BringToFront("SnowbreakGachaExportTool");
+            var msgBox = MessageBoxManager.GetMessageBoxStandard("", "Finished!");
+            await msgBox.ShowWindowAsync();
         }
         catch (Exception e)
         {

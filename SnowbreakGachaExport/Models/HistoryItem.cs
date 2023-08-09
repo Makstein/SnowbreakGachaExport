@@ -22,4 +22,13 @@ public class HistoryItem
         Time = time;
         ID = name + time;
     }
+    
+    public HistoryItem(string id, string name = "", string time = "", ItemType type = ItemType.Weapon, int star = 4)
+    {
+        Name = name;
+        Type = type;
+        Star = star;
+        Time = time;
+        ID = id;
+    }
 }

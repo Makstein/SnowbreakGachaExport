@@ -4,18 +4,16 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
 
 namespace SnowbreakGachaExport.Tools;
 
-public class WindowOperate
+public static class WindowOperate
 {
     private delegate bool WndEnumProc(IntPtr hWnd, int lParam);
     
-    [DllImport("user32.dll")]
-    public static extern IntPtr FindWindow(string className, string windowTitle);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern IntPtr FindWindow(string? className, string windowTitle);
 
     [DllImport("user32")]
     private static extern bool EnumWindows(WndEnumProc lpEnumFunc, int lParam);
@@ -42,11 +40,7 @@ public class WindowOperate
     
     private enum ShowWindowEnum
     {
-        Hide = 0,
-        ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
-        Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
-        Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
-        Restore = 9, ShowDefault = 10, ForceMinimized = 11
+        Restore = 9
     };
 
     
@@ -56,9 +50,9 @@ public class WindowOperate
         public int length;
         public int flags;
         public int showCmd;
-        public System.Drawing.Point ptMinPosition;
-        public System.Drawing.Point ptMaxPosition;
-        public System.Drawing.Rectangle rcNormalPosition;
+        public Point ptMinPosition;
+        public Point ptMaxPosition;
+        public Rectangle rcNormalPosition;
     }
 
     public static List<string> FindAll()
@@ -106,7 +100,7 @@ public class WindowOperate
     {
         try
         {
-            var image = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            var image = new Bitmap(Screen.PrimaryScreen!.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             var g = Graphics.FromImage(image);
             g.CopyFromScreen(new Point(0, 0), new Point(0, 0), Screen.PrimaryScreen.Bounds.Size);
             image.Save("./Images/123.png", ImageFormat.Png);
@@ -165,7 +159,7 @@ public class WindowOperate
     {
         try
         {
-            var rc = new Rectangle(x - 10, y - 80, 30, 80);
+            var rc = new Rectangle(x - 10, y - 80, 70, 80);
             var bitmap = new Bitmap(rc.Width, rc.Height, PixelFormat.Format32bppArgb);
             
             using var g = Graphics.FromImage(bitmap);

@@ -1,30 +1,30 @@
 # SnowbreakGachaExport
 
-基于Opencv和Tesseract的抽卡记录导出工具，设计基于尘白禁区，理论上经调整可用于任何带有抽卡记录历史展示的游戏，目前尚在开发，只完成了读取历史记录并进行简单展示的功能，目前不能保存和导出，只能统计单一池子，并且可能有许多bug。
+基于OpenCV和Tesseract的抽卡记录导出工具，设计基于尘白禁区，理论上经调整可用于任何带有抽卡记录历史展示的游戏，目前尚在开发，只完成了读取历史记录并进行简单展示和保存，可以分池统计，可能有许多bug。
 
-Snwobreak: Containment Zone Gacha Exporter, based on OpenCV and Tesseract, it may bse used in other with some change if you want, WIP now, only finished read and display gacha log, can not save or export and can only read one pool for now, may have many bugs.
+Snwobreak: Containment Zone Gacha Exporter, based on OpenCV and Tesseract, it may be used in other with some change if you want, WIP now, only finished read, save and display gacha log, may have many bugs.
 
-OpencvとTesseractをベースにしたガチャ履歴のエクスポートツール、デザインはスノウブレイクをベースに、理論的にはガチャ履歴の表示があるゲームであれば、どんなゲームでも使えるように調整されている、現在はまだ開発中で、履歴の読み込みと簡単な表示機能しか完成していない、現在は保存とエクスポートができない、ガチャは1つしかカウントできない、バグも多いかもしれない。
+OpenCVとTesseractをベースにしたガチャ履歴のエクスポートツール、デザインはスノウブレイクをベースに、理論的にはガチャ履歴の表示があるゲームであれば、どんなゲームでも使えるように調整されている、現在はまだ開発中で、履歴の読み込みと簡単な表示機能しか完成していない、バグも多いかもしれない。
 
---- 
+---
 
 ## Requirements
 
 .Net 7.0 Runtime
 
---- 
+---
 
 ## 使用
 
-![](./Document//Images/Display.png)
+![loading-ag-1133](Document/Images/Display.png)
 
 - **注意：程序需要以管理员身份运行，需要在1080p下运行**
   
-  **ATTENTION: Run As Adiministor is Required, 1080p needed**
+  **ATTENTION: Run As Administer is Required, 1080p needed**
   
   **注: プログラムは管理者として実行する必要があります, 1080p**
   
-  --- 
+  ---
 
 - 从`Release`下载最新版本并解压到任意目录
   
@@ -44,7 +44,7 @@ OpencvとTesseractをベースにしたガチャ履歴のエクスポートツ�
 
 - 打开`SnowbreakGachaExport.exe`，在右上角下拉框选择尘白禁区程序名（一般为`Snowbreak:xxxx`），点击左侧Refresh  
   
-  Open `SnowbreakGachaExport.exe`, select Snwobreak: containment zone in the combobox in top-right, and click refresh
+  Open `SnowbreakGachaExport.exe`, select Snwobreak: containment zone in the combo box in top-right, and click refresh
   
   `SnowbreakGachaExport.exe`を開き、右上のドロップダウンボックスでスノブレのスノブレプログラム名（通常は`Snowbreak:xxxx`）を選択し、左側のRefreshをクリックします。
   
@@ -52,7 +52,7 @@ OpencvとTesseractをベースにしたガチャ履歴のエクスポートツ�
 
 - 此时应自动返回至游戏界面，大约3-5秒读取一页（10条）数据，等待自动读取翻页至最后一页，等待三到五秒至程序不再点击翻页键
   
-  It will auto back to game, and read log about 3-5 sec per page, waitting for reading to the last page and the export doesn't click the next page button
+  It will auto back to game, and read log about 3-5 sec per page, waiting for reading to the last page and the export doesn't click the next page button
   
   この時点で自動的にゲーム画面に戻ってデータを読み取る(約3〜5秒)、最後のページで停止までに待つ
   
