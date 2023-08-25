@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Avalonia.Extensions.Controls;
 using Newtonsoft.Json;
 using SnowbreakGachaExport.Models;
@@ -18,8 +19,7 @@ public static class JsonOperate
             File.Create(path);
         }
 
-        var jsonString = File.ReadAllText(path);
-
+        var jsonString = File.ReadAllText(path, Encoding.Default);
         return JsonConvert.DeserializeObject<Dictionary<string, List<HistoryItem>>>(jsonString);
     }
 

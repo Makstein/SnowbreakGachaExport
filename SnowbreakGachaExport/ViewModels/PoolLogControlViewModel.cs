@@ -10,6 +10,7 @@ namespace SnowbreakGachaExport.ViewModels;
 public class PoolLogControlViewModel : ViewModelBase
 {
     private int _nowGoldProcess;
+
     public int NowGoldProcess
     {
         get => _nowGoldProcess;
@@ -17,6 +18,7 @@ public class PoolLogControlViewModel : ViewModelBase
     }
 
     private int _nowPurpleProcess;
+
     public int NowPurpleProcess
     {
         get => _nowPurpleProcess;
@@ -24,13 +26,15 @@ public class PoolLogControlViewModel : ViewModelBase
     }
 
     private float _fiveAVG;
+
     public float FiveAVG
     {
         get => -_fiveAVG;
         set => this.RaiseAndSetIfChanged(ref _fiveAVG, value);
     }
-    
+
     private List<HistoryItem> _logList = new();
+
     public List<HistoryItem> LogList
     {
         get => _logList;
@@ -38,8 +42,7 @@ public class PoolLogControlViewModel : ViewModelBase
     }
 
     public int MaxGoldProcessValue { get; } = 80;
-    
-    
+
 
     public PoolLogControlViewModel()
     {
@@ -49,7 +52,7 @@ public class PoolLogControlViewModel : ViewModelBase
     public PoolLogControlViewModel(IEnumerable<HistoryItem> logList, int maxProcessValue)
     {
         MaxGoldProcessValue = maxProcessValue;
-        
+
         UpdateList(logList);
     }
 
@@ -57,29 +60,35 @@ public class PoolLogControlViewModel : ViewModelBase
     {
         LogList = new List<HistoryItem>(newList.Reverse());
 
-        var bFIndPurple = true;
+        var bFindPurple = true;
+        var bFindGold = true;
         for (var i = _logList.Count - 1; i >= 0; --i)
         {
+            if (!bFindPurple && !bFindGold) break;
+
             switch (_logList[i].Star)
             {
-                case 5:
+                case 5 when bFindGold:
                 {
                     NowGoldProcess = _logList.Count - 1 - i;
-                    if (bFIndPurple)
-                    {
-                        NowPurpleProcess = _logList.Count - 1 - i;
-                    }
-                    return;
+                    bFindGold = false;
+                    break;
                 }
-                case 4 when bFIndPurple:
-                    bFIndPurple = false;
+                case 4 when bFindPurple:
+                {
+                    bFindPurple = false;
                     NowPurpleProcess = _logList.Count - 1 - i;
                     break;
+                }
             }
         }
 
-        NowGoldProcess = _logList.Count;
-        if (bFIndPurple)
+        if (bFindGold)
+        {
+            NowGoldProcess = _logList.Count;
+        }
+
+        if (bFindPurple)
         {
             NowPurpleProcess = _logList.Count;
         }

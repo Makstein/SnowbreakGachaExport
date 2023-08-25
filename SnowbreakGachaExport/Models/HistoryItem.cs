@@ -1,4 +1,6 @@
-﻿namespace SnowbreakGachaExport.Models;
+﻿using Newtonsoft.Json;
+
+namespace SnowbreakGachaExport.Models;
 
 public enum ItemType
 {
@@ -23,6 +25,7 @@ public class HistoryItem
         ID = name + time;
     }
     
+    [JsonConstructor]
     public HistoryItem(string id, string name = "", string time = "", ItemType type = ItemType.Weapon, int star = 4)
     {
         Name = name;
