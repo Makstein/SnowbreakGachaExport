@@ -22,11 +22,11 @@ public class MainWindowViewModel : ViewModelBase
     private List<HistoryItem> SpecialCharacterHistory { get; set; } = new();
     private List<HistoryItem> CommonWeaponHistory { get; set; } = new();
     private List<HistoryItem> SpecialWeaponHistory { get; set; } = new();
-    private PoolLogControlViewModel CommonCharacterVM { get; }
-    private PoolLogControlViewModel SpecialCharacterVM { get; }
-    private PoolLogControlViewModel CommonWeaponVM { get; }
-    private PoolLogControlViewModel SpecialWeaponVM { get; }
-    private Dictionary<string, List<HistoryItem>>? _cacheDic { get; }
+    private PoolLogControlViewModel? CommonCharacterVM { get; set; }
+    private PoolLogControlViewModel? SpecialCharacterVM { get; set; }
+    private PoolLogControlViewModel? CommonWeaponVM { get; set; }
+    private PoolLogControlViewModel? SpecialWeaponVM { get; set; }
+    private Dictionary<string, List<HistoryItem>>? _cacheDic { get; set; }
 
     private List<string> _bannerName { get; } = new()
     {
@@ -38,16 +38,27 @@ public class MainWindowViewModel : ViewModelBase
 
     private List<PoolLogControlViewModel> _bannerLogVmName { get; } = new();
 
-    public PoolLogControl CommonCharacterLogView { get; }
-    public PoolLogControl SpecialCharacterLogView { get; }
-    public PoolLogControl CommonWeaponLogView { get; }
-    public PoolLogControl SpecialWeaponLogView { get; }
+    public PoolLogControl? CommonCharacterLogView { get; set; }
+    public PoolLogControl? SpecialCharacterLogView { get; set; }
+    public PoolLogControl? CommonWeaponLogView { get; set; }
+    public PoolLogControl? SpecialWeaponLogView { get; set; }
+
+    private AppConfig _config;
 
     public MainWindowViewModel()
     {
         RefreshCommand = ReactiveCommand.CreateFromTask<int>(StartRefresh);
+        
         WindowTitleList = new ObservableCollection<string>(WindowOperate.FindAll());
 
+        InitHistory();
+        InitViews();
+
+        _config = new AppConfig();
+    }
+    
+    private void InitHistory()
+    {
         // Read History Cache
         _cacheDic = JsonOperate.Read();
         if (_cacheDic != null)
@@ -67,7 +78,10 @@ public class MainWindowViewModel : ViewModelBase
                 {nameof(SpecialWeaponHistory), SpecialWeaponHistory}
             };
         }
+    }
 
+    private void InitViews()
+    {
         CommonCharacterVM = new PoolLogControlViewModel(CommonCharacterHistory, 80);
         SpecialCharacterVM = new PoolLogControlViewModel(SpecialCharacterHistory, 80);
         CommonWeaponVM = new PoolLogControlViewModel(CommonWeaponHistory, 60);
@@ -101,9 +115,18 @@ public class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            if (windowIndex < 0) return;
+            if (windowIndex < 0)
+            {
+                var errBox = MessageBoxManager.GetMessageBoxStandard("", "Please select a game window");
+                await errBox.ShowWindowAsync();
+                return;
+            }
 
-            WindowOperate.BringToFront(WindowTitleList[windowIndex]);
+            var gameWindowTitle = WindowTitleList[windowIndex];
+
+            if (!_config.IsInit) _config.Init(gameWindowTitle);
+            WindowOperate.BringToFront(gameWindowTitle);
+
             await Task.Delay(100);
             var newItems = new List<HistoryItem>();
             
@@ -135,7 +158,8 @@ public class MainWindowViewModel : ViewModelBase
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error in StartRefresh" + e);
+            var msgBox = MessageBoxManager.GetMessageBoxStandard("", "Error when start refresh: " + e.Message);
+            await msgBox.ShowWindowAsync();
             throw;
         }
     }
