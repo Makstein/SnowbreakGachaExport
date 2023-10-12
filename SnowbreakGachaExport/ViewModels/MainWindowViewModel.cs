@@ -9,6 +9,8 @@ using SnowbreakGachaExport.Models;
 using SnowbreakGachaExport.Tools;
 using SnowbreakGachaExport.Views.Controls;
 using MsBox.Avalonia;
+using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace SnowbreakGachaExport.ViewModels;
 
@@ -22,28 +24,22 @@ public class MainWindowViewModel : ViewModelBase
     private List<HistoryItem> SpecialCharacterHistory { get; set; } = new();
     private List<HistoryItem> CommonWeaponHistory { get; set; } = new();
     private List<HistoryItem> SpecialWeaponHistory { get; set; } = new();
-    private PoolLogControlViewModel? CommonCharacterVM { get; set; }
-    private PoolLogControlViewModel? SpecialCharacterVM { get; set; }
-    private PoolLogControlViewModel? CommonWeaponVM { get; set; }
-    private PoolLogControlViewModel? SpecialWeaponVM { get; set; }
-    private Dictionary<string, List<HistoryItem>>? _cacheDic { get; set; }
+    private PoolLogControlViewModel CommonCharacterVM { get; set; }
+    private PoolLogControlViewModel SpecialCharacterVM { get; set; }
+    private PoolLogControlViewModel CommonWeaponVM { get; set; }
+    private PoolLogControlViewModel SpecialWeaponVM { get; set; }
 
-    private List<string> _bannerName { get; } = new()
-    {
-        nameof(CommonCharacterHistory),
-        nameof(SpecialCharacterHistory),
-        nameof(CommonWeaponHistory),
-        nameof(SpecialWeaponHistory)
-    };
+    private Dictionary<string, List<HistoryItem>>? _cacheDic { get; set; }
 
     private List<PoolLogControlViewModel> _bannerLogVmName { get; } = new();
 
-    public PoolLogControl? CommonCharacterLogView { get; set; }
-    public PoolLogControl? SpecialCharacterLogView { get; set; }
-    public PoolLogControl? CommonWeaponLogView { get; set; }
-    public PoolLogControl? SpecialWeaponLogView { get; set; }
+    public PoolLogControl CommonCharacterLogView { get; set; }
+    public PoolLogControl SpecialCharacterLogView { get; set; }
+    public PoolLogControl CommonWeaponLogView { get; set; }
+    public PoolLogControl SpecialWeaponLogView { get; set; }
 
-    private AppConfig _config;
+    private readonly AppConfig _config;
+    private readonly BitMapPool _bitMapPool;
 
     public MainWindowViewModel()
     {
@@ -55,6 +51,7 @@ public class MainWindowViewModel : ViewModelBase
         InitViews();
 
         _config = new AppConfig();
+        _bitMapPool = new BitMapPool(_config);
     }
     
     private void InitHistory()
@@ -124,37 +121,24 @@ public class MainWindowViewModel : ViewModelBase
 
             var gameWindowTitle = WindowTitleList[windowIndex];
 
-            if (!_config.IsInit) _config.Init(gameWindowTitle);
+            if (!_config.IsInit)
+                _config.Init(gameWindowTitle);
+
             WindowOperate.BringToFront(gameWindowTitle);
 
-            await Task.Delay(100);
-            var newItems = new List<HistoryItem>();
-            
-            while (true)
-            {
-                var pos = OpenCVFind.FindNextPageArrow();
-                if (pos is { X: 0, Y: 0 })
-                {
-                    Console.WriteLine("End of page");
-                    break;
-                }
+            var items = await PxFind.IdentifyHistories(_bitMapPool, _config);
 
-                newItems.AddRange(new List<HistoryItem>(OpenCVFind.FindStar(
-                    BannerSelectedIndex is 0 or 1 ? ItemType.Character : ItemType.Weapon)));
+            MergeHistory(items);
 
-                MouseOperate.DoMouseClick(pos.X, pos.Y);
-                await Task.Delay(100);
-                MouseOperate.DoMouseClick(pos.X + 80, pos.Y + 80);
-                await Task.Delay(100);
-            }
-            
-            MergeHistory(newItems, _bannerName[BannerSelectedIndex]);
-            
-            _bannerLogVmName[BannerSelectedIndex].UpdateList(_cacheDic[_bannerName[BannerSelectedIndex]]);
-            JsonOperate.Save(_cacheDic!);
+            //MergeHistory(newItems, _bannerName[BannerSelectedIndex]);
+
+            //_bannerLogVmName[BannerSelectedIndex].UpdateList(_cacheDic[_bannerName[BannerSelectedIndex]]);
+            //JsonOperate.Save(_cacheDic!);
+
             WindowOperate.BringToFront("SnowbreakGachaExportTool");
-            var msgBox = MessageBoxManager.GetMessageBoxStandard("", "Finished!");
-            await msgBox.ShowWindowAsync();
+
+            //var msgBox = MessageBoxManager.GetMessageBoxStandard("", "Finished!");
+            //await msgBox.ShowWindowAsync();
         }
         catch (Exception e)
         {
@@ -164,8 +148,23 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private void MergeHistory(ImmutableArray<HistoryItem> items)
+    {
+        foreach (var item in items)
+        {
+            Debug.WriteLine(item.ToString());
+        }
+    }
+
     private void MergeHistory(List<HistoryItem> newList, string name)
     {
+        if (_cacheDic == null)
+        {
+            var msgBox = MessageBoxManager.GetMessageBoxStandard("", "Error: CacheDic Null");
+            _ = msgBox.ShowWindowAsync();
+            return;
+        }
+
         if (_cacheDic[name].Count == 0)
         {
             _cacheDic[name].AddRange(newList);

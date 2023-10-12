@@ -1,99 +1,49 @@
-﻿using System;
+﻿using SnowbreakGachaExport.Models;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using Windows.Win32;
 
 namespace SnowbreakGachaExport.Tools;
 
-public static class WindowOperate
+public static partial class WindowOperate
 {
-    private delegate bool WndEnumProc(IntPtr hWnd, int lParam);
-    
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    private static extern IntPtr FindWindow(string? className, string windowTitle);
-
-    [DllImport("user32")]
-    private static extern bool EnumWindows(WndEnumProc lpEnumFunc, int lParam);
-
-    [DllImport("user32")]
-    private static extern IntPtr GetParent(IntPtr hWnd);
-
-    [DllImport("user32")]
+    [DllImport("user32", CharSet = CharSet.Unicode)]
     private static extern int GetWindowText(IntPtr hWnd, StringBuilder lptrString, int nMaxCount);
-    
-    [DllImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool GetWindowPlacement(IntPtr hWnd, ref WindowPlacement lpwndpl);
-    
-    [DllImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
-    
-    [DllImport("user32.dll")]
-    private static extern int SetForegroundWindow(IntPtr hwnd);
-    
-    [DllImport("user32")]
-    private static extern bool IsWindowVisible(IntPtr hWnd);
-    
-    private enum ShowWindowEnum
-    {
-        Restore = 9
-    };
-
-    
-    [StructLayout(LayoutKind.Sequential)]
-    private struct WindowPlacement
-    {
-        public int length;
-        public int flags;
-        public int showCmd;
-        public Point ptMinPosition;
-        public Point ptMaxPosition;
-        public Rectangle rcNormalPosition;
-    }
 
     public static List<string> FindAll()
     {
         var res = new List<string>();
-        EnumWindows(OnWindowEnum, 0);
 
-        bool OnWindowEnum(IntPtr hwnd, int param)
+        PInvoke.EnumWindows((hwnd, param) =>
         {
-            if (GetParent(hwnd) == IntPtr.Zero)
+            if (PInvoke.GetParent(hwnd) == IntPtr.Zero)
             {
-                if (!IsWindowVisible(hwnd)) return true;
-                
-                var titleTemp = new StringBuilder(512);
-                GetWindowText(hwnd, titleTemp, titleTemp.Capacity);
-                var title = titleTemp.ToString().Trim();
-                if (title.Length > 0)
+                if (!PInvoke.IsWindowVisible(hwnd)) return true;
+
+                var titleTemp = new StringBuilder(128);
+                if (GetWindowText(hwnd, titleTemp, 128) != 0)
                 {
+                    var title = titleTemp.ToString().Trim();
                     res.Add(title);
                 }
             }
 
             return true;
-        }
+        }, 0);
 
         return res;
     }
 
     public static void BringToFront(string title)
     {
-        var hwnd = FindWindow(null, title);
+        var hwnd = PInvoke.FindWindow(null, title);
 
-        var windowPlacement = new WindowPlacement();
-        GetWindowPlacement(hwnd, ref windowPlacement);
-        
-        if (windowPlacement.showCmd != (int)ShowWindowEnum.Restore)
-        {
-            ShowWindow(hwnd, ShowWindowEnum.Restore);
-        }
-
-        SetForegroundWindow(hwnd);
+        PInvoke.SetForegroundWindow(hwnd);
     }
 
     public static Bitmap GetScreenShot()
@@ -111,6 +61,14 @@ public static class WindowOperate
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    public static IFullImage CaptureHistoryRegion(BitMapPool bitMapPool, AppConfig config)
+    {
+        var bitmap = bitMapPool.Rent(config.ClientRegionLog);
+        using var g = Graphics.FromImage(bitmap.Inner.Bitmap);
+        g.CopyFromScreen(config.ClientRegionLog.Left, config.ClientRegionLog.Top, 0, 0, config.ClientRegionLog.Size);
+        return bitmap;
     }
 
     public static Bitmap GetItemTimeScreenshot(int x, int y, int height)

@@ -1,21 +1,27 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:SnowbreakGachaExport.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
-        MinWidth="1200"
-        x:Class="SnowbreakGachaExport.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/LittleSun.ico"
-        Title="SnowbreakGachaExportTool"
-        TransparencyLevelHint="AcrylicBlur"
-        Background="Transparent"
-        ExtendClientAreaToDecorationsHint="True">
+<Window
+    x:Class="SnowbreakGachaExport.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:FluentAvalonia.UI.Controls"
+    xmlns:vm="using:SnowbreakGachaExport.ViewModels"
+    Title="SnowbreakGachaExportTool"
+    MinWidth="1200"
+    d:DesignHeight="800"
+    d:DesignWidth="1000"
+    x:DataType="vm:MainWindowViewModel"
+    Background="Transparent"
+    ExtendClientAreaToDecorationsHint="True"
+    Icon="/Assets/LittleSun.ico"
+    TransparencyLevelHint="AcrylicBlur"
+    mc:Ignorable="d">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
@@ -24,45 +30,63 @@
             <ExperimentalAcrylicBorder.Material>
                 <ExperimentalAcrylicMaterial
                     BackgroundSource="Digger"
+                    MaterialOpacity="0.65"
                     TintColor="Black"
-                    TintOpacity="1"
-                    MaterialOpacity="0.65" />
+                    TintOpacity="1" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.ColumnSpan="3"
-                    VerticalAlignment="Top" Margin="15 35">
-            <Button Content="Refresh" Padding="15 5"
-                    Command="{Binding RefreshCommand}"
-                    CommandParameter="{Binding ElementName=WindowBox, Path=SelectedIndex}" />
-            <ComboBox Margin="10 0 0 0" ItemsSource="{Binding WindowTitleList}"
-                      SelectedIndex="0" MinWidth="120" x:Name="WindowBox" />
-            <TextBlock Text="Select Banner:" VerticalAlignment="Center" Margin="15 0 0 0"/>
-            <ComboBox MinWidth="100" Margin="10 0 0 0" SelectedIndex="{Binding BannerSelectedIndex}">
-                <ComboBoxItem Content="Common Character Banner"/>
-                <ComboBoxItem Content="Event Character Banner"/>
-                <ComboBoxItem Content="Common Weapon Banner"/>
-                <ComboBoxItem Content="Event Weapon Banner"/>
+        <StackPanel
+            Grid.ColumnSpan="3"
+            Margin="15,35"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+            <Button
+                Padding="15,5"
+                Command="{Binding RefreshCommand}"
+                CommandParameter="{Binding ElementName=WindowBox, Path=SelectedIndex}"
+                Content="Refresh" />
+
+            <ComboBox
+                x:Name="WindowBox"
+                MinWidth="120"
+                Margin="10,0,0,0"
+                ItemsSource="{Binding WindowTitleList}"
+                SelectedIndex="0" />
+
+            <TextBlock
+                Margin="15,0,0,0"
+                VerticalAlignment="Center"
+                Text="Select Banner:" />
+
+            <ComboBox
+                MinWidth="100"
+                Margin="10,0,0,0"
+                SelectedIndex="{Binding BannerSelectedIndex}">
+                <ComboBoxItem Content="Common Character Banner" />
+                <ComboBoxItem Content="Event Character Banner" />
+                <ComboBoxItem Content="Common Weapon Banner" />
+                <ComboBoxItem Content="Event Weapon Banner" />
             </ComboBox>
         </StackPanel>
-        
-        <Grid RowDefinitions="* 10" Margin="5 80 5 5">
-            <Grid ColumnDefinitions="* * * *">
-                
+
+        <Grid Margin="5,80,5,5" RowDefinitions="* 10">
+            <Grid Grid.Column="1" ColumnDefinitions="* * * *">
                 <Grid Column="0">
-                    <ContentControl Content="{Binding CommonCharacterLogView}"/>
+                    <ContentControl Content="{Binding CommonCharacterLogView}" />
                 </Grid>
-                
+
                 <Grid Column="1">
-                    <ContentControl Content="{Binding SpecialCharacterLogView}"/>
+                    <ContentControl Content="{Binding SpecialCharacterLogView}" />
                 </Grid>
-                
+
                 <Grid Column="2">
-                    <ContentControl Content="{Binding CommonWeaponLogView}"/>
+                    <ContentControl Content="{Binding CommonWeaponLogView}" />
                 </Grid>
-                
+
                 <Grid Column="3">
-                    <ContentControl Content="{Binding SpecialWeaponLogView}"/>
+                    <ContentControl Content="{Binding SpecialWeaponLogView}" />
                 </Grid>
             </Grid>
         </Grid>

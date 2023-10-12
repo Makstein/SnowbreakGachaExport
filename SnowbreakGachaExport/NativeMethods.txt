@@ -14,6 +14,9 @@ SendInput
 keybd_event
 FindWindow
 SetForegroundWindow
+EnumWindows
+GetParent
+IsWindowVisible
 GetWindowRect
 SetProcessDpiAwareness
 GetMessage
