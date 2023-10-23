@@ -58,23 +58,11 @@ public class MainWindowViewModel : ViewModelBase
     {
         // Read History Cache
         _cacheDic = JsonOperate.Read();
-        if (_cacheDic != null)
-        {
-            CommonCharacterHistory = new List<HistoryItem>(_cacheDic[nameof(CommonCharacterHistory)]);
-            SpecialCharacterHistory = new List<HistoryItem>(_cacheDic[nameof(SpecialCharacterHistory)]);
-            CommonWeaponHistory = new List<HistoryItem>(_cacheDic[nameof(CommonWeaponHistory)]);
-            SpecialWeaponHistory = new List<HistoryItem>(_cacheDic[nameof(SpecialWeaponHistory)]);
-        }
-        else
-        {
-            _cacheDic = new Dictionary<string, List<HistoryItem>>()
-            {
-                {nameof(CommonCharacterHistory), CommonCharacterHistory},
-                {nameof(SpecialCharacterHistory), SpecialCharacterHistory},
-                {nameof(CommonWeaponHistory), CommonWeaponHistory},
-                {nameof(SpecialWeaponHistory), SpecialWeaponHistory}
-            };
-        }
+
+        CommonCharacterHistory = new List<HistoryItem>();
+        SpecialCharacterHistory = new List<HistoryItem>();
+        CommonWeaponHistory = new List<HistoryItem>();
+        SpecialWeaponHistory = new List<HistoryItem>();
     }
 
     private void InitViews()

@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Avalonia.Extensions.Controls;
+﻿using Avalonia.Extensions.Controls;
 using Newtonsoft.Json;
 using SnowbreakGachaExport.Models;
 using SnowbreakGachaExport.Models.Global;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace SnowbreakGachaExport.Tools;
 
 public static class JsonOperate
 {
-    public static Dictionary<string, List<HistoryItem>>? Read()
+    public static Dictionary<string, List<HistoryItem>> Read()
     {
         Directory.CreateDirectory("./Data");
         var path = Path.Combine(UserPaths.DataPath, UserPaths.GachaJsonName);
@@ -20,7 +20,23 @@ public static class JsonOperate
         }
 
         var jsonString = File.ReadAllText(path, Encoding.Default);
-        return JsonConvert.DeserializeObject<Dictionary<string, List<HistoryItem>>>(jsonString);
+        if (jsonString == null || jsonString.Length == 0)
+            return new Dictionary<string, List<HistoryItem>>()
+        {
+            { Resource.CommonCharacterHisoryName, new List<HistoryItem>() },
+            { Resource.CommonWeaponHistoryName, new List<HistoryItem>() },
+            { Resource.SpecialCharacterHistoryName, new List<HistoryItem>() },
+            { Resource.SpecialWeaponHistoryName, new List<HistoryItem>() }
+        };
+
+        var res = JsonConvert.DeserializeObject<Dictionary<string, List<HistoryItem>>>(jsonString);
+        return res ?? new Dictionary<string, List<HistoryItem>>()
+        {
+            { Resource.CommonCharacterHisoryName, new List<HistoryItem>() },
+            { Resource.CommonWeaponHistoryName, new List<HistoryItem>() },
+            { Resource.SpecialCharacterHistoryName, new List<HistoryItem>() },
+            { Resource.SpecialWeaponHistoryName, new List<HistoryItem>() }
+        };
     }
 
     public static void Save(Dictionary<string, List<HistoryItem>> dictionary)

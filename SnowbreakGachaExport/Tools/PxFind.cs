@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using System.Threading.Tasks;
-using Windows.Win32;
-using Windows.Win32.UI.Input.KeyboardAndMouse;
 
 namespace SnowbreakGachaExport.Tools;
 

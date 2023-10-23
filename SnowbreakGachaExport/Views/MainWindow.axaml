@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:FluentAvalonia.UI.Controls"
+    xmlns:views="using:SnowbreakGachaExport.Views"
     xmlns:vm="using:SnowbreakGachaExport.ViewModels"
     Title="SnowbreakGachaExportTool"
     MinWidth="1200"
@@ -12,7 +13,6 @@
     d:DesignWidth="1000"
     x:DataType="vm:MainWindowViewModel"
     Background="Transparent"
-    ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/LittleSun.ico"
     TransparencyLevelHint="AcrylicBlur"
     mc:Ignorable="d">
@@ -36,59 +36,8 @@
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
-        <StackPanel
-            Grid.ColumnSpan="3"
-            Margin="15,35"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Orientation="Horizontal">
-            <Button
-                Padding="15,5"
-                Command="{Binding RefreshCommand}"
-                CommandParameter="{Binding ElementName=WindowBox, Path=SelectedIndex}"
-                Content="Refresh" />
-
-            <ComboBox
-                x:Name="WindowBox"
-                MinWidth="120"
-                Margin="10,0,0,0"
-                ItemsSource="{Binding WindowTitleList}"
-                SelectedIndex="0" />
-
-            <TextBlock
-                Margin="15,0,0,0"
-                VerticalAlignment="Center"
-                Text="Select Banner:" />
-
-            <ComboBox
-                MinWidth="100"
-                Margin="10,0,0,0"
-                SelectedIndex="{Binding BannerSelectedIndex}">
-                <ComboBoxItem Content="Common Character Banner" />
-                <ComboBoxItem Content="Event Character Banner" />
-                <ComboBoxItem Content="Common Weapon Banner" />
-                <ComboBoxItem Content="Event Weapon Banner" />
-            </ComboBox>
-        </StackPanel>
-
-        <Grid Margin="5,80,5,5" RowDefinitions="* 10">
-            <Grid Grid.Column="1" ColumnDefinitions="* * * *">
-                <Grid Column="0">
-                    <ContentControl Content="{Binding CommonCharacterLogView}" />
-                </Grid>
-
-                <Grid Column="1">
-                    <ContentControl Content="{Binding SpecialCharacterLogView}" />
-                </Grid>
-
-                <Grid Column="2">
-                    <ContentControl Content="{Binding CommonWeaponLogView}" />
-                </Grid>
-
-                <Grid Column="3">
-                    <ContentControl Content="{Binding SpecialWeaponLogView}" />
-                </Grid>
-            </Grid>
+        <Grid>
+            <views:MainView Margin="5" />
         </Grid>
     </Panel>
 </Window>
