@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SnowbreakGachaExport.Models;
 using SnowbreakGachaExport.Models.Global;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace SnowbreakGachaExport.Tools;
 
 public static class JsonOperate
 {
-    public static Dictionary<string, List<HistoryItem>> Read()
+    public static Dictionary<string, List<HistoryItem>> ReadHistory()
     {
         Directory.CreateDirectory("./Data");
         var path = Path.Combine(UserPaths.DataPath, UserPaths.GachaJsonName);
@@ -39,7 +40,7 @@ public static class JsonOperate
         };
     }
 
-    public static void Save(Dictionary<string, List<HistoryItem>> dictionary)
+    public static void SaveHistory(Dictionary<string, List<HistoryItem>> dictionary)
     {
         Directory.CreateDirectory("./Data");
         var path = Path.Combine(UserPaths.DataPath, UserPaths.GachaJsonName);
@@ -54,5 +55,21 @@ public static class JsonOperate
             , UserPaths.GachaJsonName.Replace(".json", "") + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".json"));
 
         File.WriteAllText(path, JsonConvert.SerializeObject(dictionary, Formatting.Indented));
+    }
+
+    public static GameConfig ReadConfig()
+    {
+        var jsonString = File.ReadAllText(UserPaths.GameConfigFileName);
+        var gameConfig = JsonConvert.DeserializeObject<GameConfig>(jsonString);
+
+        Debug.WriteLine(gameConfig?.GameWindowTitle);
+
+        return gameConfig;
+    }
+
+    public static void SaveConfig(ref GameConfig gameConfig)
+    {
+        var jsonString = JsonConvert.SerializeObject(gameConfig, Formatting.Indented);
+        File.WriteAllText(UserPaths.GameConfigFileName, jsonString);
     }
 }

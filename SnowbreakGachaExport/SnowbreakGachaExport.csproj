@@ -72,6 +72,9 @@
 
 
     <ItemGroup>
+      <None Update="config.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Images\TestImage.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

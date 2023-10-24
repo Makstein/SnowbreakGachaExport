@@ -22,7 +22,7 @@ public class GachaLogViewModel : MainPageViewModelBase
 
     public GachaLogViewModel()
     {
-        HistoryItems = JsonOperate.Read();
+        HistoryItems = JsonOperate.ReadHistory();
 
         InitViews();
     }

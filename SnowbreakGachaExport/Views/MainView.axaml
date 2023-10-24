@@ -13,6 +13,7 @@
             Name="NavView"
             AlwaysShowHeader="False"
             IsSettingsVisible="False"
+            OpenPaneLength="200"
             PaneDisplayMode="Left">
             <ui:Frame Name="FrameView" Margin="10,30,0,0" />
         </ui:NavigationView>

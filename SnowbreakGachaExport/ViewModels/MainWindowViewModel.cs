@@ -57,7 +57,7 @@ public class MainWindowViewModel : ViewModelBase
     private void InitHistory()
     {
         // Read History Cache
-        _cacheDic = JsonOperate.Read();
+        _cacheDic = JsonOperate.ReadHistory();
 
         CommonCharacterHistory = new List<HistoryItem>();
         SpecialCharacterHistory = new List<HistoryItem>();
