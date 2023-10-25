@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Input;
-using ReactiveUI;
+﻿using ReactiveUI;
 using SnowbreakGachaExport.Models;
+using System.Collections.Generic;
 
 namespace SnowbreakGachaExport.ViewModels;
 
@@ -58,28 +55,29 @@ public class PoolLogControlViewModel : ViewModelBase
 
     public void UpdateList(IEnumerable<HistoryItem> newList)
     {
-        LogList = new List<HistoryItem>(newList.Reverse());
+        LogList = new List<HistoryItem>(newList);
 
+        // 查找距最后一个五星和四星物品的距离
         var bFindPurple = true;
         var bFindGold = true;
-        for (var i = _logList.Count - 1; i >= 0; --i)
+        for (int i = 0; i < LogList.Count; ++i)
         {
             if (!bFindPurple && !bFindGold) break;
 
             switch (_logList[i].Star)
             {
                 case 5 when bFindGold:
-                {
-                    NowGoldProcess = _logList.Count - 1 - i;
-                    bFindGold = false;
-                    break;
-                }
+                    {
+                        NowGoldProcess = i + 1;
+                        bFindGold = false;
+                        break;
+                    }
                 case 4 when bFindPurple:
-                {
-                    bFindPurple = false;
-                    NowPurpleProcess = _logList.Count - 1 - i;
-                    break;
-                }
+                    {
+                        bFindPurple = false;
+                        NowPurpleProcess = i + 1;
+                        break;
+                    }
             }
         }
 

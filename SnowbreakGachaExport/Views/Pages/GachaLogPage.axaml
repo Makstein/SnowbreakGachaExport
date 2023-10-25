@@ -14,8 +14,31 @@
         <vm:GachaLogViewModel />
     </Design.DataContext>
 
-    <Grid Margin="10" RowDefinitions="* 10">
-        <Grid Grid.Column="1" ColumnDefinitions="* * * *">
+    <Grid Margin="10" RowDefinitions="auto, *">
+        <StackPanel
+            Margin="0,0,10,20"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <TextBlock
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                Text="Current Banner" />
+
+            <ComboBox
+                MinWidth="200"
+                Margin="0,0,10,0"
+                SelectedIndex="{Binding SelectedBannerIndex}"
+                SelectedValue="CommmonCharacter">
+                <ComboBoxItem Content="CommmonCharacter" />
+                <ComboBoxItem Content="CommonWeapon" />
+                <ComboBoxItem Content="SpecialCharacter" />
+                <ComboBoxItem Content="SpecialWeapon" />
+            </ComboBox>
+
+            <Button Padding="15,5" Content="开始刷新" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="* * * *">
             <Grid Column="0">
                 <ContentControl Content="{Binding CommonCharacterLogView}" />
             </Grid>

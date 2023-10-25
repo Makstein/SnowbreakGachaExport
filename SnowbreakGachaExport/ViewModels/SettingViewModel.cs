@@ -1,9 +1,7 @@
 ﻿using Avalonia.Controls;
-using Newtonsoft.Json;
 using SnowbreakGachaExport.Models.Global;
 using SnowbreakGachaExport.Tools;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace SnowbreakGachaExport.ViewModels;
 

@@ -1,14 +1,17 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:SnowbreakGachaExport.ViewModels"
-             xmlns:model="clr-namespace:SnowbreakGachaExport.Models"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SnowbreakGachaExport.Views.Controls.PoolLogControl"
-             xmlns:tool="clr-namespace:SnowbreakGachaExport.Tools"
-             xmlns:cvt="clr-namespace:SnowbreakGachaExport.Tools.Converts"
-             x:DataType="vm:PoolLogControlViewModel">
+﻿<UserControl
+    x:Class="SnowbreakGachaExport.Views.Controls.PoolLogControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="clr-namespace:SnowbreakGachaExport.Tools.Converts"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:SnowbreakGachaExport.Models"
+    xmlns:tool="clr-namespace:SnowbreakGachaExport.Tools"
+    xmlns:vm="clr-namespace:SnowbreakGachaExport.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:PoolLogControlViewModel"
+    mc:Ignorable="d">
     <Design.DataContext>
         <vm:PoolLogControlViewModel />
     </Design.DataContext>
@@ -18,42 +21,70 @@
         <cvt:FiveAVGConvert x:Key="FiveAvgConvert" />
     </UserControl.Resources>
 
-    <Grid RowDefinitions="Auto Auto Auto *" Margin="10 0 10 0">
+    <Grid Margin="10,0,10,0" RowDefinitions="Auto Auto Auto *">
         <Grid ColumnDefinitions="3* 1* Auto">
-            <ProgressBar x:Name="PullGoldBar" Minimum="0" Maximum="{Binding MaxGoldProcessValue}"
-                         Value="{Binding NowGoldProcess}" Margin="25 0" HorizontalAlignment="Center"
-                         Foreground="Gold" Height="10" />
-            <TextBlock Grid.Column="1" Text="{Binding ElementName=PullGoldBar, Path=Value}"
-                       FontFamily="Consolas" />
+            <ProgressBar
+                x:Name="PullGoldBar"
+                Height="10"
+                Margin="25,0"
+                HorizontalAlignment="Center"
+                Foreground="Gold"
+                Maximum="{Binding MaxGoldProcessValue}"
+                Minimum="0"
+                Value="{Binding NowGoldProcess}" />
+            <TextBlock
+                Grid.Column="1"
+                FontFamily="Consolas"
+                Text="{Binding ElementName=PullGoldBar, Path=Value}" />
         </Grid>
 
-        <Grid Row="1" ColumnDefinitions="3* 1*" Margin="0 15 0 0">
-            <ProgressBar x:Name="PullPurpleBar" Minimum="0" Maximum="10"
-                         Value="{Binding NowPurpleProcess}" Margin="25 0" HorizontalAlignment="Center"
-                         Foreground="Violet" Height="10" />
-            <TextBlock Grid.Column="1" Text="{Binding ElementName=PullPurpleBar, Path=Value}"
-                       FontFamily="Consolas" />
+        <Grid
+            Margin="0,15,0,0"
+            ColumnDefinitions="3* 1*"
+            Row="1">
+            <ProgressBar
+                x:Name="PullPurpleBar"
+                Height="10"
+                Margin="25,0"
+                HorizontalAlignment="Center"
+                Foreground="Violet"
+                Maximum="10"
+                Minimum="0"
+                Value="{Binding NowPurpleProcess}" />
+            <TextBlock
+                Grid.Column="1"
+                FontFamily="Consolas"
+                Text="{Binding ElementName=PullPurpleBar, Path=Value}" />
         </Grid>
 
-        <ListView Grid.Row="2" Margin="0 15 0 10" CornerRadius="5">
+        <ListView
+            Grid.Row="2"
+            Margin="0,15,0,10"
+            CornerRadius="5">
             <Grid>
-                <TextBlock Text="5* AVG Pull" FontFamily="Consolas" />
-                <TextBlock Text="{Binding LogList, Converter={StaticResource FiveAvgConvert}, StringFormat=0.0}"
-                           HorizontalAlignment="Right"
-                           FontFamily="Consolas" />
+                <TextBlock FontFamily="Consolas" Text="5* AVG Pull" />
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    FontFamily="Consolas"
+                    Text="{Binding LogList, Converter={StaticResource FiveAvgConvert}, StringFormat=0.0}" />
             </Grid>
         </ListView>
 
-        <ListBox Grid.Row="3" ItemsSource="{Binding LogList, Converter={StaticResource LogListConvert}}">
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="model:FiveStarItem">
-                    <Grid>
-                        <TextBlock Text="{Binding Name}" />
-                        <TextBlock Text="{Binding Count}" HorizontalAlignment="Right"
-                                   FontFamily="Consolas" VerticalAlignment="Center" />
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <Border Grid.Row="3" CornerRadius="5">
+            <ListBox ItemsSource="{Binding LogList, Converter={StaticResource LogListConvert}}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="model:FiveStarItem">
+                        <Grid>
+                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                FontFamily="Consolas"
+                                Text="{Binding Count}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
     </Grid>
 </UserControl>

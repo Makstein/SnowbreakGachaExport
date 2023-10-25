@@ -7,6 +7,7 @@ using Point = OpenCvSharp.Point;
 
 namespace SnowbreakGachaExport.Tools;
 
+[Obsolete("方法类因过慢已弃用，请使用PxFind类 / Use PxFind class instead, this class is too slow")]
 public static class OpenCVFind
 {
     private const string nextPageArrowImagePath = "./Images/NextPageArrow.png";

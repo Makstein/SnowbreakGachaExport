@@ -12,6 +12,7 @@ public class FiveAVGConvert : IValueConverter
     {
         if (value is not List<HistoryItem> list) return null;
 
+        list.Reverse();
         var avg = 0.0f;
         var lastFive = 0;
         var fiveCount = 0;

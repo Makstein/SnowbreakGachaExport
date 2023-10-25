@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using Avalonia.Data.Converters;
+﻿using Avalonia.Data.Converters;
 using SnowbreakGachaExport.Models;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace SnowbreakGachaExport.Tools;
 
@@ -13,13 +11,14 @@ public class LogListConvert : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not List<HistoryItem> list) return null;
-        
+
+        list.Reverse();
         var res = new List<FiveStarItem>();
         var lastFive = -1;
         for (var i = 0; i < list.Count; i++)
         {
             if (list[i].Star != 5) continue;
-            
+
             res.Add(new FiveStarItem(list[i].Name, i - lastFive));
             lastFive = i;
         }
