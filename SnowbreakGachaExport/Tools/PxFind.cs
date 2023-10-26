@@ -42,7 +42,7 @@ public static class PxFind
 
                 PreviousLogView = pooledBitmap;
 
-                items.AddRange(await IdentifyItemsAsync(nameBitmaps, timeBitmaps, rarePixels, _config));
+                items.AddRange(IdentifyItems(nameBitmaps, timeBitmaps, rarePixels, _config));
 
                 for (int i = 0; i < nameBitmaps.Length; i++)
                 {
@@ -54,7 +54,7 @@ public static class PxFind
 
             MouseOperate.DoMouseClick(_config.ClientNextPageArrowPoint.X, _config.ClientNextPageArrowPoint.Y);
 
-            await Task.Delay(200);
+            Task.Delay(200).Wait();
         }
 
         return items.ToImmutable();
@@ -110,7 +110,7 @@ public static class PxFind
     /// <param name="rareColors"></param>
     /// <param name="_config"></param>
     /// <returns></returns>
-    public static Task<ImmutableArray<HistoryItem>> IdentifyItemsAsync(ImmutableArray<PooledWrappedBitmap> nameBitmaps, 
+    public static ImmutableArray<HistoryItem> IdentifyItems(ImmutableArray<PooledWrappedBitmap> nameBitmaps, 
         ImmutableArray<PooledWrappedBitmap> timeBitmaps, ImmutableArray<Color> rareColors, AppConfig _config)
     {
         var items = ImmutableArray.CreateBuilder<HistoryItem>();
@@ -126,16 +126,16 @@ public static class PxFind
             Debug.WriteLine($"{names[i]}, {times[i]}, {items[i].Star}");
         }
 
-        return Task.FromResult(items.ToImmutable());
+        return items.ToImmutable();
     }
 
-    private static int IdentifyRareFromColor(Color color, AppConfig _confgi)
+    private static int IdentifyRareFromColor(Color color, AppConfig _config)
     {
-        var blueMSE = ColorMSE(_confgi.RareBlueColor, color);
-        var purpleMSE = ColorMSE(_confgi.RarePurpleColor, color);
-        var goldMSE = ColorMSE(_confgi.RareGoldColor, color);
+        var blueMSE = ColorMSE(_config.RareBlueColor, color);
+        var purpleMSE = ColorMSE(_config.RarePurpleColor, color);
+        var goldMSE = ColorMSE(_config.RareGoldColor, color);
 
-        if (Math.Min(blueMSE, Math.Min(purpleMSE, goldMSE)) >= 45) return 0;
+        if (Math.Min(blueMSE, Math.Min(purpleMSE, goldMSE)) >= 50) return 0;
 
         if (goldMSE < purpleMSE && goldMSE < blueMSE) return 5;
         if (purpleMSE < goldMSE && purpleMSE < blueMSE) return 4;
@@ -144,7 +144,7 @@ public static class PxFind
 
     private static double ColorMSE(Color a, Color b)
     {
-        return Vector3.DistanceSquared(new Vector3(a.R, a.G, b.R), new Vector3(b.R, b.G, b.B));
+        return Vector3.Distance(new Vector3(a.R, a.G, b.B), new Vector3(b.R, b.G, b.B));
     }
 
     private static double CalculateMSE(WrappedBitmap bmp1, WrappedBitmap bmp2)

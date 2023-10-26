@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Avalonia.Data.Converters;
+using SnowbreakGachaExport.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Avalonia.Data.Converters;
-using SnowbreakGachaExport.Models;
 
 namespace SnowbreakGachaExport.Tools.Converts;
 
@@ -12,15 +12,14 @@ public class FiveAVGConvert : IValueConverter
     {
         if (value is not List<HistoryItem> list) return null;
 
-        list.Reverse();
         var avg = 0.0f;
-        var lastFive = 0;
+        var lastFive = list.Count;
         var fiveCount = 0;
-        for (var i = 0; i < list.Count; ++i)
+        for (var i = list.Count - 1; i >= 0; --i)
         {
             if (list[i].Star != 5) continue;
-            
-            avg += i - lastFive + 1;
+
+            avg += lastFive - i;
             lastFive = i;
             ++fiveCount;
         }

@@ -92,12 +92,10 @@ public class GachaLogViewModel : MainPageViewModelBase
             var items = await PxFind.IdentifyHistories(_bitMapPool, _config);
 
             MergeHistory(items);
-
             _viewModels[SelectedBannerIndex].UpdateList(HistoryItems[BannerNames[SelectedBannerIndex]]);
             JsonOperate.SaveHistory(HistoryItems);
 
             WindowOperate.BringToFront("SnowbreakGachaExportTool");
-
             var msgBox = MessageBoxManager.GetMessageBoxStandard("", "Finished!");
             await msgBox.ShowWindowAsync();
         }

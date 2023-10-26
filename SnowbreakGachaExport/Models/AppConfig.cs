@@ -151,7 +151,7 @@ public class AppConfig
 
     public double ImageMesThr { get; set; } = 45;
 
-    public Color RareBlueColor { get; set; } = ColorTranslator.FromHtml("#3762f2");
+    public Color RareBlueColor { get; set; } = Color.FromArgb(255, 55, 98, 242);
 
     public Color RarePurpleColor { get; set; } = ColorTranslator.FromHtml("#c069d6");
 

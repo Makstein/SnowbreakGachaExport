@@ -35,7 +35,10 @@
                 <ComboBoxItem Content="SpecialWeapon" />
             </ComboBox>
 
-            <Button Padding="15,5" Content="开始刷新" />
+            <Button
+                Padding="15,5"
+                Command="{Binding RefreshCommand}"
+                Content="开始刷新" />
         </StackPanel>
 
         <Grid Grid.Row="1" ColumnDefinitions="* * * *">
