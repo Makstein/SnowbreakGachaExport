@@ -25,7 +25,6 @@ public static class TesseractOperate
                     .Replace("翠帯", "绷带").Replace("②", "2").Replace("①", "").Replace("⑥", "6")
                     .Replace("③", "3").Replace("④", "4").Replace("⑤", "5").Replace("⑦", "7")
                     .Replace("⑧", "8").Replace("⑨", "9");
-                Console.WriteLine(nameText);
             }
             engine.SetVariable("tessedit_char_whitelist", "0123456789");
             using (var timePage = engine.Process(timeBitmap))
@@ -36,9 +35,8 @@ public static class TesseractOperate
             }
             return (nameText.ToString(), timeText.ToString());
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.WriteLine(e);
             throw;
         }
     }
@@ -63,8 +61,6 @@ public static class TesseractOperate
                     .Replace("⑧", "8").Replace("⑨", "9");
 
             names.Add(nameText.ToString());
-
-            Debug.WriteLine(nameText);
         }
 
         engine.SetVariable("tessedit_char_whitelist", "0123456789");
@@ -78,8 +74,6 @@ public static class TesseractOperate
                     .Replace("\r", "").Replace("\n", "");
 
             times.Add(timeText.ToString());
-
-            Debug.WriteLine(timeText);
         }
 
         return (names.ToImmutable(), times.ToImmutable());

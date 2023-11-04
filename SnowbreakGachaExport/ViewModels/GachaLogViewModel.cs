@@ -89,6 +89,8 @@ public class GachaLogViewModel : MainPageViewModelBase
 
             WindowOperate.BringToFront(gameWindowTitle);
 
+            Task.Delay(200).Wait();
+
             var items = await PxFind.IdentifyHistories(_bitMapPool, _config);
 
             MergeHistory(items);

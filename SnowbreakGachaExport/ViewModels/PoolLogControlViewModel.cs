@@ -68,14 +68,14 @@ public class PoolLogControlViewModel : ViewModelBase
             {
                 case 5 when bFindGold:
                     {
-                        NowGoldProcess = i + 1;
+                        NowGoldProcess = i;
                         bFindGold = false;
                         break;
                     }
                 case 4 when bFindPurple:
                     {
                         bFindPurple = false;
-                        NowPurpleProcess = i + 1;
+                        NowPurpleProcess = i;
                         break;
                     }
             }

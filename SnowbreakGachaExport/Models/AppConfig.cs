@@ -167,9 +167,9 @@ public class AppConfig
     private const int LogBoxHeight = 680;
 
     // 历史记录物品名称区域
-    private const int NameAreaX0 = 35;
+    private const int NameAreaX0 = 30;
     private const int NameAreaY0 = 5;
-    private const int NameAreaWidth = 180;
+    private const int NameAreaWidth = 170;
     private const int NameAreaHeight = 50;
 
     // 历史记录物品抽取时间区域
