@@ -46,9 +46,9 @@ public class GachaLogViewModel : MainPageViewModelBase
 
     private void InitViews()
     {
-        PoolLogControlViewModel vm;
-
-        vm = new PoolLogControlViewModel(HistoryItems[Resource.CommonCharacterHisoryName], 80);
+        // 初始化四个抽卡记录显示界面
+        
+        var vm = new PoolLogControlViewModel(HistoryItems[Resource.CommonCharacterHisoryName], 80);
         CommonCharacterLogView = new PoolLogControl { DataContext = vm };
         _viewModels.Add(vm);
 

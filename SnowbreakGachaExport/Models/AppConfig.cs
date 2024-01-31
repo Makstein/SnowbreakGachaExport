@@ -17,7 +17,7 @@ public class AppConfig
         {
             var msgBox =
                 MessageBoxManager.GetMessageBoxStandard("", $"Error: cant find game window: '{GameWindowTitle}'");
-            _ = msgBox.ShowWindowAsync();
+            msgBox.ShowWindowAsync();
             return;
         }
 

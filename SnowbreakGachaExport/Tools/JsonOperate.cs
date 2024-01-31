@@ -21,7 +21,11 @@ public static class JsonOperate
         }
 
         var jsonString = File.ReadAllText(path, Encoding.Default);
-        if (jsonString == null || jsonString.Length == 0)
+        
+        // Fix the typo last version
+        jsonString = jsonString.Replace("CommonCharacterHisory", "CommonCharacterHistory");
+        
+        if (jsonString.Length == 0)
             return new Dictionary<string, List<HistoryItem>>()
         {
             { Resource.CommonCharacterHisoryName, new List<HistoryItem>() },

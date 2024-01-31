@@ -21,17 +21,13 @@ public static partial class WindowOperate
 
         PInvoke.EnumWindows((hwnd, param) =>
         {
-            if (PInvoke.GetParent(hwnd) == IntPtr.Zero)
-            {
-                if (!PInvoke.IsWindowVisible(hwnd)) return true;
+            if (PInvoke.GetParent(hwnd) != IntPtr.Zero) return true;
+            if (!PInvoke.IsWindowVisible(hwnd)) return true;
 
-                var titleTemp = new StringBuilder(128);
-                if (GetWindowText(hwnd, titleTemp, 128) != 0)
-                {
-                    var title = titleTemp.ToString().Trim();
-                    res.Add(title);
-                }
-            }
+            var titleTemp = new StringBuilder(128);
+            if (GetWindowText(hwnd, titleTemp, 128) == 0) return true;
+            var title = titleTemp.ToString().Trim();
+            res.Add(title);
 
             return true;
         }, 0);
