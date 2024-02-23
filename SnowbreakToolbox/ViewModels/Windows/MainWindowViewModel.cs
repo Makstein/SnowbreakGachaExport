@@ -4,6 +4,7 @@
 // All Rights Reserved.
 
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 using Wpf.Ui.Controls;
 
 namespace SnowbreakToolbox.ViewModels.Windows;
@@ -18,9 +19,16 @@ public partial class MainWindowViewModel : ObservableObject
     [
         new NavigationViewItem()
         {
-            Content = "Home",
-            Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
+            Content = "启动？",
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Home24, FontWeight = FontWeights.SemiBold },
             TargetPageType = typeof(Views.Pages.DashboardPage)
+        },
+        new NavigationViewItem()
+        {
+            Content = "记录统计",
+            Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentOnePage20, FontWeight = FontWeights.SemiBold },
+            TargetPageType = typeof(Views.Pages.GachaHistoryPage),
+            FontFamily = new FontFamily("Microsoft YaHei Semibold"),
         }
     ];
 
@@ -29,9 +37,10 @@ public partial class MainWindowViewModel : ObservableObject
     [
         new NavigationViewItem()
         {
-            Content = "Settings",
-            Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
-            TargetPageType = typeof(Views.Pages.SettingsPage)
+            Content = "设置",
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24, FontWeight = FontWeights.SemiBold },
+            TargetPageType = typeof(Views.Pages.SettingsPage),
+            FontFamily = new FontFamily("Microsoft YaHei Semibold"),
         }
     ];
 

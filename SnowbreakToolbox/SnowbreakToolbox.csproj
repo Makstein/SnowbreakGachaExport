@@ -24,4 +24,8 @@
     <Resource Include="Assets\little_sun.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Controls\" />
+  </ItemGroup>
+
 </Project>

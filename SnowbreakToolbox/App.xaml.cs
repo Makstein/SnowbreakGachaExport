@@ -20,7 +20,7 @@ public partial class App
 {
     private static readonly IHost _host = Host
         .CreateDefaultBuilder()
-        .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly()!.Location)!); })
+        .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)!); })
         .ConfigureServices((context, services) =>
         {
             services.AddHostedService<ApplicationHostService>();
@@ -84,5 +84,7 @@ public partial class App
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
+
+        MessageBox.Show(e.Exception.Message);
     }
 }

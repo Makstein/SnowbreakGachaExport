@@ -30,7 +30,7 @@ public partial class MainWindow :FluentWindow, INavigationWindow
 
         // Fix the title bar color.
         new WindowInteropHelper(this).EnsureHandle();
-        SystemThemeWatcher.Watch(this);
+        SystemThemeWatcher.Watch(this, WindowBackdropType.Acrylic);
 
         SetPageService(pageService);
 
