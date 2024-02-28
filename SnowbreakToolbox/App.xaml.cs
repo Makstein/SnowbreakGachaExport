@@ -7,7 +7,6 @@ using SnowbreakToolbox.ViewModels.Windows;
 using SnowbreakToolbox.Views.Pages;
 using SnowbreakToolbox.Views.Windows;
 using System.IO;
-using System.Reflection;
 using System.Windows.Threading;
 using Wpf.Ui;
 
@@ -45,6 +44,10 @@ public partial class App
             services.AddSingleton<DashboardViewModel>();
             services.AddSingleton<GachaHistoryPage>();
             services.AddSingleton<GachaHistoryViewModel>();
+            services.AddSingleton<TetrisPage>();
+            services.AddSingleton<TetrisViewModel>();
+            services.AddSingleton<AutoControlPage>();
+            services.AddSingleton<AutoControlViewModel>();
             services.AddSingleton<SettingsPage>();
             services.AddSingleton<SettingsViewModel>();
         }).Build();

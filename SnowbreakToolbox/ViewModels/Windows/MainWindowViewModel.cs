@@ -1,9 +1,4 @@
-﻿// This Source Code Form is subject to the terms of the MIT License.
-// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
-// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
-// All Rights Reserved.
-
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Media;
 using Wpf.Ui.Controls;
 
@@ -23,11 +18,25 @@ public partial class MainWindowViewModel : ObservableObject
             Icon = new SymbolIcon { Symbol = SymbolRegular.Home24, FontWeight = FontWeights.SemiBold },
             TargetPageType = typeof(Views.Pages.DashboardPage)
         },
-        new NavigationViewItem()
+        new NavigationViewItem() 
         {
             Content = "记录统计",
             Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentOnePage20, FontWeight = FontWeights.SemiBold },
             TargetPageType = typeof(Views.Pages.GachaHistoryPage),
+            FontFamily = new FontFamily("Microsoft YaHei Semibold"),
+        },
+        new NavigationViewItem()
+        {
+            Content = "宿舍拼图",
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Steps20, FontWeight = FontWeights.SemiBold },
+            TargetPageType = typeof(Views.Pages.TetrisPage),
+            FontFamily = new FontFamily("Microsoft YaHei Semibold"),
+        },
+        new NavigationViewItem()
+        {
+            Content = "自动化",
+            Icon = new SymbolIcon { Symbol = SymbolRegular.ApprovalsApp20, FontWeight = FontWeights.SemiBold },
+            TargetPageType = typeof(Views.Pages.AutoControlPage),
             FontFamily = new FontFamily("Microsoft YaHei Semibold"),
         }
     ];
@@ -42,11 +51,5 @@ public partial class MainWindowViewModel : ObservableObject
             TargetPageType = typeof(Views.Pages.SettingsPage),
             FontFamily = new FontFamily("Microsoft YaHei Semibold"),
         }
-    ];
-
-    [ObservableProperty]
-    private ObservableCollection<MenuItem> _trayMenuItems =
-    [
-        new MenuItem { Header = "Home", Tag = "tray_home" }
     ];
 }

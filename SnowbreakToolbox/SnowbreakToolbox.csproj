@@ -18,10 +18,12 @@
 
   <ItemGroup>
     <None Remove="Assets\little_sun.ico" />
+    <None Remove="Assets\little_Sun_banner.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\little_sun.ico" />
+    <Resource Include="Assets\little_Sun_banner.png" />
   </ItemGroup>
 
   <ItemGroup>

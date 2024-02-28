@@ -5,32 +5,26 @@
 
 using SnowbreakToolbox.ViewModels.Windows;
 using System.Windows.Interop;
-using System.Windows.Media;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace SnowbreakToolbox.Views.Windows;
 
-public partial class MainWindow :FluentWindow, INavigationWindow
+public partial class MainWindow : FluentWindow, INavigationWindow
 {
     public MainWindowViewModel ViewModel { get; }
 
-    public MainWindow(
-        MainWindowViewModel viewModel,
-        IPageService pageService,
-        INavigationService navigationService
-    )
+    public MainWindow(MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService)
     {
         ViewModel = viewModel;
         DataContext = this;
-
 
         InitializeComponent();
 
         // Fix the title bar color.
         new WindowInteropHelper(this).EnsureHandle();
-        SystemThemeWatcher.Watch(this, WindowBackdropType.Acrylic);
+        SystemThemeWatcher.Watch(this, WindowBackdropType.Mica);
 
         SetPageService(pageService);
 
