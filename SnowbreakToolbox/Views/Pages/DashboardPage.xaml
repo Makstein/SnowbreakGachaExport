@@ -9,7 +9,7 @@
     Title="DashboardPage"
     d:DataContext="{d:DesignInstance local:DashboardPage,
                                      IsDesignTimeCreatable=False}"
-    d:DesignHeight="450"
+    d:DesignHeight="850"
     d:DesignWidth="800"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
@@ -18,10 +18,66 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:Image Margin="15" Source="pack://application:,,,/Assets/little_sun_banner.png" />
+        <Border
+            Height="450"
+            Margin="5"
+            CornerRadius="15">
+            <Border.Background>
+                <ImageBrush
+                    ImageSource="pack://application:,,,/Assets/little_sun_banner.png"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    Stretch="UniformToFill" />
+            </Border.Background>
+        </Border>
+
+        <StackPanel
+            Grid.Row="1"
+            Margin="0,25,0,0"
+            HorizontalAlignment="Stretch">
+            <ui:CardAction
+                Command="{Binding ViewModel.RunGameCommand}"
+                CommandParameter="Game"
+                Icon="{ui:SymbolIcon Play20,
+                                     Filled=False,
+                                     FontSize=43}">
+                <StackPanel>
+                    <ui:TextBlock
+                        Margin="0"
+                        FontTypography="BodyStrong"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Text="启动游戏" />
+                    <ui:TextBlock
+                        Appearance="Secondary"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="精力充沛，容光焕发"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </ui:CardAction>
+
+            <ui:CardAction
+                Margin="0,10,0,0"
+                Command="{Binding ViewModel.RunGameCommand}"
+                CommandParameter="Launcher"
+                Icon="{ui:SymbolIcon Play20,
+                                     Filled=False,
+                                     FontSize=43}">
+                <StackPanel>
+                    <ui:TextBlock
+                        Margin="0"
+                        FontTypography="BodyStrong"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Text="启动启动器" />
+                    <ui:TextBlock
+                        Appearance="Secondary"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="启动启动启动器"
+                        TextWrapping="WrapWithOverflow" />
+                </StackPanel>
+            </ui:CardAction>
+        </StackPanel>
     </Grid>
 </Page>
