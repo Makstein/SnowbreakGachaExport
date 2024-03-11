@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Services;
 using SnowbreakToolbox.ViewModels.Pages;
 using SnowbreakToolbox.ViewModels.Windows;
 using SnowbreakToolbox.Views.Pages;
 using SnowbreakToolbox.Views.Windows;
 using System.IO;
-using Serilog;
 using System.Windows.Threading;
 using Wpf.Ui;
 
@@ -37,6 +38,12 @@ public partial class App
             // Service containing navigation, same as INavigationWindow... but without window
             services.AddSingleton<INavigationService, NavigationService>();
 
+            // Dialog
+            services.AddSingleton<IContentDialogService, ContentDialogService>();
+
+            // Config maniputation
+            services.AddSingleton<ISnowbreakConfig, ConfigService>();
+
             // Suppress the .net host messages when starting. ("...press Ctrl + c to stop...", etc)
             services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
 
@@ -49,6 +56,7 @@ public partial class App
                 .MinimumLevel.Information()
                 .CreateLogger();
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
+
 
             // Main window with navigation
             services.AddSingleton<INavigationWindow, MainWindow>();

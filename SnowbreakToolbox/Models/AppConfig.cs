@@ -1,9 +1,8 @@
 ﻿namespace SnowbreakToolbox.Models;
 
+[Serializable]
 public class AppConfig
 {
-    public string? AppPropertiesFileName { get; set; } = "config.json";
-    public string? GameLauncherPath { get; set; }
-
-
+    public string GamePath { get; set; } = string.Empty;
+    public string UserPreferTheme { get; set; } = "Light";
 }

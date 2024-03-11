@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:SnowbreakToolbox.Helpers"
     xmlns:local="clr-namespace:SnowbreakToolbox.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -15,6 +16,30 @@
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary>
+            <StackPanel
+                x:Key="SelectGamePathDialogContent"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="路径：" />
+                <TextBox
+                    MinWidth="350"
+                    Margin="15,0,0,0"
+                    Text="{Binding ViewModel.DialogGamePath}" />
+                <Button
+                    Margin="15,0,0,0"
+                    Command="{Binding ViewModel.SelectGameFolderCommand}"
+                    Content="..." />
+            </StackPanel>
+
+            <helpers:CommandMultiParameterConverter x:Key="CommandMultiParameterConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -22,7 +47,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border
+        <!--<Border
             Height="450"
             Margin="5"
             CornerRadius="15">
@@ -32,7 +57,7 @@
                     RenderOptions.BitmapScalingMode="HighQuality"
                     Stretch="UniformToFill" />
             </Border.Background>
-        </Border>
+        </Border>-->
 
         <StackPanel
             Grid.Row="1"
@@ -40,10 +65,16 @@
             HorizontalAlignment="Stretch">
             <ui:CardAction
                 Command="{Binding ViewModel.RunGameCommand}"
-                CommandParameter="Game"
+                Foreground="DodgerBlue"
                 Icon="{ui:SymbolIcon Play20,
                                      Filled=False,
                                      FontSize=43}">
+                <ui:CardAction.CommandParameter>
+                    <MultiBinding Converter="{StaticResource CommandMultiParameterConverter}">
+                        <Binding Source="{StaticResource SelectGamePathDialogContent}" />
+                        <Binding Source="Game" />
+                    </MultiBinding>
+                </ui:CardAction.CommandParameter>
                 <StackPanel>
                     <ui:TextBlock
                         Margin="0"
@@ -61,10 +92,16 @@
             <ui:CardAction
                 Margin="0,10,0,0"
                 Command="{Binding ViewModel.RunGameCommand}"
-                CommandParameter="Launcher"
+                Foreground="DodgerBlue"
                 Icon="{ui:SymbolIcon Play20,
                                      Filled=False,
                                      FontSize=43}">
+                <ui:CardAction.CommandParameter>
+                    <MultiBinding Converter="{StaticResource CommandMultiParameterConverter}">
+                        <Binding Source="{StaticResource SelectGamePathDialogContent}" />
+                        <Binding Source="Launcher" />
+                    </MultiBinding>
+                </ui:CardAction.CommandParameter>
                 <StackPanel>
                     <ui:TextBlock
                         Margin="0"

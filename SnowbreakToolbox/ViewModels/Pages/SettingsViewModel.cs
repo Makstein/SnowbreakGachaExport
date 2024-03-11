@@ -3,6 +3,8 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
+using SnowbreakToolbox.Interfaces;
+using SnowbreakToolbox.Models;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -11,6 +13,8 @@ namespace SnowbreakToolbox.ViewModels.Pages;
 public partial class SettingsViewModel : ObservableObject, INavigationAware
 {
     private bool _isInitialized = false;
+
+    private AppConfig? _config;
 
     [ObservableProperty]
     private string _appVersion = string.Empty;
@@ -22,9 +26,19 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
     {
         if (!_isInitialized)
             InitializeViewModel();
+
+        _config = App.GetService<ISnowbreakConfig>()?.GetConfig();
     }
 
-    public void OnNavigatedFrom() { }
+    // Save when leave setting page 
+    // TODO: Save when in setting page and exit
+    public void OnNavigatedFrom()
+    {
+        if (_config == null)
+            return;
+
+        App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
+    }
 
     private void InitializeViewModel()
     {
@@ -51,7 +65,7 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
 
                 ApplicationThemeManager.Apply(ApplicationTheme.Light, WindowBackdropType.Mica, true, true);
                 CurrentTheme = ApplicationTheme.Light;
-
+                _config!.UserPreferTheme = "Light";
                 break;
 
             default:
@@ -59,8 +73,8 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
                     break;
 
                 ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Mica, true, true);
+                _config!.UserPreferTheme = "Dark";
                 CurrentTheme = ApplicationTheme.Dark;
-
                 break;
         }
     }
