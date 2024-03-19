@@ -28,8 +28,8 @@ public partial class MainWindow : FluentWindow, INavigationWindow
         InitializeComponent();
 
         // Fix the title bar color.
-        new WindowInteropHelper(this).EnsureHandle();
-        SystemThemeWatcher.Watch(this, WindowBackdropType.Mica);
+        //new WindowInteropHelper(this).EnsureHandle();
+        //SystemThemeWatcher.Watch(this);
 
         // Use user prefer theme
         var config = configService.GetConfig();
@@ -39,12 +39,12 @@ public partial class MainWindow : FluentWindow, INavigationWindow
             case "Light":
                 if (currentTheme == ApplicationTheme.Light)
                     break;
-                ApplicationThemeManager.Apply(ApplicationTheme.Light, WindowBackdropType.Mica, true, true);
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
                 break;
             default:
                 if (currentTheme == ApplicationTheme.Dark)
                     break;
-                ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Mica, true, true);
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
                 break;
         }
 

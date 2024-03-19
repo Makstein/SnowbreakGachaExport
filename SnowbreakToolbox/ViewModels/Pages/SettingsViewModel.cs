@@ -14,6 +14,7 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
 {
     private bool _isInitialized = false;
 
+    private ISnowbreakConfig? _configService;
     private AppConfig? _config;
 
     [ObservableProperty]
@@ -37,13 +38,14 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
         if (_config == null)
             return;
 
-        App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
+        _configService?.SetConfig(_config);
     }
 
     private void InitializeViewModel()
     {
         CurrentTheme = ApplicationThemeManager.GetAppTheme();
         AppVersion = $"SnowbreakToolbox - {GetAssemblyVersion()}";
+        _configService = App.GetService<ISnowbreakConfig>();
 
         _isInitialized = true;
     }
@@ -63,7 +65,7 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
                 if (CurrentTheme == ApplicationTheme.Light)
                     break;
 
-                ApplicationThemeManager.Apply(ApplicationTheme.Light, WindowBackdropType.Mica, true, true);
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
                 CurrentTheme = ApplicationTheme.Light;
                 _config!.UserPreferTheme = "Light";
                 break;
@@ -72,7 +74,7 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
                 if (CurrentTheme == ApplicationTheme.Dark)
                     break;
 
-                ApplicationThemeManager.Apply(ApplicationTheme.Dark, WindowBackdropType.Mica, true, true);
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
                 _config!.UserPreferTheme = "Dark";
                 CurrentTheme = ApplicationTheme.Dark;
                 break;

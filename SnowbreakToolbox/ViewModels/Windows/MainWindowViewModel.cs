@@ -18,7 +18,7 @@ public partial class MainWindowViewModel : ObservableObject
             Icon = new SymbolIcon { Symbol = SymbolRegular.Home24, FontWeight = FontWeights.SemiBold },
             TargetPageType = typeof(Views.Pages.DashboardPage)
         },
-        new NavigationViewItem() 
+        new NavigationViewItem()
         {
             Content = "记录统计",
             Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentOnePage20, FontWeight = FontWeights.SemiBold },
@@ -28,7 +28,7 @@ public partial class MainWindowViewModel : ObservableObject
         new NavigationViewItem()
         {
             Content = "宿舍拼图",
-            Icon = new SymbolIcon { Symbol = SymbolRegular.Steps20, FontWeight = FontWeights.SemiBold },
+            Icon = new SymbolIcon { Symbol = SymbolRegular.TetrisApp24, FontWeight = FontWeights.SemiBold },
             TargetPageType = typeof(Views.Pages.TetrisPage),
             FontFamily = new FontFamily("Microsoft YaHei Semibold"),
         },

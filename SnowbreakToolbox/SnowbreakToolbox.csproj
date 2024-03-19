@@ -15,7 +15,7 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.17" />
-    <PackageReference Include="WPF-UI" Version="3.0.0" />
+    <PackageReference Include="WPF-UI" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2 " />
   </ItemGroup>
@@ -23,11 +23,13 @@
   <ItemGroup>
     <None Remove="Assets\little_sun.ico" />
     <None Remove="Assets\little_Sun_banner.png" />
+    <None Remove="Assets\tetris1.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\little_sun.ico" />
     <Resource Include="Assets\little_Sun_banner.png" />
+    <Resource Include="Assets\tetris1.png" />
   </ItemGroup>
 
   <ItemGroup>
