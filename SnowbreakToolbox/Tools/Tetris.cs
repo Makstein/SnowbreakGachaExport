@@ -183,7 +183,7 @@ public class Tetris
 
             _result.Add(curRes);
 
-            return _result.Count > 1000;
+            return _result.Count > 10000;
         }
 
         var x = pos / _n;
@@ -220,6 +220,7 @@ public class Tetris
     {
         var block = _blocks[blockIndex][rotationIndex];
 
+        // Find the real position of current block's left side
         var offset = 0;
         while (block[0][offset] == 0) offset++;
         y -= offset;
@@ -238,6 +239,14 @@ public class Tetris
         return true;
     }
 
+    /// <summary>
+    /// Fill the area of block's shape in map with given content
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="blockIndex"></param>
+    /// <param name="rotationIndex"></param>
+    /// <param name="content"></param>
     private static void PlaceBlock(int x, int y, int blockIndex, int rotationIndex, byte content)
     {
         var block = _blocks[blockIndex][rotationIndex];

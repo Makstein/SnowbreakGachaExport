@@ -3,8 +3,6 @@ using Serilog;
 using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Tools;
-using System.Diagnostics;
-using System.IO;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Vanara.PInvoke;
@@ -133,7 +131,7 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware
             });
 
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Log.Error(ex, "Launch failed");
         }

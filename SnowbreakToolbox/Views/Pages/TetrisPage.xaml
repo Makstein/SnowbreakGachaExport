@@ -63,10 +63,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" HorizontalAlignment="Stretch">
-            <ui:VirtualizingItemsControl
-                HorizontalAlignment="Stretch"
-                ItemsSource="{Binding ViewModel.Blocks}"
-                VirtualizingPanel.CacheLengthUnit="Item">
+            <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding ViewModel.Blocks}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
@@ -74,19 +71,20 @@
                 </ItemsControl.ItemsPanel>
 
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type models:BlockProperty}">
-                        <ui:CardControl Icon="{Binding Icon}">
+                    <DataTemplate DataType="{x:Type models:TetrisBlockProperty}">
+                        <ui:CardControl Command="{Binding CardSelectCommand}" Icon="{Binding Icon}">
                             <StackPanel Orientation="Horizontal">
                                 <ui:NumberBox Value="{Binding BlockCount}" />
                                 <ui:ToggleSwitch
                                     Margin="10,0,0,0"
+                                    IsChecked="{Binding MustUse}"
                                     OffContent="可选"
                                     OnContent="必选" />
                             </StackPanel>
                         </ui:CardControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-            </ui:VirtualizingItemsControl>
+            </ItemsControl>
 
             <Button
                 Margin="0,15,30,0"

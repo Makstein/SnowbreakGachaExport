@@ -1,7 +1,6 @@
 ﻿using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Tools;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows.Media;
 
 namespace SnowbreakToolbox.ViewModels.Pages;
@@ -10,35 +9,38 @@ public partial class TetrisViewModel : ObservableObject
 {
     public ObservableCollection<TetrisMapCell> Cells { get; set; } = [];
     public List<byte> BlockCount { get; set; } = [];
-    public ObservableCollection<BlockProperty> Blocks { get; set; } = [];
+    public ObservableCollection<TetrisBlockProperty> Blocks { get; set; } = [];
 
     private int _curSolutionIndex;
     private List<IList<byte[]>>? _solutions;
 
-    private readonly List<Brush> _blockColors
-        = [new SolidColorBrush(Colors.LightSkyBlue),
-            new SolidColorBrush(Colors.MediumPurple),
-            new SolidColorBrush(Colors.DodgerBlue),
-            new SolidColorBrush(Colors.YellowGreen),
-            new SolidColorBrush(Colors.GreenYellow),
-            new SolidColorBrush(Colors.Yellow),
-            new SolidColorBrush(Colors.Brown),
-            new SolidColorBrush(Colors.Gold),
-            new SolidColorBrush(Colors.OrangeRed),
-            new SolidColorBrush(Colors.IndianRed),
-            new SolidColorBrush(Colors.MediumVioletRed),
-            new SolidColorBrush(Colors.Black)];
+    private readonly List<Brush> _blockColors =
+        [
+            new SolidColorBrush(Colors.LightSkyBlue),           // 1
+            new SolidColorBrush(Colors.MediumPurple),           // 2
+            new SolidColorBrush(Colors.DodgerBlue),             // 3
+            new SolidColorBrush(Colors.YellowGreen),            // 4
+            new SolidColorBrush(Colors.GreenYellow),            // 5
+            new SolidColorBrush(Colors.Yellow),                 // 6
+            new SolidColorBrush(Colors.Chocolate),              // 7
+            new SolidColorBrush(Colors.Gold),                   // 8
+            new SolidColorBrush(Colors.OrangeRed),              // 9
+            new SolidColorBrush(Colors.IndianRed),              // 10
+            new SolidColorBrush(Colors.MediumVioletRed),        // 11
+        ];
 
     public TetrisViewModel()
     {
+        // Initialize puzzle map
         for (var i = 0; i < 30; i++)
         {
             Cells.Add(new TetrisMapCell());
         }
 
+        // Initialize tetris block image and count
         for (int i = 1; i <= 11; i++)
         {
-            Blocks.Add(new BlockProperty($"pack://application:,,,/Assets/tetris1.png", 99));
+            Blocks.Add(new TetrisBlockProperty($"pack://application:,,,/Assets/tetris{i}.png", 99));
         }
     }
 
@@ -60,6 +62,34 @@ public partial class TetrisViewModel : ObservableObject
         }
 
         _solutions = Tetris.GetSolutions(map, [.. BlockCount]);
+
+        var mustUseBlocks = new List<byte>();
+        for (byte i = 0; i < Blocks.Count; i++)
+        {
+            if (Blocks[i].MustUse)
+            {
+                mustUseBlocks.Add((byte)(i + 1));
+            }
+        }
+        _solutions = _solutions.Where((x) =>
+        {
+            foreach (var blockIndex in mustUseBlocks)
+            {
+                var singleBlockRes = false;
+                foreach (var row in x)
+                {
+                    if (row.Contains(blockIndex))
+                    {
+                        singleBlockRes = true;
+                        break;
+                    }
+                }
+                if (!singleBlockRes)
+                    return false;
+            }
+            return true;
+        }).ToList();
+
         _curSolutionIndex = 0;
         OnChangeDisplaySolution("0");
     }
@@ -80,17 +110,7 @@ public partial class TetrisViewModel : ObservableObject
         }
 
         _curSolutionIndex += param;
-        Debug.WriteLine(_curSolutionIndex + " " + _solutions.Count);
         var solution = _solutions[_curSolutionIndex];
-        for (var i = 0; i < solution.Count; i++)
-        {
-            for (var j = 0; j < solution[i].Length; j++)
-            {
-                Debug.Write(solution[i][j].ToString() + " ");
-            }
-            Debug.WriteLine("");
-        }
-
 
         for (var i = 0; i < solution.Count; i++)
         {
