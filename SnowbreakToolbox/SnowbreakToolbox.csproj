@@ -11,7 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WPF-UI" Version="3.0.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.4.17" />
+    <PackageReference Include="WPF-UI" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2 " />
   </ItemGroup>
@@ -19,11 +23,36 @@
   <ItemGroup>
     <None Remove="Assets\little_sun.ico" />
     <None Remove="Assets\little_Sun_banner.png" />
+    <None Remove="Assets\tetris1.png" />
+    <None Remove="Assets\tetris10.png" />
+    <None Remove="Assets\tetris11.png" />
+    <None Remove="Assets\tetris2.png" />
+    <None Remove="Assets\tetris3.png" />
+    <None Remove="Assets\tetris4.png" />
+    <None Remove="Assets\tetris5.png" />
+    <None Remove="Assets\tetris6.png" />
+    <None Remove="Assets\tetris7.png" />
+    <None Remove="Assets\tetris8.png" />
+    <None Remove="Assets\tetris9.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\tetris10.png" />
+    <Resource Include="Assets\tetris11.png" />
+    <Resource Include="Assets\tetris2.png" />
+    <Resource Include="Assets\tetris3.png" />
+    <Resource Include="Assets\tetris4.png" />
+    <Resource Include="Assets\tetris5.png" />
+    <Resource Include="Assets\tetris6.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\little_sun.ico" />
     <Resource Include="Assets\little_Sun_banner.png" />
+    <Resource Include="Assets\tetris1.png" />
+    <Resource Include="Assets\tetris7.png" />
+    <Resource Include="Assets\tetris8.png" />
+    <Resource Include="Assets\tetris9.png" />
   </ItemGroup>
 
   <ItemGroup>

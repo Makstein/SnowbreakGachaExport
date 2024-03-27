@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Services;
 using SnowbreakToolbox.ViewModels.Pages;
 using SnowbreakToolbox.ViewModels.Windows;
@@ -19,7 +21,7 @@ public partial class App
 {
     private static readonly IHost _host = Host
         .CreateDefaultBuilder()
-        .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory)!); })
+        .ConfigureAppConfiguration(c => { c.SetBasePath(Path.GetDirectoryName(AppContext.BaseDirectory)!); })
         .ConfigureServices((context, services) =>
         {
             services.AddHostedService<ApplicationHostService>();
@@ -35,6 +37,26 @@ public partial class App
 
             // Service containing navigation, same as INavigationWindow... but without window
             services.AddSingleton<INavigationService, NavigationService>();
+
+            // Dialog
+            services.AddSingleton<IContentDialogService, ContentDialogService>();
+
+            // Config maniputation
+            services.AddSingleton<ISnowbreakConfig, ConfigService>();
+
+            // Suppress the .net host messages when starting. ("...press Ctrl + c to stop...", etc)
+            services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
+
+            // Config logging
+            var logPath = Path.Combine(AppContext.BaseDirectory, "Logs");
+            var logFile = Path.Combine(logPath, "log_.txt");
+            var serilogOutputTemplate = "[{Timestamp:HH:mm:ss:fff} {Level:u3}] {Message:lj}{NewLine}{Exception}";
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(logFile, outputTemplate: serilogOutputTemplate, rollingInterval: RollingInterval.Day)
+                .MinimumLevel.Information()
+                .CreateLogger();
+            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
+
 
             // Main window with navigation
             services.AddSingleton<INavigationWindow, MainWindow>();
@@ -88,6 +110,6 @@ public partial class App
     {
         // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
 
-        MessageBox.Show(e.Exception.Message);
+        Log.Error(e.Exception, "ApplicationDispatcherUnhandledException");
     }
 }

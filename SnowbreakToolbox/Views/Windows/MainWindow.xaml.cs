@@ -3,6 +3,7 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
+using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.ViewModels.Windows;
 using System.Windows.Interop;
 using Wpf.Ui;
@@ -15,7 +16,11 @@ public partial class MainWindow : FluentWindow, INavigationWindow
 {
     public MainWindowViewModel ViewModel { get; }
 
-    public MainWindow(MainWindowViewModel viewModel, IPageService pageService, INavigationService navigationService)
+    public MainWindow(MainWindowViewModel viewModel,
+        IPageService pageService,
+        INavigationService navigationService,
+        ISnowbreakConfig configService,
+        IContentDialogService contentDialogService)
     {
         ViewModel = viewModel;
         DataContext = this;
@@ -23,12 +28,30 @@ public partial class MainWindow : FluentWindow, INavigationWindow
         InitializeComponent();
 
         // Fix the title bar color.
-        new WindowInteropHelper(this).EnsureHandle();
-        SystemThemeWatcher.Watch(this, WindowBackdropType.Mica);
+        //new WindowInteropHelper(this).EnsureHandle();
+        //SystemThemeWatcher.Watch(this);
+
+        // Use user prefer theme
+        var config = configService.GetConfig();
+        var currentTheme = ApplicationThemeManager.GetAppTheme();
+        switch (config.UserPreferTheme)
+        {
+            case "Light":
+                if (currentTheme == ApplicationTheme.Light)
+                    break;
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
+                break;
+            default:
+                if (currentTheme == ApplicationTheme.Dark)
+                    break;
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+                break;
+        }
 
         SetPageService(pageService);
-
         navigationService.SetNavigationControl(RootNavigation);
+
+        contentDialogService.SetContentPresenter(RootContentDialog);
     }
 
     #region INavigationWindow methods
