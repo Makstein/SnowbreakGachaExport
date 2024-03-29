@@ -14,7 +14,7 @@ public partial class MainWindowViewModel : ObservableObject
     [
         new NavigationViewItem()
         {
-            Content = "启动？",
+            Content = "启动",
             Icon = new SymbolIcon { Symbol = SymbolRegular.Home24, FontWeight = FontWeights.SemiBold },
             TargetPageType = typeof(Views.Pages.DashboardPage)
         },

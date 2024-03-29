@@ -28,7 +28,8 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
         if (!_isInitialized)
             InitializeViewModel();
 
-        _config = App.GetService<ISnowbreakConfig>()?.GetConfig();
+        _configService = App.GetService<ISnowbreakConfig>();
+        _config = _configService?.GetConfig();
     }
 
     // Save when leave setting page 
@@ -45,7 +46,6 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
     {
         CurrentTheme = ApplicationThemeManager.GetAppTheme();
         AppVersion = $"SnowbreakToolbox - {GetAssemblyVersion()}";
-        _configService = App.GetService<ISnowbreakConfig>();
 
         _isInitialized = true;
     }

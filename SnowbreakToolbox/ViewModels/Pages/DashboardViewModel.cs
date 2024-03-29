@@ -3,8 +3,12 @@ using Serilog;
 using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Tools;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 using Vanara.PInvoke;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -13,16 +17,24 @@ using TextBox = Wpf.Ui.Controls.TextBox;
 
 namespace SnowbreakToolbox.ViewModels.Pages;
 
-public partial class DashboardViewModel : ObservableObject, INavigationAware
+public partial class DashboardViewModel : ObservableObject, INavigationAware, IDisposable
 {
     private readonly StackPanel SelectGamePathPanel = new();
 
-    private bool _initialized = false;
     private AppConfig? _config;
     private IContentDialogService? _contentDialogService;
+    private HWND _gameHwnd;
 
     [ObservableProperty]
     private string _dialogGamePath = string.Empty;
+
+    private bool _initialized = false;
+
+    public void Dispose()
+    {
+        CloseLauncher();
+        GC.SuppressFinalize(this);
+    }
 
     public void OnNavigatedFrom()
     {
@@ -86,6 +98,24 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware
     }
 
     [RelayCommand]
+    private void OnSelectGameFolder()
+    {
+        OpenFolderDialog openFolderDialog = new()
+        {
+            Multiselect = false,
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+        };
+
+        if (openFolderDialog.ShowDialog() != true)
+            return;
+
+        if (openFolderDialog.FolderNames.Length == 0)
+            return;
+
+        DialogGamePath = openFolderDialog.FolderNames[0];
+    }
+
+    [RelayCommand]
     private async Task RunGame(string param)
     {
         try
@@ -110,26 +140,68 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware
                 App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
             }
 
-            //using var p = new Process();
-            //p.StartInfo = new ProcessStartInfo()
-            //{
-            //    UseShellExecute = false,
-            //    CreateNoWindow = false,
-            //    FileName = Path.Combine(_config.GamePath, _config.LauncherExeFileName),
-            //};
-            //p.Start();
+#if DEBUG
+            // Display all windows titles
+            User32.EnumWindows((hwnd, param) =>
+            {
+                if (!User32.IsWindowVisible(hwnd)) return true;
 
+                var titleTemp = new StringBuilder(128);
+                if (User32.GetWindowText(hwnd, titleTemp, 128) == 0) return true;
+                var title = titleTemp.ToString().Trim();
+                Debug.WriteLine(title);
+
+                return true;
+            }, 0);
+#endif
+
+            // Start launcher process
+            Process.Start(Path.Combine(_config.GamePath, _config.LauncherExeFileName));
+
+            if (param == "Launcher") return;
+
+            // Try click the run button until the game started
             await Task.Run(() =>
             {
-                while (User32.FindWindow(_config.GameWindowTitle) == HWND.NULL)
+                // Wait for launcher appear
+                var launcherHwnd = User32.FindWindow(null, _config.LauncherWindowTitle);
+                while (launcherHwnd == HWND.NULL)
                 {
+                    launcherHwnd = User32.FindWindow(null, _config.LauncherWindowTitle);
                     Task.Delay(500).Wait();
                 }
-            }).ContinueWith((res) =>
-            {
-                MouseOperations.LeftMouseClick(_config.LauncherStartBtnPosX, _config.LauncherStartBtnPosY);
+
+                // Get "Run Game" button position
+                User32.GetWindowRect(launcherHwnd, out var rect);
+                var clientLauncherStartBtnPosX = rect.Left + _config.LauncherStartBtnPosX;
+                var clientLauncherStartBtnPosY = rect.top + _config.LauncherStartBtnPosY;
+
+                // Try run the game
+                var count = 0;
+                while ((User32.FindWindow(null, _config.GameWindowTitle) == HWND.NULL) && (User32.FindWindow(null, _config.GameWindowTitleCN) == HWND.NULL))
+                {
+                    if (count > 7) return;
+
+                    MouseOperations.LeftMouseClick(clientLauncherStartBtnPosX, clientLauncherStartBtnPosY);
+                    count++;
+                    Task.Delay(1000).Wait();
+                }
             });
 
+            if (!_config.CloseLauncherWhenGameExit) return;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _gameHwnd = User32.FindWindow(null, _config.GameWindowTitle);
+                if (_gameHwnd == HWND.NULL)
+                {
+                    _gameHwnd = User32.FindWindow(null, _config.GameWindowTitleCN);
+                }
+
+                var threadID = User32.GetWindowThreadProcessId(_gameHwnd, out var processId);
+                if (threadID == 0) return;
+                var hookInstance = User32.SetWinEventHook(User32.EventConstants.EVENT_OBJECT_DESTROY, User32.EventConstants.EVENT_OBJECT_DESTROY, HINSTANCE.NULL, WinEventProc, processId, threadID, User32.WINEVENT.WINEVENT_OUTOFCONTEXT);
+                Debug.WriteLine(hookInstance == IntPtr.Zero ? "Hook failed" : "Hook success");
+            });
         }
         catch (Exception ex)
         {
@@ -137,21 +209,51 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware
         }
     }
 
-    [RelayCommand]
-    private void OnSelectGameFolder()
+    /// <summary>
+    /// Callback when game exit
+    /// </summary>
+    /// <param name="hWinEventHook"></param>
+    /// <param name="winEvent"></param>
+    /// <param name="hwnd"></param>
+    /// <param name="idObject"></param>
+    /// <param name="idChild"></param>
+    /// <param name="idEventThread"></param>
+    /// <param name="dwmsEventTime"></param>
+    private void WinEventProc(User32.HWINEVENTHOOK hWinEventHook, uint winEvent, HWND hwnd, int idObject, int idChild, uint idEventThread, uint dwmsEventTime)
     {
-        OpenFolderDialog openFolderDialog = new()
+        if (winEvent != User32.EventConstants.EVENT_OBJECT_DESTROY) return;
+        if (hwnd != _gameHwnd) return;
+        if (idObject != User32.ObjectIdentifiers.OBJID_WINDOW) return;
+
+        Debug.WriteLine("Game Exit");
+
+        CloseLauncher(true);
+    }
+
+    private void CloseLauncher(bool isWaitForLauncher = false)
+    {
+        if (_config != null)
         {
-            Multiselect = false,
-            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-        };
+            var hwnd = User32.FindWindow(null, _config.LauncherWindowTitle);
 
-        if (openFolderDialog.ShowDialog() != true)
-            return;
+            if (isWaitForLauncher)
+            {
+                var count = 0;
+                while (hwnd != IntPtr.Zero)
+                {
+                    if (count > 10)
+                        return;
 
-        if (openFolderDialog.FolderNames.Length == 0)
-            return;
+                    hwnd = User32.FindWindow(null, _config.LauncherWindowTitle);
+                    count++;
+                    Task.Delay(1000).Wait();
+                }
+            }
 
-        DialogGamePath = openFolderDialog.FolderNames[0];
+            if (hwnd == IntPtr.Zero)
+                return;
+
+            User32.SendMessage(hwnd, User32.WindowMessage.WM_CLOSE);
+        }
     }
 }
