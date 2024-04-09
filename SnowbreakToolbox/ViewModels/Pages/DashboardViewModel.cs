@@ -180,7 +180,10 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
                 var count = 0;
                 while ((User32.FindWindow(null, _config.GameWindowTitle) == HWND.NULL) && (User32.FindWindow(null, _config.GameWindowTitleCN) == HWND.NULL))
                 {
-                    if (count > 7) return;
+                    if (count > 7)
+                    {
+                        throw new Exception("不能运行，无法找到窗口");
+                    }
 
                     MouseOperations.LeftMouseClick(clientLauncherStartBtnPosX, clientLauncherStartBtnPosY);
                     count++;

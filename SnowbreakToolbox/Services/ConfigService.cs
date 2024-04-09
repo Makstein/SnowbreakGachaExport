@@ -73,8 +73,8 @@ public class ConfigService : ISnowbreakConfig
         if (config.ClientScreenWidth == curClientScreenWidth || config.ClientScreenHeight == curClientScreenHeight)
             return;
 
-        config.ClientScale = (double)curClientScreenWidth / config.ReferenceScreenWidth;
-        if (config.ReferenceScreenHeight * config.ClientScale != curClientScreenHeight)
+        config.ClientScreenScale = (double)curClientScreenWidth / config.ReferenceScreenWidth;
+        if (config.ReferenceScreenHeight * config.ClientScreenScale != curClientScreenHeight)
         {
             Log.Error("分辨率缩放初始化失败: 非16: 9分辨率");
             throw new Exception("分辨率缩放初始化失败: 非16: 9分辨率");
@@ -82,6 +82,10 @@ public class ConfigService : ISnowbreakConfig
 
         config.ClientScreenWidth = curClientScreenWidth;
         config.ClientScreenHeight = curClientScreenHeight;
+        config.ClientLogBoxX0 = (int)(config.ClientLogBoxX0 * config.ClientScreenScale);
+        config.ClientLogBoxY0 = (int)(config.ClientLogBoxY0 * config.ClientScreenScale);
+        config.ClientLogBoxWidth = (int)(config.ClientLogBoxWidth * config.ClientScreenScale);
+        config.ClientLogBoxHeight = (int)( config.ClientLogBoxHeight * config.ClientScreenScale);
 
         Log.Information("初始化设置分辨路缩放成功，当前客户端分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
             config.ClientScreenWidth,
