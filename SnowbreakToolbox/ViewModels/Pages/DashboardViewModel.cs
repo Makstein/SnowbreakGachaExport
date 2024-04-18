@@ -182,7 +182,7 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
                 {
                     if (count > 7)
                     {
-                        throw new Exception("不能运行，无法找到窗口");
+                        throw new Exception("Exceed max retry time, can't find game window");
                     }
 
                     MouseOperations.LeftMouseClick(clientLauncherStartBtnPosX, clientLauncherStartBtnPosY);

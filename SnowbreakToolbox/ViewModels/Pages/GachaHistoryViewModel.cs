@@ -2,6 +2,7 @@
 using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Services;
 using SnowbreakToolbox.Tools;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using Vanara.PInvoke;
 
@@ -11,6 +12,11 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 {
     private readonly PaddleOrcService _paddleOrcService = (snowbreakOcr as PaddleOrcService)!;
     private readonly ISnowbreakConfig _configService = snowbreakConfig;
+
+    public ObservableCollection<string> CCharHistory { get; private set; } = [];    // Common Character
+    public ObservableCollection<string> SCharHistory { get; private set; } = [];    // Special Character
+    public ObservableCollection<string> CWeaponHistory { get; private set; } = [];
+    public ObservableCollection<string> SWeaponHistory { get; private set; } = [];
 
     [RelayCommand]
     private void OnGetHistory()
