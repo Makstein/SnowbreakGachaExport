@@ -100,5 +100,7 @@ public class PaddleOrcService : ISnowbreakOcr
         return res;
     }
 
+    public List<PaddleOcrResultRegion[]> GetRegions(Bitmap image) => GetRegions(image.ToMat());
+
     public void GetText(Bitmap image) => GetText(image.ToMat());
 }

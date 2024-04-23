@@ -65,6 +65,9 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
         }
     }
 
+    /// <summary>
+    /// Generate [Select game path] window in code
+    /// </summary>
     private void InitSelectGamePanel()
     {
         Wpf.Ui.Controls.TextBlock textBlock = new()
@@ -120,7 +123,13 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
     {
         try
         {
-            if (_config == null) { throw new InvalidOperationException("DashBoard read config file failed"); }
+            if (_config == null) { throw new InvalidOperationException("Dashboard read config file failed"); }
+
+            if (_config.GamePlatform == GamePlatform.Steam)
+            {
+                Process.Start("steam://rungameid/" + _config.GameSteamId);
+                return;
+            }
 
             if (string.IsNullOrEmpty(_config.GamePath))
             {

@@ -12,6 +12,7 @@ public class ConfigService : ISnowbreakConfig
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
     private static AppConfig? _config;
@@ -45,6 +46,7 @@ public class ConfigService : ISnowbreakConfig
             _config = new AppConfig();
         }
 
+        // Re-calculate game scale every time call GetConfig()
         InitConfigResolutionScale(ref _config!);
 
         return _config!;
@@ -70,7 +72,7 @@ public class ConfigService : ISnowbreakConfig
         var curClientScreenWidth = User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN);
         var curClientScreenHeight = User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN);
 
-        if (config.ClientScreenWidth == curClientScreenWidth || config.ClientScreenHeight == curClientScreenHeight)
+        if (config.ClientScreenWidth == curClientScreenWidth && config.ClientScreenHeight == curClientScreenHeight)
             return;
 
         config.ClientScreenScale = (double)curClientScreenWidth / config.ReferenceScreenWidth;
@@ -82,10 +84,11 @@ public class ConfigService : ISnowbreakConfig
 
         config.ClientScreenWidth = curClientScreenWidth;
         config.ClientScreenHeight = curClientScreenHeight;
-        config.ClientLogBoxX0 = (int)(config.ClientLogBoxX0 * config.ClientScreenScale);
-        config.ClientLogBoxY0 = (int)(config.ClientLogBoxY0 * config.ClientScreenScale);
-        config.ClientLogBoxWidth = (int)(config.ClientLogBoxWidth * config.ClientScreenScale);
-        config.ClientLogBoxHeight = (int)( config.ClientLogBoxHeight * config.ClientScreenScale);
+        config.ClientLogBoxX0 = (int)(config.ReferenceLogBoxX0 * config.ClientScreenScale);
+        config.ClientLogBoxY0 = (int)(config.ReferenceLogBoxY0 * config.ClientScreenScale);
+        config.ClientLogBoxWidth = (int)(config.ReferenceLogBoxHeight * config.ClientScreenScale);
+        config.ClientLogBoxHeight = (int)( config.ReferenceLogBoxHeight * config.ClientScreenScale);
+        config.ClientRareColorPosX = (int)(config.ReferenceRareColorPosX * config.ClientGameScale);
 
         Log.Information("初始化设置分辨路缩放成功，当前客户端分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
             config.ClientScreenWidth,

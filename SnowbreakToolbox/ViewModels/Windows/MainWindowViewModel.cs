@@ -32,13 +32,13 @@ public partial class MainWindowViewModel : ObservableObject
             TargetPageType = typeof(Views.Pages.TetrisPage),
             FontFamily = new FontFamily("Microsoft YaHei Semibold"),
         },
-        new NavigationViewItem()
-        {
-            Content = "自动化",
-            Icon = new SymbolIcon { Symbol = SymbolRegular.ApprovalsApp20, FontWeight = FontWeights.SemiBold },
-            TargetPageType = typeof(Views.Pages.AutoControlPage),
-            FontFamily = new FontFamily("Microsoft YaHei Semibold"),
-        }
+        //new NavigationViewItem()
+        //{
+        //    Content = "自动化",
+        //    Icon = new SymbolIcon { Symbol = SymbolRegular.ApprovalsApp20, FontWeight = FontWeights.SemiBold },
+        //    TargetPageType = typeof(Views.Pages.AutoControlPage),
+        //    FontFamily = new FontFamily("Microsoft YaHei Semibold"),
+        //}
     ];
 
     [ObservableProperty]
