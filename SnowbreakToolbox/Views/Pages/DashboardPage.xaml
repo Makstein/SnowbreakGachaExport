@@ -34,12 +34,12 @@
             Height="450"
             Margin="5"
             CornerRadius="15">
-            <!--<Border.Background>
+            <Border.Background>
                 <ImageBrush
                     ImageSource="pack://application:,,,/Assets/little_sun_banner.png"
                     RenderOptions.BitmapScalingMode="HighQuality"
                     Stretch="UniformToFill" />
-            </Border.Background>-->
+            </Border.Background>
         </Border>
 
         <StackPanel

@@ -42,11 +42,11 @@ public partial class App
             // Dialog
             services.AddSingleton<IContentDialogService, ContentDialogService>();
 
-            // OCR manipulation
             services.AddSingleton<ISnowbreakOcr, PaddleOrcService>();
 
-            // Config manipulation
             services.AddSingleton<ISnowbreakConfig, ConfigService>();
+
+            services.AddSingleton<ISnowbreakHistory, HistoryService>();
 
             // Suppress the .net host messages when starting. ("...press Ctrl + c to stop...", etc)
             services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
@@ -105,6 +105,7 @@ public partial class App
     {
         GetService<ISnowbreakConfig>()!.Save();
         GetService<DashboardViewModel>()!.Dispose();
+        GetService<GachaHistoryViewModel>()!.Dispose();
 
         await _host.StopAsync();
 

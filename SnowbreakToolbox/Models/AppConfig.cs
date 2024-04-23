@@ -28,15 +28,17 @@ public class AppConfig
     public GamePlatform GamePlatform { get; set; } = GamePlatform.Default;
 
     // Reference settings
-    public int LauncherStartBtnPosX { get; set; } = 1085;
-    public int LauncherStartBtnPosY { get; set; } = 670;
-    public int ReferenceScreenWidth { get; set; } = 1920;
-    public int ReferenceScreenHeight { get; set; } = 1080;
-    public int ReferenceLogBoxX0 { get; set; } = 280;
-    public int ReferenceLogBoxY0 { get; set; } = 188;
-    public int ReferenceLogBoxWidth { get; set; } = 1260;
-    public int ReferenceLogBoxHeight { get; set; } = 680;
-    public int ReferenceRareColorPosX { get; set; } = 27;
+    public int LauncherStartBtnPosX { get; private set; } = 1085;
+    public int LauncherStartBtnPosY { get; private set; } = 670;
+    public int ReferenceScreenWidth { get; private set; } = 1920;
+    public int ReferenceScreenHeight { get; private set; } = 1080;
+    public int ReferenceLogBoxX0 { get; private set; } = 280;
+    public int ReferenceLogBoxY0 { get; private set; } = 188;
+    public int ReferenceLogBoxWidth { get; private set; } = 1260;
+    public int ReferenceLogBoxHeight { get; private set; } = 680;
+    public int ReferenceRareColorPosX { get; private set; } = 27;
+    public int ReferenceNextPageArrowX { get; private set; } = 1665;
+    public int ReferenceNextPageArrowY { get; private set; } = 600;
 
     // Pixel settings are all based on 1920x1080 resolution(reference settings above), calculate scale rate after get user real resolution
     // Client screen scale settings (for launcher)
@@ -53,6 +55,8 @@ public class AppConfig
     public int ClientLogBoxWidth { get; set; } = 1260;      // History region box width
     public int ClientLogBoxHeight { get; set; } = 680;      // History region box height
     public int ClientRareColorPosX { get; set; } = 27;      // The rare color position X according to left border of log box
+    public int ClientNextPageArrowX { get; set; } = 1665;
+    public int ClientNextPageArrowY { get; set; } = 600;
 
     // Rare colors
     public string RareBlueColor { get; set; } = "#3763f2";
