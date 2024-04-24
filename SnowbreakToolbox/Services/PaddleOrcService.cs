@@ -54,10 +54,10 @@ public class PaddleOrcService : ISnowbreakOcr
         regions = [.. regions.OrderBy(item => item.Rect.Points()[0].Y)];
 
 #if DEBUG
-        foreach (PaddleOcrResultRegion region in regions)
-        {
-            Debug.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectX: {region.Rect.Points()[0]}, RectSize: {region.Rect.Size}, Angle: {region.Rect.Angle}");
-        }
+        //foreach (PaddleOcrResultRegion region in regions)
+        //{
+        //    Debug.WriteLine($"Text: {region.Text}, Score: {region.Score}, RectCenter: {region.Rect.Center}, RectX: {region.Rect.Points()[0]}, RectSize: {region.Rect.Size}, Angle: {region.Rect.Angle}");
+        //}
 #endif
 
         for (var i = 0; i < regions.Length; i += 3)

@@ -127,7 +127,15 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
 
             if (_config.GamePlatform == GamePlatform.Steam)
             {
-                Process.Start("steam://rungameid/" + _config.GameSteamId);
+                var process = new Process()
+                {
+                    StartInfo =
+                    {
+                        UseShellExecute = true,
+                        FileName = @"steam://rungameid/" + _config.GameSteamId
+                    }
+                };
+                process.Start();
                 return;
             }
 

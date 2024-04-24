@@ -4,6 +4,7 @@ using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Services;
 using SnowbreakToolbox.Tools;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using Vanara.PInvoke;
@@ -66,9 +67,30 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             throw new Exception("Exception: OnGetHistory() can't find game window");
         }
 
+        User32.GetWindowRect(gameWindowHwnd, out var rect);
+        var gameWindowWidth = rect.Width;
+        var gameWindowHeight = rect.Height;
         User32.BringWindowToTop(gameWindowHwnd);
 
-        Task.Delay(100).Wait();
+        _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
+        if (_config.ReferenceScreenHeight * _config.ClientGameScale != gameWindowHeight)
+        {
+            throw new Exception("游戏非16: 9分辨率");
+        }
+
+        _config.ClientGameWidth = gameWindowWidth;
+        _config.ClientGameHeight = gameWindowHeight;
+        _config.ClientLogBoxX0 = (int)(_config.ReferenceLogBoxX0 * _config.ClientGameScale);
+        _config.ClientLogBoxY0 = (int)(_config.ReferenceLogBoxY0 * _config.ClientGameScale);
+        _config.ClientLogBoxWidth = (int)(_config.ReferenceLogBoxWidth * _config.ClientGameScale);
+        _config.ClientLogBoxHeight = (int)(_config.ReferenceLogBoxHeight * _config.ClientGameScale);
+        _config.ClientRareColorPosX = (int)(_config.ReferenceRareColorPosX * _config.ClientGameScale);
+        _config.ClientNextPageArrowX = (int)(_config.ReferenceNextPageArrowX * _config.ClientGameScale);
+        _config.ClientNextPageArrowY = (int)(_config.ReferenceNextPageArrowY * _config.ClientGameScale);
+
+        App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
+
+        Task.Delay(200).Wait();
 
         var list = new List<GachaItem>();
         Bitmap? lastCapturedImage = null;
@@ -80,13 +102,13 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             if (lastCapturedImage != null)
             {
                 var mse = ImageOperations.ImageMse(lastCapturedImage, image);
-                lastCapturedImage = null;
                 if (mse < 45)
                 {
                     break;
                 }
             }
 
+            lastCapturedImage = new(image);
             _paddleOrcService.GetText(image);
 
             var regions = _paddleOrcService.GetRegions(image);
@@ -144,16 +166,17 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 break;
         }
 
-        var index = newHistory.FindIndex(x => x.Id == curHistory[0].Id);
-        if (index == -1)
+        var index = newHistory.Count;
+        if (curHistory.Count > 0)
         {
-            index = newHistory.Count;
+            index = newHistory.FindIndex(x => x.Id == curHistory[0].Id);
+            if (index == -1)
+            {
+                index = newHistory.Count;
+            }
         }
 
-        for (var i = index; i >= 0; i--)
-        {
-            curHistory.InsertRange(0, newHistory.Take(index));
-        }
+        curHistory.InsertRange(0, newHistory.Take(index));
 
         UpdateDisplay(SelectedBannerIndex);
     }

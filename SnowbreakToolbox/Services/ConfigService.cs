@@ -84,13 +84,6 @@ public class ConfigService : ISnowbreakConfig
 
         config.ClientScreenWidth = curClientScreenWidth;
         config.ClientScreenHeight = curClientScreenHeight;
-        config.ClientLogBoxX0 = (int)(config.ReferenceLogBoxX0 * config.ClientScreenScale);
-        config.ClientLogBoxY0 = (int)(config.ReferenceLogBoxY0 * config.ClientScreenScale);
-        config.ClientLogBoxWidth = (int)(config.ReferenceLogBoxHeight * config.ClientScreenScale);
-        config.ClientLogBoxHeight = (int)( config.ReferenceLogBoxHeight * config.ClientScreenScale);
-        config.ClientRareColorPosX = (int)(config.ReferenceRareColorPosX * config.ClientGameScale);
-        config.ClientNextPageArrowX = (int)(config.ReferenceNextPageArrowX * config.ClientGameScale);
-        config.ClientNextPageArrowY = (int)(config.ReferenceNextPageArrowY * config.ClientGameScale);
 
         Log.Information("初始化设置分辨路缩放成功，当前客户端分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
             config.ClientScreenWidth,
