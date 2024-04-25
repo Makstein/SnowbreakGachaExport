@@ -38,3 +38,17 @@ If you have any bug or suggestion, you can open an issue
 - The switch in the right of each block can change must select this block or not
 
 - Click the block in map to change can put block or not
+
+
+
+## Credits
+
+* * *
+
+* [lepoco/wpfui: WPF UI provides the Fluent experience in your known and loved WPF framework. Intuitive design, themes, navigation and new immersive controls. All natively and effortlessly. (github.com)](https://github.com/lepoco/wpfui)
+
+* [sdcb/PaddleSharp: .NET/C# binding for Baidu paddle inference library and PaddleOCR (github.com)](https://github.com/sdcb/PaddleSharp)
+
+* [CmdBlockZQG/cbjq: 尘白禁区 信源研析小工具 (github.com)](https://github.com/CmdBlockZQG/cbjq)
+
+* [dahall/Vanara: A set of .NET libraries for Windows implementing PInvoke calls to many native Windows APIs with supporting wrappers. (github.com)](https://github.com/dahall/Vanara)
