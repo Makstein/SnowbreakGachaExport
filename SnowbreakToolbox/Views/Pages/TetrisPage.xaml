@@ -59,6 +59,12 @@
                     Command="{Binding ViewModel.ChangeDisplaySolutionCommand}"
                     CommandParameter="1"
                     Content="下一个" />
+
+                <Button
+                    Margin="30,0,0,0"
+                    HorizontalAlignment="Right"
+                    Command="{Binding ViewModel.GetSolutionCommand}"
+                    Content="计算" />
             </StackPanel>
         </StackPanel>
 
@@ -74,7 +80,7 @@
                     <DataTemplate DataType="{x:Type models:TetrisBlockProperty}">
                         <ui:CardControl Command="{Binding CardSelectCommand}" Icon="{Binding Icon}">
                             <StackPanel Orientation="Horizontal">
-                                <ui:NumberBox Value="{Binding BlockCount}" />
+                                <TextBox MinWidth="60" Text="{Binding BlockCount}" />
                                 <ui:ToggleSwitch
                                     Margin="10,0,0,0"
                                     IsChecked="{Binding MustUse}"
@@ -85,12 +91,6 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
-            <Button
-                Margin="0,15,30,0"
-                HorizontalAlignment="Right"
-                Command="{Binding ViewModel.GetSolutionCommand}"
-                Content="计算" />
         </StackPanel>
     </Grid>
 </Page>

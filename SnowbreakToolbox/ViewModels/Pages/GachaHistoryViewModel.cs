@@ -109,8 +109,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             }
 
             lastCapturedImage = new(image);
-            _paddleOrcService.GetText(image);
 
+            //_paddleOrcService.GetText(image);
             var regions = _paddleOrcService.GetRegions(image);
 
             foreach (var region in regions)

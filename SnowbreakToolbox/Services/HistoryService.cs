@@ -40,6 +40,7 @@ public class HistoryService : ISnowbreakHistory
                 else
                 {
                     var jsonString = File.ReadAllText(Global.UserPaths.DataFile);
+                    jsonString = jsonString.Replace("Hisory", "History");   // Fix typo in previous version
                     _gachaHistory = JsonSerializer.Deserialize<Dictionary<string, List<GachaItem>>>(jsonString);
                 }
             }
@@ -55,11 +56,19 @@ public class HistoryService : ISnowbreakHistory
 
     public void SaveGachaHistory(Dictionary<string, List<GachaItem>> newHistory)
     {
+        var newHistoryString = JsonSerializer.Serialize(newHistory, _jsonOptions);
+
         if (File.Exists(Global.UserPaths.DataFile))
         {
+            var oldHistoryString = File.ReadAllText(Global.UserPaths.DataFile);
+            if (oldHistoryString == newHistoryString)
+            {
+                return;
+            }
+
             File.Copy(Global.UserPaths.DataFile, Global.UserPaths.DataFile + "_Backup" + DateTime.Now.ToString("yyyyMMddhhmmss"));
         }
 
-        File.WriteAllText(Global.UserPaths.DataFile, JsonSerializer.Serialize(newHistory, _jsonOptions));
+        File.WriteAllText(Global.UserPaths.DataFile, newHistoryString);
     }
 }

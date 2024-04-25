@@ -40,7 +40,7 @@ public partial class TetrisViewModel : ObservableObject
         // Initialize tetris block image and count
         for (int i = 1; i <= 11; i++)
         {
-            Blocks.Add(new TetrisBlockProperty($"pack://application:,,,/Assets/tetris{i}.png", 99));
+            Blocks.Add(new TetrisBlockProperty($"pack://application:,,,/Assets/tetris{i}.png", 0));
         }
     }
 

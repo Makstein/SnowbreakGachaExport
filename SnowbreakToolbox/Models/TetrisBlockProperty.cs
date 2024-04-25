@@ -11,7 +11,9 @@ public partial class TetrisBlockProperty(string imageUrl, byte count) : Observab
         Height = 48,
         Width = 48,
     };
-    public byte BlockCount { get; set; } = count;
+
+    [ObservableProperty]
+    private byte _blockCount = count;
 
     [ObservableProperty]
     private bool _mustUse;

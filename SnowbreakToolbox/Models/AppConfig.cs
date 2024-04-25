@@ -19,8 +19,8 @@ public class AppConfig
     public string GamePath { get; set; } = string.Empty;
     public string UserPreferTheme { get; set; } = "Dark";
     public string LauncherExeFileName { get; set; } = "snow_launcher.exe";
-    //public string GameWindowTitle { get; set; } = "Snowbreak: Containment Zone";
-    public string GameWindowTitle { get; set; } = "屏幕截图 2023-10-08 121726.png ‎- 照片";
+    public string GameWindowTitle { get; set; } = "Snowbreak: Containment Zone";
+    //public string GameWindowTitle { get; set; } = "屏幕截图 2023-10-08 121726.png ‎- 照片";     // Test only
     public string GameWindowTitleCN { get; set; } = "尘白禁区";
     public string LauncherWindowTitle { get; set; } = "SnowBreak";
     public string GameSteamId { get; set; } = "2668080";

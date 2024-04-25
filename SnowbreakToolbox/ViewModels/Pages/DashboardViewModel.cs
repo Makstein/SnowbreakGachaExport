@@ -82,7 +82,8 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
         TextBox textBox = new()
         {
             Margin = new Thickness(15, 0, 0, 0),
-            MinWidth = 350
+            MinWidth = 350,
+            ToolTip = "选择启动器所在文件夹"
         };
         textBox.SetBinding(System.Windows.Controls.TextBox.TextProperty, textBinding);
         Wpf.Ui.Controls.Button button = new()
@@ -127,15 +128,17 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
 
             if (_config.GamePlatform == GamePlatform.Steam)
             {
-                var process = new Process()
-                {
-                    StartInfo =
-                    {
-                        UseShellExecute = true,
-                        FileName = @"steam://rungameid/" + _config.GameSteamId
-                    }
-                };
-                process.Start();
+                //var process = new Process()
+                //{
+                //    StartInfo =
+                //    {
+                //        UseShellExecute = true,
+                //        FileName = @"steam://rungameid/" + _config.GameSteamId
+                //    }
+                //};
+                //process.Start();
+
+                Shell32.ShellExecute(HWND.NULL, "open", "steam://rungameid/" + _config.GameSteamId, null, null, ShowWindowCommand.SW_SHOWNORMAL);
                 return;
             }
 
@@ -219,13 +222,25 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
 
                 var threadID = User32.GetWindowThreadProcessId(_gameHwnd, out var processId);
                 if (threadID == 0) return;
-                var hookInstance = User32.SetWinEventHook(User32.EventConstants.EVENT_OBJECT_DESTROY, User32.EventConstants.EVENT_OBJECT_DESTROY, HINSTANCE.NULL, WinEventProc, processId, threadID, User32.WINEVENT.WINEVENT_OUTOFCONTEXT);
+
+                var hookInstance = User32.SetWinEventHook(User32.EventConstants.EVENT_OBJECT_DESTROY
+                    ,User32.EventConstants.EVENT_OBJECT_DESTROY, HINSTANCE.NULL
+                    ,WinEventProc, processId, threadID, User32.WINEVENT.WINEVENT_OUTOFCONTEXT);
+
                 Debug.WriteLine(hookInstance == IntPtr.Zero ? "Hook failed" : "Hook success");
             });
         }
         catch (Exception ex)
         {
             Log.Error(ex, "Launch failed");
+
+            var msgBox = new Wpf.Ui.Controls.MessageBox
+            {
+                Title = "Launch Failed",
+                Content = ex.Message,
+            };
+
+            await msgBox.ShowDialogAsync();
         }
     }
 
