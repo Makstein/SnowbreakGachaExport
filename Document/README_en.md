@@ -6,6 +6,8 @@ Snwobreak: Containment Zone Toolbox, can count pull history, do tetris puzzle in
 
 `Ver2.0 Only test conut pull history on 2560x1440 resolution, it should support other 16:9 resolution, Game Launch(non steam version) only test on 1080P, steam version game launch should work whatever resolution you use`
 
+If you have any bug or suggestion, you can open an issue
+
 # Requirements
 
 - .Net 8 Runtime (If you don't have one, it will be automatic downloaded when you start the program, just click the "download" in popup window)
