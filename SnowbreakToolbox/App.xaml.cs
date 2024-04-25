@@ -10,6 +10,7 @@ using SnowbreakToolbox.Views.Pages;
 using SnowbreakToolbox.Views.Windows;
 using System.IO;
 using System.Windows.Threading;
+using Vanara.PInvoke;
 using Wpf.Ui;
 
 namespace SnowbreakToolbox;
@@ -41,8 +42,11 @@ public partial class App
             // Dialog
             services.AddSingleton<IContentDialogService, ContentDialogService>();
 
-            // Config maniputation
+            services.AddSingleton<ISnowbreakOcr, PaddleOrcService>();
+
             services.AddSingleton<ISnowbreakConfig, ConfigService>();
+
+            services.AddSingleton<ISnowbreakHistory, HistoryService>();
 
             // Suppress the .net host messages when starting. ("...press Ctrl + c to stop...", etc)
             services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
@@ -56,7 +60,6 @@ public partial class App
                 .MinimumLevel.Information()
                 .CreateLogger();
             services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
-
 
             // Main window with navigation
             services.AddSingleton<INavigationWindow, MainWindow>();
@@ -86,24 +89,6 @@ public partial class App
     }
 
     /// <summary>
-    /// Occurs when the application is loading.
-    /// </summary>
-    private void OnStartup(object sender, StartupEventArgs e)
-    {
-        _host.Start();
-    }
-
-    /// <summary>
-    /// Occurs when the application is closing.
-    /// </summary>
-    private async void OnExit(object sender, ExitEventArgs e)
-    {
-        await _host.StopAsync();
-
-        _host.Dispose();
-    }
-
-    /// <summary>
     /// Occurs when an exception is thrown by an application but not handled.
     /// </summary>
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -111,5 +96,27 @@ public partial class App
         // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
 
         Log.Error(e.Exception, "ApplicationDispatcherUnhandledException");
+    }
+
+    /// <summary>
+    /// Occurs when the application is closing.
+    /// </summary>
+    private async void OnExit(object sender, ExitEventArgs e)
+    {
+        GetService<ISnowbreakConfig>()!.Save();
+        GetService<DashboardViewModel>()!.Dispose();
+        GetService<GachaHistoryViewModel>()!.Dispose();
+
+        await _host.StopAsync();
+
+        _host.Dispose();
+    }
+
+    /// <summary>
+    /// Occurs when the application is loading.
+    /// </summary>
+    private void OnStartup(object sender, StartupEventArgs e)
+    {
+        _host.Start();
     }
 }

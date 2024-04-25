@@ -41,6 +41,17 @@
             GroupName="themeSelect"
             IsChecked="{Binding ViewModel.CurrentTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}" />
 
+        <ui:CardControl Margin="0,12,0,0">
+            <ui:CardControl.Header>
+                <TextBlock Text="游戏平台" />
+            </ui:CardControl.Header>
+
+            <ComboBox SelectedIndex="{Binding ViewModel.SelectedGamePlatformIndex}">
+                <ComboBoxItem Content="Default" />
+                <ComboBoxItem Content="Steam" />
+            </ComboBox>
+        </ui:CardControl>
+
         <TextBlock
             Margin="0,24,0,0"
             FontSize="20"

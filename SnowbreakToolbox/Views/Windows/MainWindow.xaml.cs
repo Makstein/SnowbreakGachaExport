@@ -51,7 +51,7 @@ public partial class MainWindow : FluentWindow, INavigationWindow
         SetPageService(pageService);
         navigationService.SetNavigationControl(RootNavigation);
 
-        contentDialogService.SetContentPresenter(RootContentDialog);
+        contentDialogService.SetDialogHost(RootContentDialog);
     }
 
     #region INavigationWindow methods
