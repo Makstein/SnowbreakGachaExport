@@ -35,6 +35,7 @@
 ### 记录统计
 
 - 刷新前在程序中手动选择当前记录对应卡池
+- 游戏内需要预先打开抽卡记录页面
 - 游戏需全屏或全屏窗口，如果多显示器需与程序在同一屏幕
   
   
@@ -60,5 +61,3 @@
 - [CmdBlockZQG/cbjq: 尘白禁区 信源研析小工具 (github.com)](https://github.com/CmdBlockZQG/cbjq)
 
 - [dahall/Vanara: A set of .NET libraries for Windows implementing PInvoke calls to many native Windows APIs with supporting wrappers. (github.com)](https://github.com/dahall/Vanara)
-
-

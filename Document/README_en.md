@@ -29,6 +29,7 @@ If you have any bug or suggestion, you can open an issue
 ### Pull History
 
 - You need to choose the banner manually before refresh
+- Also need to open history page in game before refresh
 - Game Fullscreen or Fullsrenn windowed
 
 ### Tetris
@@ -38,8 +39,8 @@ If you have any bug or suggestion, you can open an issue
 - The switch in the right of each block can change must select this block or not
 
 - Click the block in map to change can put block or not
-
-
+  
+  
 
 ## Credits
 
