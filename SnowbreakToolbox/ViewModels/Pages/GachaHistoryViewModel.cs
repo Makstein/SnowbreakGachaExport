@@ -64,7 +64,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             gameWindowHwnd = User32.FindWindow(null, _config.GameWindowTitleCN);
         if (gameWindowHwnd == HWND.NULL)
         {
-            throw new Exception("Exception: OnGetHistory() can't find game window");
+            throw new Exception("Exception: can't find game window");
         }
 
         User32.GetWindowRect(gameWindowHwnd, out var rect);
@@ -73,9 +73,9 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         User32.BringWindowToTop(gameWindowHwnd);
 
         _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
-        if (_config.ReferenceScreenHeight * _config.ClientGameScale != gameWindowHeight)
+        if (Math.Abs(_config.ReferenceScreenHeight * _config.ClientGameScale - gameWindowHeight) > 0.01)
         {
-            throw new Exception("游戏非16: 9分辨率");
+            throw new Exception("游戏分辨率初始化失败：非16: 9分辨率");
         }
 
         _config.ClientGameWidth = gameWindowWidth;
@@ -109,7 +109,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             }
 
             lastCapturedImage = new(image);
-
+                                           
             //_paddleOrcService.GetText(image);
             var regions = _paddleOrcService.GetRegions(image);
 
@@ -255,7 +255,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     private void InitializeViewModel()
     {
-        if (_initialized)
+        if (!_initialized)
         {
             // Load local history cache
             var historyItems = _historyService.GetGachaHistory();

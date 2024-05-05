@@ -96,6 +96,14 @@ public partial class App
         // For more info see https://docs.microsoft.com/en-us/dotnet/api/system.windows.application.dispatcherunhandledexception?view=windowsdesktop-6.0
 
         Log.Error(e.Exception, "ApplicationDispatcherUnhandledException");
+
+        var msgBox = new Wpf.Ui.Controls.MessageBox()
+        {
+            Title = "错误",
+            Content = e.Exception.Message,
+            CloseButtonText = "退出",
+        };
+        msgBox.ShowDialogAsync();
     }
 
     /// <summary>
