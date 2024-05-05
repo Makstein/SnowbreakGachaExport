@@ -69,24 +69,36 @@ public class ConfigService : ISnowbreakConfig
 
     private void InitConfigResolutionScale(ref AppConfig config)
     {
-        var curClientScreenWidth = User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN);
-        var curClientScreenHeight = User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN);
-
-        if (config.ClientScreenWidth == curClientScreenWidth && config.ClientScreenHeight == curClientScreenHeight)
-            return;
-
-        config.ClientScreenScale = (double)curClientScreenWidth / config.ReferenceScreenWidth;
-        if (config.ReferenceScreenHeight * config.ClientScreenScale != curClientScreenHeight)
+        try
         {
-            Log.Error("分辨率缩放初始化失败: 非16: 9分辨率");
-            throw new Exception("分辨率缩放初始化失败: 非16: 9分辨率");
+            var curClientScreenWidth = User32.GetSystemMetrics(User32.SystemMetric.SM_CXSCREEN);
+            var curClientScreenHeight = User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN);
+
+            if (config.ClientScreenWidth == curClientScreenWidth && config.ClientScreenHeight == curClientScreenHeight)
+                return;
+
+            config.ClientScreenScale = (double)curClientScreenWidth / config.ReferenceScreenWidth;
+            if (Math.Abs(config.ReferenceScreenHeight * config.ClientScreenScale - curClientScreenHeight) > 0.01)
+            {
+                throw new Exception("系统分辨率缩放初始化失败: 非16: 9分辨率");
+            }
+
+            config.ClientScreenWidth = curClientScreenWidth;
+            config.ClientScreenHeight = curClientScreenHeight;
+
+            Log.Information("初始化设置分辨路缩放成功，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
+                config.ClientScreenWidth,
+                config.ClientScreenHeight);
         }
-
-        config.ClientScreenWidth = curClientScreenWidth;
-        config.ClientScreenHeight = curClientScreenHeight;
-
-        Log.Information("初始化设置分辨路缩放成功，当前客户端分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
-            config.ClientScreenWidth,
-            config.ClientScreenHeight);
+        catch (Exception ex)
+        {
+            var msgBox = new Wpf.Ui.Controls.MessageBox()
+            {
+                Title = "错误",
+                Content = ex.Message,
+                CloseButtonText = "确定"
+            };
+            msgBox.ShowDialogAsync();
+        }
     }
 }

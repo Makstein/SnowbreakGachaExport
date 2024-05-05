@@ -64,7 +64,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             gameWindowHwnd = User32.FindWindow(null, _config.GameWindowTitleCN);
         if (gameWindowHwnd == HWND.NULL)
         {
-            throw new Exception("Exception: OnGetHistory() can't find game window");
+            throw new Exception("Exception: can't find game window");
         }
 
         User32.GetWindowRect(gameWindowHwnd, out var rect);
@@ -73,9 +73,9 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         User32.BringWindowToTop(gameWindowHwnd);
 
         _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
-        if (_config.ReferenceScreenHeight * _config.ClientGameScale != gameWindowHeight)
+        if (Math.Abs(_config.ReferenceScreenHeight * _config.ClientGameScale - gameWindowHeight) > 0.01)
         {
-            throw new Exception("游戏非16: 9分辨率");
+            throw new Exception("游戏分辨率初始化失败：非16: 9分辨率");
         }
 
         _config.ClientGameWidth = gameWindowWidth;
@@ -109,7 +109,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             }
 
             lastCapturedImage = new(image);
-
+                                           
             //_paddleOrcService.GetText(image);
             var regions = _paddleOrcService.GetRegions(image);
 
@@ -128,7 +128,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
         MergeHistory(list);
 
-        User32.ShowWindow(gameWindowHwnd, ShowWindowCommand.SW_HIDE);
+        User32.ShowWindow(gameWindowHwnd, ShowWindowCommand.SW_MINIMIZE);
     }
 
     private int GetRare(Color color)
@@ -255,19 +255,22 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     private void InitializeViewModel()
     {
-        // Load local history cache
-        var historyItems = _historyService.GetGachaHistory();
-        CCharHistory = historyItems.TryGetValue(NameResource.CommonCharacterHistoryName, out List<GachaItem>? localCcHistory) ? localCcHistory : [];
-        SCharHistory = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory: [];
-        CWeaponHistory = historyItems.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
-        SWeaponHistory = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
+        if (!_initialized)
+        {
+            // Load local history cache
+            var historyItems = _historyService.GetGachaHistory();
+            CCharHistory = historyItems.TryGetValue(NameResource.CommonCharacterHistoryName, out List<GachaItem>? localCcHistory) ? localCcHistory : [];
+            SCharHistory = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
+            CWeaponHistory = historyItems.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
+            SWeaponHistory = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
 
-        UpdateDisplay(0);
-        UpdateDisplay(1);
-        UpdateDisplay(2);
-        UpdateDisplay(3);
+            UpdateDisplay(0);
+            UpdateDisplay(1);
+            UpdateDisplay(2);
+            UpdateDisplay(3);
 
-        _initialized = true;
+            _initialized = true;
+        }
     }
 
     public void OnNavigatedTo()
@@ -285,6 +288,11 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     public void Dispose()
     {
+        if (!_initialized)
+        {
+            return;
+        }
+
         Dictionary<string, List<GachaItem>> newHistory = [];
         newHistory.Add(NameResource.CommonCharacterHistoryName, CCharHistory);
         newHistory.Add(NameResource.SpecialCharacterHistoryName, SCharHistory);
