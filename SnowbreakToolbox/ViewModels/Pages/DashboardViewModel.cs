@@ -42,11 +42,11 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
 
     public void OnNavigatedTo()
     {
-        if (!_initialized)
-            InitializeViewModel();
-
         // Reload config every time, for hot reload
         _config = App.GetService<ISnowbreakConfig>()?.GetConfig();
+
+        if (!_initialized)
+            InitializeViewModel();
     }
 
     private void InitializeViewModel()
@@ -55,6 +55,11 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
         {
             _initialized = true;
             _contentDialogService = App.GetService<IContentDialogService>();
+
+            if (_config!.RunGameOnStart)
+            {
+                RunGame("Game");
+            }
 
             InitSelectGamePanel();
         }

@@ -5,8 +5,6 @@
 
 using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
-using System.Collections.ObjectModel;
-using Vanara.Extensions;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -28,6 +26,18 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
             SetProperty(ref _selectedGamePlatformIndex, value);
 
             _config!.GamePlatform = (GamePlatform)value;
+            _configService!.SetConfig(_config);
+        }
+    }
+
+    private bool _isRunGameOnStart;
+    public bool IsRunGameOnStart
+    {
+        get => _isRunGameOnStart;
+        set
+        {
+            SetProperty(ref _isRunGameOnStart, value);
+            _config!.RunGameOnStart = value;
             _configService!.SetConfig(_config);
         }
     }
