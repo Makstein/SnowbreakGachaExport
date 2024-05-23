@@ -41,7 +41,9 @@ public class HistoryService : ISnowbreakHistory
                 {
                     var jsonString = File.ReadAllText(Global.UserPaths.DataFile);
                     jsonString = jsonString.Replace("Hisory", "History");   // Fix typo in previous version
+                    jsonString = jsonString.Replace("ID", "Id");            // Fix different case for property 'Id' in ver1.x
                     _gachaHistory = JsonSerializer.Deserialize<Dictionary<string, List<GachaItem>>>(jsonString);
+                    FixIDInVersion200Alpha12(_gachaHistory!);
                 }
             }
         }
@@ -52,6 +54,19 @@ public class HistoryService : ISnowbreakHistory
         }
 
         return _gachaHistory!;
+    }
+
+    public static void FixIDInVersion200Alpha12(Dictionary<string, List<GachaItem>> history)
+    {
+        if (history.Count == 0) return;
+
+        foreach (var (_, value) in history)
+        {
+            foreach (var item in value)
+            {
+                item.Id = item.Id.Replace("-", "").Replace(":", "").Replace(" ", "");
+            }
+        }
     }
 
     public void SaveGachaHistory(Dictionary<string, List<GachaItem>> newHistory)

@@ -52,6 +52,14 @@
             </ComboBox>
         </ui:CardControl>
 
+        <ui:CardControl Margin="0,12,0,0">
+            <ui:CardControl.Header>
+                <TextBlock Text="程序启动时自动启动游戏" />
+            </ui:CardControl.Header>
+
+            <ui:ToggleSwitch />
+        </ui:CardControl>
+
         <TextBlock
             Margin="0,24,0,0"
             FontSize="20"

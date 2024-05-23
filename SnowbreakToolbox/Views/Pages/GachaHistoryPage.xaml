@@ -72,7 +72,7 @@
                                 Margin="5"
                                 FontSize="15"
                                 Foreground="DodgerBlue"
-                                Text="{Binding ViewModel.AvgSc}" />
+                                Text="{Binding ViewModel.AvgSc, StringFormat={}{0:F3}}" />
                         </Grid>
 
                         <Grid>
@@ -178,7 +178,7 @@
                                 Margin="5"
                                 FontSize="15"
                                 Foreground="DodgerBlue"
-                                Text="{Binding ViewModel.AvgSw}" />
+                                Text="{Binding ViewModel.AvgSw, StringFormat={}{0:F3}}" />
                         </Grid>
 
                         <Grid>
@@ -284,7 +284,7 @@
                                 Margin="5"
                                 FontSize="15"
                                 Foreground="DodgerBlue"
-                                Text="{Binding ViewModel.AvgCc}" />
+                                Text="{Binding ViewModel.AvgCc, StringFormat={}{0:F3}}" />
                         </Grid>
 
                         <Grid>
@@ -390,7 +390,7 @@
                                 Margin="5"
                                 FontSize="15"
                                 Foreground="DodgerBlue"
-                                Text="{Binding ViewModel.AvgCw}" />
+                                Text="{Binding ViewModel.AvgCw, StringFormat={}{0:F3}}" />
                         </Grid>
 
                         <Grid>
