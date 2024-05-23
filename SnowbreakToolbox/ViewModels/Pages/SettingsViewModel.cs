@@ -56,6 +56,7 @@ public partial class SettingsViewModel : ObservableObject, INavigationAware
         _configService = App.GetService<ISnowbreakConfig>();
         _config = _configService?.GetConfig();
         SelectedGamePlatformIndex = (int)_config!.GamePlatform;
+        IsRunGameOnStart = _config.RunGameOnStart;
     }
 
     // Save when leave setting page 

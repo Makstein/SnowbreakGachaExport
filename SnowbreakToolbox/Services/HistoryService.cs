@@ -1,13 +1,8 @@
 ﻿using Serilog;
 using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SnowbreakToolbox.Services;
 
@@ -56,6 +51,7 @@ public class HistoryService : ISnowbreakHistory
         return _gachaHistory!;
     }
 
+    // Fix the wrong ID format in 2.0.0-alpha1 and 2.0.0-alpha2
     public static void FixIDInVersion200Alpha12(Dictionary<string, List<GachaItem>> history)
     {
         if (history.Count == 0) return;

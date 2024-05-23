@@ -158,7 +158,7 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
                     }
                 );
 
-                if (result == ContentDialogResult.Secondary) { return; }
+                if (result == ContentDialogResult.None) { return; }
 
                 _config.GamePath = DialogGamePath;
                 App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
