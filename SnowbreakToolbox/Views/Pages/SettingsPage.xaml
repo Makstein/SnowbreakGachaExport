@@ -57,7 +57,7 @@
                 <TextBlock Text="程序启动时自动启动游戏" />
             </ui:CardControl.Header>
 
-            <ui:ToggleSwitch />
+            <ui:ToggleSwitch IsChecked="{Binding ViewModel.IsRunGameOnStart}" />
         </ui:CardControl>
 
         <TextBlock
