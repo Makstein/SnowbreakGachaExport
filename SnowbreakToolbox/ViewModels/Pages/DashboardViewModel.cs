@@ -55,13 +55,12 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
         {
             _initialized = true;
             _contentDialogService = App.GetService<IContentDialogService>();
+            InitSelectGamePanel();
 
             if (_config!.RunGameOnStart)
             {
-                RunGame("Game");
+                _ = RunGame("Game");
             }
-
-            InitSelectGamePanel();
         }
         catch (Exception ex)
         {

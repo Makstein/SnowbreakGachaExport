@@ -16,7 +16,9 @@ namespace SnowbreakToolbox.Models
             Type = type;
             Star = star;
             Time = time;
-            Id = name + time;
+
+            // IDs don't need these char
+            Id = name.Replace("-", "") + time.Replace(":", "").Replace("-", "").Replace(" ", "");
         }
 
         [JsonConstructor]
