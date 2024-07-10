@@ -120,13 +120,26 @@
   <data name="CommonCharacterHistoryName" xml:space="preserve">
     <value>CommonCharacterHistory</value>
   </data>
+  <data name="CommonCharacterPreferenceHistoryName" xml:space="preserve">
+    <value>CommonCharacterPreferenceHistory</value>
+    <comment>特选当期（100%保底）</comment>
+  </data>
   <data name="CommonWeaponHistoryName" xml:space="preserve">
     <value>CommonWeaponHistory</value>
+  </data>
+  <data name="CommonWeaponPreferenceHistoryName" xml:space="preserve">
+    <value>CommonWeaponPreferenceHistory</value>
   </data>
   <data name="SpecialCharacterHistoryName" xml:space="preserve">
     <value>SpecialCharacterHistory</value>
   </data>
+  <data name="SpecialCharacterPreferenceHistoryName" xml:space="preserve">
+    <value>SpecialCharacterPreferenceHistory</value>
+  </data>
   <data name="SpecialWeaponHistoryName" xml:space="preserve">
     <value>SpecialWeaponHistory</value>
+  </data>
+  <data name="SpecialWeaponPreferenceHistoryName" xml:space="preserve">
+    <value>SpecialWeaponPreferenceHistory</value>
   </data>
 </root>

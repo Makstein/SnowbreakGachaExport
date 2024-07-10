@@ -18,6 +18,7 @@ public class AppConfig
     // General settings
     public string GamePath { get; set; } = string.Empty;
     public string UserPreferTheme { get; set; } = "Dark";
+    public int UserLastSelectedGachaMode { get; set; } = 0;                                         // 0: 50/50 1: 100
     public string LauncherExeFileName { get; set; } = "snow_launcher.exe";
     public string GameWindowTitle { get; set; } = "Snowbreak: Containment Zone";
     //public string GameWindowTitle { get; set; } = "屏幕截图 2023-10-08 121726.png ‎- 照片";     // Test only

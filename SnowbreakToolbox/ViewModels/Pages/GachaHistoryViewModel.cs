@@ -1,10 +1,8 @@
-﻿using Serilog;
-using SnowbreakToolbox.Interfaces;
+﻿using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Services;
 using SnowbreakToolbox.Tools;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using Vanara.PInvoke;
@@ -45,11 +43,16 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     [ObservableProperty] private int _minSw;
 
     public int SelectedBannerIndex { get; set; }
+    public int SelectedGachaMode { get; set; }                                          // 0: 59% 1:100%
 
-    public List<GachaItem> CCharHistory { get; private set; } = [];                     // Common Character
-    public List<GachaItem> SCharHistory { get; private set; } = [];                     // Special Character
+    public List<GachaItem> CCharHistory { get; private set; } = [];                     // Common Character 50%
+    public List<GachaItem> SCharHistory { get; private set; } = [];                     // Special Character 50%
+    public List<GachaItem> CCharPreferenceHistory { get; private set; } = [];           // Common Character 100%
+    public List<GachaItem> SCharPreferenceHistory { get; private set; } = [];           // Special Character 100%
     public List<GachaItem> CWeaponHistory { get; private set; } = [];
     public List<GachaItem> SWeaponHistory { get; private set; } = [];
+    public List<GachaItem> CWeaponPreferenceHistory { get; private set; } = [];
+    public List<GachaItem> SWeaponPreferenceHistory { get; private set; } = [];
 
     public ObservableCollection<DisplayItem> DisplayCCharHistory { get; private set; } = [];            // Collection for display in page(to show count)
     public ObservableCollection<DisplayItem> DisplaySCharHistory { get; private set; } = [];
@@ -109,7 +112,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             }
 
             lastCapturedImage = new(image);
-                                           
+
             //_paddleOrcService.GetText(image);
             var regions = _paddleOrcService.GetRegions(image);
 
@@ -129,6 +132,18 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         MergeHistory(list);
 
         User32.ShowWindow(gameWindowHwnd, ShowWindowCommand.SW_MINIMIZE);
+    }
+
+    [RelayCommand]
+    private void OnExportHistory()
+    {
+
+    }
+
+    [RelayCommand]
+    private void OnImportHistory()
+    {
+
     }
 
     private int GetRare(Color color)
@@ -187,22 +202,22 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         var curHistory = new List<GachaItem>();
         var curDisplayHistory = new ObservableCollection<DisplayItem>();
 
-        switch(bannerIndex)
+        switch (bannerIndex)
         {
             case 0:
-                curHistory = SCharHistory;
+                curHistory = SelectedGachaMode == 0 ? SCharHistory : SCharPreferenceHistory;
                 curDisplayHistory = DisplaySCharHistory;
                 break;
             case 1:
-                curHistory = SWeaponHistory;
+                curHistory = SelectedGachaMode == 0 ? SWeaponHistory : SWeaponPreferenceHistory;
                 curDisplayHistory = DisplaySWeaponHistory;
                 break;
             case 2:
-                curHistory = CCharHistory;
+                curHistory = SelectedGachaMode == 0 ? CCharHistory : CCharPreferenceHistory;
                 curDisplayHistory = DisplayCCharHistory;
                 break;
             case 3:
-                curHistory = CWeaponHistory;
+                curHistory = SelectedGachaMode == 0 ? CWeaponHistory : CWeaponPreferenceHistory;
                 curDisplayHistory = DisplayCWeaponHistory;
                 break;
         }
@@ -263,6 +278,10 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             SCharHistory = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
             CWeaponHistory = historyItems.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
             SWeaponHistory = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
+            CCharPreferenceHistory = historyItems.TryGetValue(NameResource.CommonCharacterPreferenceHistoryName, out List<GachaItem>? localCCPHistory) ? localCCPHistory : [];
+            SCharPreferenceHistory = historyItems.TryGetValue(NameResource.SpecialCharacterPreferenceHistoryName, out List<GachaItem>? localSCPHistory) ? localSCPHistory : [];
+            CWeaponPreferenceHistory = historyItems.TryGetValue(NameResource.CommonWeaponPreferenceHistoryName, out List<GachaItem>? localCWPHistory) ? localCWPHistory : [];
+            SWeaponPreferenceHistory = historyItems.TryGetValue(NameResource.SpecialWeaponPreferenceHistoryName, out List<GachaItem>? localSWPHistory) ? localSWPHistory : [];
 
             UpdateDisplay(0);
             UpdateDisplay(1);
@@ -283,7 +302,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     public void OnNavigatedFrom()
     {
-        
+
     }
 
     public void Dispose()

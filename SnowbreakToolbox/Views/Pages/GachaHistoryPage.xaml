@@ -25,11 +25,24 @@
                 <ComboBoxItem Content="常驻角色" />
                 <ComboBoxItem Content="常驻武器" />
             </ComboBox>
+            <ComboBox Margin="12,0,0,0" SelectedIndex="{Binding ViewModel.SelectedGachaMode}">
+                <ComboBoxItem Content="当期（50%）" />
+                <ComboBoxItem Content="特选当期（100%）" />
+            </ComboBox>
             <Button
                 Margin="12,0,0,0"
                 VerticalAlignment="Stretch"
                 Command="{Binding ViewModel.GetHistoryCommand}"
                 Content="获取记录" />
+        </StackPanel>
+
+        <StackPanel
+            Margin="0,0,12,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <ui:Button Content="导出当前记录" />
+            <Button Margin="12,0,0,0" Content="导入记录" />
         </StackPanel>
 
         <Grid Grid.Row="1">

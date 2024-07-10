@@ -70,11 +70,29 @@ namespace SnowbreakToolbox {
         }
         
         /// <summary>
+        ///   查找类似 CommonCharacterPreferenceHistory 的本地化字符串。
+        /// </summary>
+        internal static string CommonCharacterPreferenceHistoryName {
+            get {
+                return ResourceManager.GetString("CommonCharacterPreferenceHistoryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 CommonWeaponHistory 的本地化字符串。
         /// </summary>
         internal static string CommonWeaponHistoryName {
             get {
                 return ResourceManager.GetString("CommonWeaponHistoryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 CommonWeaponPreferenceHistory 的本地化字符串。
+        /// </summary>
+        internal static string CommonWeaponPreferenceHistoryName {
+            get {
+                return ResourceManager.GetString("CommonWeaponPreferenceHistoryName", resourceCulture);
             }
         }
         
@@ -88,11 +106,29 @@ namespace SnowbreakToolbox {
         }
         
         /// <summary>
+        ///   查找类似 SpecialCharacterPreferenceHistory 的本地化字符串。
+        /// </summary>
+        internal static string SpecialCharacterPreferenceHistoryName {
+            get {
+                return ResourceManager.GetString("SpecialCharacterPreferenceHistoryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 SpecialWeaponHistory 的本地化字符串。
         /// </summary>
         internal static string SpecialWeaponHistoryName {
             get {
                 return ResourceManager.GetString("SpecialWeaponHistoryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SpecialWeaponPreferenceHistory 的本地化字符串。
+        /// </summary>
+        internal static string SpecialWeaponPreferenceHistoryName {
+            get {
+                return ResourceManager.GetString("SpecialWeaponPreferenceHistoryName", resourceCulture);
             }
         }
     }
