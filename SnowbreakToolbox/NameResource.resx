@@ -126,7 +126,13 @@
   <data name="SpecialCharacterHistoryName" xml:space="preserve">
     <value>SpecialCharacterHistory</value>
   </data>
+  <data name="SpecialCharacterHistoryNameMihoyo" xml:space="preserve">
+    <value>SpecialCharacterHistoryMihoyo</value>
+  </data>
   <data name="SpecialWeaponHistoryName" xml:space="preserve">
     <value>SpecialWeaponHistory</value>
+  </data>
+  <data name="SpecialWeaponHistoryNameMihoyo" xml:space="preserve">
+    <value>SpecialWeaponHistoryMihoyo</value>
   </data>
 </root>

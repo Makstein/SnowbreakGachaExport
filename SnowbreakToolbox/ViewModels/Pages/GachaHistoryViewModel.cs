@@ -4,9 +4,9 @@ using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Services;
 using SnowbreakToolbox.Tools;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
+using System.Security.Cryptography;
 using Vanara.PInvoke;
 using Wpf.Ui.Controls;
 
@@ -43,6 +43,10 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     [ObservableProperty] private int _minSc;
     [ObservableProperty] private double _avgSw;     // Special weapon
     [ObservableProperty] private int _minSw;
+    [ObservableProperty] private double _avgScm;    // Special character Mihoyo
+    [ObservableProperty] private int _minScm;
+    [ObservableProperty] private double _avgSwm;    // Special weapon Mihoyo
+    [ObservableProperty] private int _minSwm;
 
     public int SelectedBannerIndex { get; set; }
 
@@ -50,11 +54,15 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     public List<GachaItem> SCharHistory { get; private set; } = [];                     // Special Character
     public List<GachaItem> CWeaponHistory { get; private set; } = [];
     public List<GachaItem> SWeaponHistory { get; private set; } = [];
+    public List<GachaItem> SCharHistoryMihoyo { get; private set; } = [];
+    public List<GachaItem> SWeaponHistoryMihoyo { get; private set; } = [];
 
     public ObservableCollection<DisplayItem> DisplayCCharHistory { get; private set; } = [];            // Collection for display in page(to show count)
     public ObservableCollection<DisplayItem> DisplaySCharHistory { get; private set; } = [];
     public ObservableCollection<DisplayItem> DisplayCWeaponHistory { get; private set; } = [];
     public ObservableCollection<DisplayItem> DisplaySWeaponHistory { get; private set; } = [];
+    public ObservableCollection<DisplayItem> DisplaySCharHistoryMihoyo { get; private set; } = [];
+    public ObservableCollection<DisplayItem> DisplaySWeaponHistoryMihoyo { get; private set; } = [];
 
     [RelayCommand]
     private void OnGetHistory()
@@ -164,6 +172,12 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             case 3:
                 curHistory = CWeaponHistory;
                 break;
+            case 4:
+                curHistory = SCharHistoryMihoyo;
+                break;
+            case 5:
+                curHistory = SWeaponHistoryMihoyo;
+                break;
         }
 
         var index = newHistory.Count;
@@ -204,6 +218,14 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             case 3:
                 curHistory = CWeaponHistory;
                 curDisplayHistory = DisplayCWeaponHistory;
+                break;
+            case 4:
+                curHistory = SCharHistoryMihoyo;
+                curDisplayHistory = DisplaySCharHistoryMihoyo;
+                break;
+            case 5:
+                curHistory = SWeaponHistoryMihoyo;
+                curDisplayHistory = DisplaySWeaponHistoryMihoyo;
                 break;
         }
 
@@ -250,6 +272,14 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 AvgCw = curDisplayHistory.Average(x => x.Count);
                 MinCw = curDisplayHistory.MinBy(x => x.Count)!.Count;
                 break;
+            case 4:
+                AvgScm = curDisplayHistory.Average(x => x.Count);
+                MinScm = curDisplayHistory.MinBy(x => x.Count)!.Count;
+                break;
+            case 5:
+                AvgSwm = curDisplayHistory.Average(x => x.Count);
+                MinSwm = curDisplayHistory.MinBy(x => x.Count)!.Count;
+                break;
         }
     }
 
@@ -263,11 +293,15 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             SCharHistory = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
             CWeaponHistory = historyItems.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
             SWeaponHistory = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
+            SCharHistoryMihoyo = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo, out List<GachaItem>? localScmHistory) ? localScmHistory : [];
+            SWeaponHistoryMihoyo = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo, out List<GachaItem>? localSwmHistory) ? localSwmHistory : [];
 
             UpdateDisplay(0);
             UpdateDisplay(1);
             UpdateDisplay(2);
             UpdateDisplay(3);
+            UpdateDisplay(4);
+            UpdateDisplay(5);
 
             _initialized = true;
         }
@@ -298,6 +332,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         newHistory.Add(NameResource.SpecialCharacterHistoryName, SCharHistory);
         newHistory.Add(NameResource.CommonWeaponHistoryName, CWeaponHistory);
         newHistory.Add(NameResource.SpecialWeaponHistoryName, SWeaponHistory);
+        newHistory.Add(NameResource.SpecialCharacterHistoryNameMihoyo, SCharHistoryMihoyo);
+        newHistory.Add(NameResource.SpecialWeaponHistoryNameMihoyo, SWeaponHistoryMihoyo);
         _historyService.SaveGachaHistory(newHistory);
 
         GC.SuppressFinalize(this);
