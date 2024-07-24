@@ -29,8 +29,10 @@ If you have any bug or suggestion, you can open an issue
 ### Pull History
 
 - You need to choose the banner manually before refresh
-- Also need to open history page in game before refresh
-- Game Fullscreen or Fullsrenn windowed
+- Game Fullscreen or Fullscreen windowed
+- Also need to open history page in game before refresh, and press the button at the first page, as the following picture shows
+![Loading](images\FromWhereToStartGetGachaData.png)
+
 
 ### Tetris
 
