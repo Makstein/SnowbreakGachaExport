@@ -86,7 +86,7 @@ public class ConfigService : ISnowbreakConfig
             config.ClientScreenWidth = curClientScreenWidth;
             config.ClientScreenHeight = curClientScreenHeight;
 
-            Log.Information("初始化设置分辨路缩放成功，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
+            Log.Information("初始化设置分辨率缩放成功，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
                 config.ClientScreenWidth,
                 config.ClientScreenHeight);
         }
