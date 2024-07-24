@@ -67,76 +67,82 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     [RelayCommand]
     private void OnGetHistory()
     {
-        var gameWindowHwnd = User32.FindWindow(null, _config!.GameWindowTitle);
-        if (gameWindowHwnd == HWND.NULL)
-            gameWindowHwnd = User32.FindWindow(null, _config.GameWindowTitleCN);
-        if (gameWindowHwnd == HWND.NULL)
-        {
-            throw new Exception("Exception: can't find game window");
-        }
-
-        User32.GetWindowRect(gameWindowHwnd, out var rect);
-        var gameWindowWidth = rect.Width;
-        var gameWindowHeight = rect.Height;
-        User32.BringWindowToTop(gameWindowHwnd);
-
-        _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
-        if (Math.Abs(_config.ReferenceScreenHeight * _config.ClientGameScale - gameWindowHeight) > 0.01)
-        {
-            throw new Exception("游戏分辨率初始化失败：非16: 9分辨率");
-        }
-
-        _config.ClientGameWidth = gameWindowWidth;
-        _config.ClientGameHeight = gameWindowHeight;
-        _config.ClientLogBoxX0 = (int)(_config.ReferenceLogBoxX0 * _config.ClientGameScale);
-        _config.ClientLogBoxY0 = (int)(_config.ReferenceLogBoxY0 * _config.ClientGameScale);
-        _config.ClientLogBoxWidth = (int)(_config.ReferenceLogBoxWidth * _config.ClientGameScale);
-        _config.ClientLogBoxHeight = (int)(_config.ReferenceLogBoxHeight * _config.ClientGameScale);
-        _config.ClientRareColorPosX = (int)(_config.ReferenceRareColorPosX * _config.ClientGameScale);
-        _config.ClientNextPageArrowX = (int)(_config.ReferenceNextPageArrowX * _config.ClientGameScale);
-        _config.ClientNextPageArrowY = (int)(_config.ReferenceNextPageArrowY * _config.ClientGameScale);
-
-        App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
-
-        Task.Delay(200).Wait();
-
-        var list = new List<GachaItem>();
-        Bitmap? lastCapturedImage = null;
-        while (true)
-        {
-            var image =
-            ScreenOperations.CaptureRegion(_config.ClientLogBoxX0, _config.ClientLogBoxY0, _config.ClientLogBoxWidth, _config.ClientLogBoxHeight);
-
-            if (lastCapturedImage != null)
+        try {
+            var gameWindowHwnd = User32.FindWindow(null, _config!.GameWindowTitle);
+            if (gameWindowHwnd == HWND.NULL)
+                gameWindowHwnd = User32.FindWindow(null, _config.GameWindowTitleCN);
+            if (gameWindowHwnd == HWND.NULL)
             {
-                var mse = ImageOperations.ImageMse(lastCapturedImage, image);
-                if (mse < 45)
-                {
-                    break;
-                }
+                throw new Exception("Exception: can't find game window");
             }
 
-            lastCapturedImage = new(image);
-                                           
-            //_paddleOrcService.GetText(image);
-            var regions = _paddleOrcService.GetRegions(image);
+            User32.GetWindowRect(gameWindowHwnd, out var rect);
+            var gameWindowWidth = rect.Width;
+            var gameWindowHeight = rect.Height;
+            User32.BringWindowToTop(gameWindowHwnd);
 
-            foreach (var region in regions)
+            _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
+            if (Math.Abs(_config.ReferenceScreenHeight * _config.ClientGameScale - gameWindowHeight) > 0.01)
             {
-                var color = image.GetPixel(_config.ClientRareColorPosX, (int)region[0].Rect.Center.Y);
-                var rare = GetRare(color);
-                var item = new GachaItem(region[0].Text, region[2].Text, region[1].Text == "武器" ? ItemType.Weapon : ItemType.Character, rare);
-                list.Add(item);
+                throw new Exception("游戏分辨率初始化失败：非16: 9分辨率");
             }
 
-            MouseOperations.LeftMouseClick(_config.ClientNextPageArrowX, _config.ClientNextPageArrowY);
+            _config.ClientGameWidth = gameWindowWidth;
+            _config.ClientGameHeight = gameWindowHeight;
+            _config.ClientLogBoxX0 = (int)(_config.ReferenceLogBoxX0 * _config.ClientGameScale);
+            _config.ClientLogBoxY0 = (int)(_config.ReferenceLogBoxY0 * _config.ClientGameScale);
+            _config.ClientLogBoxWidth = (int)(_config.ReferenceLogBoxWidth * _config.ClientGameScale);
+            _config.ClientLogBoxHeight = (int)(_config.ReferenceLogBoxHeight * _config.ClientGameScale);
+            _config.ClientRareColorPosX = (int)(_config.ReferenceRareColorPosX * _config.ClientGameScale);
+            _config.ClientNextPageArrowX = (int)(_config.ReferenceNextPageArrowX * _config.ClientGameScale);
+            _config.ClientNextPageArrowY = (int)(_config.ReferenceNextPageArrowY * _config.ClientGameScale);
+
+            App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
 
             Task.Delay(200).Wait();
+
+            var list = new List<GachaItem>();
+            Bitmap? lastCapturedImage = null;
+            while (true)
+            {
+                var image =
+                ScreenOperations.CaptureRegion(_config.ClientLogBoxX0, _config.ClientLogBoxY0, _config.ClientLogBoxWidth, _config.ClientLogBoxHeight);
+
+                if (lastCapturedImage != null)
+                {
+                    var mse = ImageOperations.ImageMse(lastCapturedImage, image);
+                    if (mse < 45)
+                    {
+                        break;
+                    }
+                }
+
+                lastCapturedImage = new(image);
+
+                //_paddleOrcService.GetText(image);
+                var regions = _paddleOrcService.GetRegions(image);
+
+                foreach (var region in regions)
+                {
+                    var color = image.GetPixel(_config.ClientRareColorPosX, (int)region[0].Rect.Center.Y);
+                    var rare = GetRare(color);
+                    var item = new GachaItem(region[0].Text, region[2].Text, region[1].Text == "武器" ? ItemType.Weapon : ItemType.Character, rare);
+                    list.Add(item);
+                }
+
+                MouseOperations.LeftMouseClick(_config.ClientNextPageArrowX, _config.ClientNextPageArrowY);
+
+                Task.Delay(200).Wait();
+            }
+
+            MergeHistory(list);
+
+            User32.ShowWindow(gameWindowHwnd, ShowWindowCommand.SW_MINIMIZE);
+        } catch (Exception)
+        {
+            System.Windows.MessageBox.Show("游戏分辨率初始化失败：非16: 9分辨率全屏");
+            Log.Warning("游戏分辨率初始化失败：非16: 9分辨率全屏");
         }
-
-        MergeHistory(list);
-
-        User32.ShowWindow(gameWindowHwnd, ShowWindowCommand.SW_MINIMIZE);
     }
 
     private int GetRare(Color color)
