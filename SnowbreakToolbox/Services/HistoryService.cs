@@ -1,19 +1,14 @@
 ﻿using Serilog;
 using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SnowbreakToolbox.Services;
 
 public class HistoryService : ISnowbreakHistory
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new()
+    public static readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

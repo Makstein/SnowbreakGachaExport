@@ -1,12 +1,15 @@
-﻿using Serilog;
+﻿using Microsoft.Win32;
+using Serilog;
+using SnowbreakToolbox.Global;
 using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Services;
 using SnowbreakToolbox.Tools;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.IO;
 using System.Numerics;
-using System.Security.Cryptography;
+using System.Text.Json;
 using Vanara.PInvoke;
 using Wpf.Ui.Controls;
 
@@ -173,16 +176,16 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 curHistory = SWeaponHistory;
                 break;
             case 2:
-                curHistory = CCharHistory;
-                break;
-            case 3:
-                curHistory = CWeaponHistory;
-                break;
-            case 4:
                 curHistory = SCharHistoryMihoyo;
                 break;
-            case 5:
+            case 3:
                 curHistory = SWeaponHistoryMihoyo;
+                break;
+            case 4:
+                curHistory = CCharHistory;
+                break;
+            case 5:
+                curHistory = CWeaponHistory;
                 break;
         }
 
@@ -218,20 +221,20 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 curDisplayHistory = DisplaySWeaponHistory;
                 break;
             case 2:
-                curHistory = CCharHistory;
-                curDisplayHistory = DisplayCCharHistory;
-                break;
-            case 3:
-                curHistory = CWeaponHistory;
-                curDisplayHistory = DisplayCWeaponHistory;
-                break;
-            case 4:
                 curHistory = SCharHistoryMihoyo;
                 curDisplayHistory = DisplaySCharHistoryMihoyo;
                 break;
-            case 5:
+            case 3:
                 curHistory = SWeaponHistoryMihoyo;
                 curDisplayHistory = DisplaySWeaponHistoryMihoyo;
+                break;
+            case 4:
+                curHistory = CCharHistory;
+                curDisplayHistory = DisplayCCharHistory;
+                break;
+            case 5:
+                curHistory = CWeaponHistory;
+                curDisplayHistory = DisplayCWeaponHistory;
                 break;
         }
 
@@ -271,22 +274,32 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 MinSw = curDisplayHistory.MinBy(x => x.Count)!.Count;
                 break;
             case 2:
-                AvgCc = curDisplayHistory.Average(x => x.Count);
-                MinCc = curDisplayHistory.MinBy(x => x.Count)!.Count;
-                break;
-            case 3:
-                AvgCw = curDisplayHistory.Average(x => x.Count);
-                MinCw = curDisplayHistory.MinBy(x => x.Count)!.Count;
-                break;
-            case 4:
                 AvgScm = curDisplayHistory.Average(x => x.Count);
                 MinScm = curDisplayHistory.MinBy(x => x.Count)!.Count;
                 break;
-            case 5:
+            case 3:
                 AvgSwm = curDisplayHistory.Average(x => x.Count);
                 MinSwm = curDisplayHistory.MinBy(x => x.Count)!.Count;
                 break;
+            case 4:
+                AvgCc = curDisplayHistory.Average(x => x.Count);
+                MinCc = curDisplayHistory.MinBy(x => x.Count)!.Count;
+                break;
+            case 5:
+                AvgCw = curDisplayHistory.Average(x => x.Count);
+                MinCw = curDisplayHistory.MinBy(x => x.Count)!.Count;
+                break;
+
         }
+    }
+    private void UpdateDisplayAll()
+    {
+        UpdateDisplay(0);
+        UpdateDisplay(1);
+        UpdateDisplay(2);
+        UpdateDisplay(3);
+        UpdateDisplay(4);
+        UpdateDisplay(5);
     }
 
     private void InitializeViewModel()
@@ -302,12 +315,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             SCharHistoryMihoyo = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo, out List<GachaItem>? localScmHistory) ? localScmHistory : [];
             SWeaponHistoryMihoyo = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo, out List<GachaItem>? localSwmHistory) ? localSwmHistory : [];
 
-            UpdateDisplay(0);
-            UpdateDisplay(1);
-            UpdateDisplay(2);
-            UpdateDisplay(3);
-            UpdateDisplay(4);
-            UpdateDisplay(5);
+            UpdateDisplayAll();
 
             _initialized = true;
         }
@@ -326,6 +334,68 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         
     }
 
+    [RelayCommand]
+    public void ImportData()
+    {
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+        openFileDialog.Title = "选择要导入的记录";
+        openFileDialog.Multiselect = false;
+        openFileDialog.Filter = "json文件|*.json";
+        openFileDialog.InitialDirectory = UserPaths.BasePath;
+        if (!(bool)openFileDialog.ShowDialog())
+        {
+            return;
+        }
+        var filename = openFileDialog.FileName;
+        try {
+            var HistoryString = File.ReadAllText(filename);
+            var _gachaHistory = JsonSerializer.Deserialize<Dictionary<string, List<GachaItem>>>(HistoryString);
+            CCharHistory = _gachaHistory.TryGetValue(NameResource.CommonCharacterHistoryName, out List<GachaItem>? localCcHistory) ? localCcHistory : [];
+            SCharHistory = _gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
+            CWeaponHistory = _gachaHistory.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
+            SWeaponHistory = _gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
+            SCharHistoryMihoyo = _gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo, out List<GachaItem>? localScmHistory) ? localScmHistory : [];
+            SWeaponHistoryMihoyo = _gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo, out List<GachaItem>? localSwmHistory) ? localSwmHistory : [];
+
+            UpdateDisplayAll();
+        }
+        catch (Exception _e) {
+            System.Windows.MessageBox.Show("Some error occured!");
+        }
+    }
+
+    [RelayCommand]
+    public void ExportData()
+    {
+        var curTimestamp = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.Title = "选择要导出的位置";
+        saveFileDialog.InitialDirectory = UserPaths.BasePath;
+        saveFileDialog.OverwritePrompt = true;
+        saveFileDialog.AddExtension = true;
+        saveFileDialog.DefaultExt = "json";
+        saveFileDialog.Filter = "json文件|*.json";
+        saveFileDialog.FileName = $"{curTimestamp}_export.json";
+        if (!(bool)saveFileDialog.ShowDialog())
+        {
+            return;
+        }
+        var filename = saveFileDialog.FileName;
+        
+        Dictionary<string, List<GachaItem>> newHistory = [];
+
+        newHistory.Add(NameResource.SpecialCharacterHistoryName, SCharHistory);
+        newHistory.Add(NameResource.SpecialWeaponHistoryName, SWeaponHistory);
+        newHistory.Add(NameResource.SpecialCharacterHistoryNameMihoyo, SCharHistoryMihoyo);
+        newHistory.Add(NameResource.SpecialWeaponHistoryNameMihoyo, SWeaponHistoryMihoyo);
+        newHistory.Add(NameResource.CommonCharacterHistoryName, CCharHistory);
+        newHistory.Add(NameResource.CommonWeaponHistoryName, CWeaponHistory);
+
+        var newHistoryString = JsonSerializer.Serialize(newHistory, HistoryService._jsonOptions);
+        File.WriteAllText(filename, newHistoryString);
+        return;
+    }
+
     public void Dispose()
     {
         if (!_initialized)
@@ -334,12 +404,14 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         }
 
         Dictionary<string, List<GachaItem>> newHistory = [];
-        newHistory.Add(NameResource.CommonCharacterHistoryName, CCharHistory);
+
         newHistory.Add(NameResource.SpecialCharacterHistoryName, SCharHistory);
-        newHistory.Add(NameResource.CommonWeaponHistoryName, CWeaponHistory);
         newHistory.Add(NameResource.SpecialWeaponHistoryName, SWeaponHistory);
         newHistory.Add(NameResource.SpecialCharacterHistoryNameMihoyo, SCharHistoryMihoyo);
         newHistory.Add(NameResource.SpecialWeaponHistoryNameMihoyo, SWeaponHistoryMihoyo);
+        newHistory.Add(NameResource.CommonCharacterHistoryName, CCharHistory);
+        newHistory.Add(NameResource.CommonWeaponHistoryName, CWeaponHistory);
+
         _historyService.SaveGachaHistory(newHistory);
 
         GC.SuppressFinalize(this);
