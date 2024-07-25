@@ -88,11 +88,29 @@ namespace SnowbreakToolbox {
         }
         
         /// <summary>
+        ///   查找类似 SpecialCharacterHistoryMihoyo 的本地化字符串。
+        /// </summary>
+        internal static string SpecialCharacterHistoryNameMihoyo {
+            get {
+                return ResourceManager.GetString("SpecialCharacterHistoryNameMihoyo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 SpecialWeaponHistory 的本地化字符串。
         /// </summary>
         internal static string SpecialWeaponHistoryName {
             get {
                 return ResourceManager.GetString("SpecialWeaponHistoryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 SpecialWeaponHistoryMihoyo 的本地化字符串。
+        /// </summary>
+        internal static string SpecialWeaponHistoryNameMihoyo {
+            get {
+                return ResourceManager.GetString("SpecialWeaponHistoryNameMihoyo", resourceCulture);
             }
         }
     }
