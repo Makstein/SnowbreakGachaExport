@@ -36,12 +36,21 @@
                 Margin="12,0,0,0"
                 VerticalAlignment="Stretch"
                 Command="{Binding ViewModel.ExportDataCommand}"
-                Content="导出记录" />
+                Content="导出记录"
+                ToolTip="json格式"
+                ToolTipService.InitialShowDelay="0" />
             <Button
                 Margin="12,0,0,0"
                 VerticalAlignment="Stretch"
                 Command="{Binding ViewModel.ImportDataCommand}"
-                Content="读取记录" />
+                Content="导入记录"
+                ToolTip="json格式"
+                ToolTipService.InitialShowDelay="0" />
+            <Button
+                Margin="12,0,0,0"
+                VerticalAlignment="Stretch"
+                Command="{Binding ViewModel.ClearUpDataCommand}"
+                Content="清空所有记录" />
         </StackPanel>
 
         <Grid Grid.Row="1">

@@ -76,7 +76,7 @@ public class HistoryService : ISnowbreakHistory
                 return;
             }
 
-            File.Copy(Global.UserPaths.DataFile, Global.UserPaths.DataFile + "_Backup" + DateTime.Now.ToString("yyyyMMddhhmmss"));
+            File.Copy(Global.UserPaths.DataFile, Global.UserPaths.DataPath + "\\" + DateTime.Now.ToString("yyyyMMddtthhmmss") + "_Backup" + ".json");
         }
 
         File.WriteAllText(Global.UserPaths.DataFile, newHistoryString);

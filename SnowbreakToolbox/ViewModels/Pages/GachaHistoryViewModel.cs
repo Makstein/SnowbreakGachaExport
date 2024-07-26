@@ -342,7 +342,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         openFileDialog.Multiselect = false;
         openFileDialog.Filter = "json文件|*.json";
         openFileDialog.InitialDirectory = UserPaths.BasePath;
-        if (!(bool)openFileDialog.ShowDialog())
+        if (openFileDialog.ShowDialog() != true)
         {
             return;
         }
@@ -350,6 +350,11 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         try {
             var HistoryString = File.ReadAllText(filename);
             var _gachaHistory = JsonSerializer.Deserialize<Dictionary<string, List<GachaItem>>>(HistoryString);
+
+            if(_gachaHistory == null)
+            {
+                throw new Exception("Wrong json");
+            }
             CCharHistory = _gachaHistory.TryGetValue(NameResource.CommonCharacterHistoryName, out List<GachaItem>? localCcHistory) ? localCcHistory : [];
             SCharHistory = _gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
             CWeaponHistory = _gachaHistory.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
@@ -359,7 +364,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
             UpdateDisplayAll();
         }
-        catch (Exception _e) {
+        catch (Exception) {
             System.Windows.MessageBox.Show("Some error occured!");
         }
     }
@@ -376,7 +381,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         saveFileDialog.DefaultExt = "json";
         saveFileDialog.Filter = "json文件|*.json";
         saveFileDialog.FileName = $"{curTimestamp}_export.json";
-        if (!(bool)saveFileDialog.ShowDialog())
+        if (saveFileDialog.ShowDialog() != true)
         {
             return;
         }
@@ -394,6 +399,16 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         var newHistoryString = JsonSerializer.Serialize(newHistory, HistoryService._jsonOptions);
         File.WriteAllText(filename, newHistoryString);
         return;
+    }
+
+    [RelayCommand]
+    public void ClearUpData()
+    {
+        var result = System.Windows.MessageBox.Show("你确定要执行这个操作吗？\n该操作会清除所有记录，但会在Data目录保留备份", "确认", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if(result == System.Windows.MessageBoxResult.No) {  return; }
+        SCharHistory = SWeaponHistory = SCharHistoryMihoyo = SWeaponHistoryMihoyo = CCharHistory = CWeaponHistory = [];
+        _historyService.SaveGachaHistory([]);
+        UpdateDisplayAll();
     }
 
     public void Dispose()
