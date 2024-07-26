@@ -40,16 +40,27 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     [ObservableProperty] private double _avgCc;     // Common character
     [ObservableProperty] private int _minCc;
+    [ObservableProperty] private int _primeCountCc;
+
     [ObservableProperty] private double _avgCw;     // Common weapon
     [ObservableProperty] private int _minCw;
+    [ObservableProperty] private int _primeCountCw;
+
     [ObservableProperty] private double _avgSc;     // Special character
     [ObservableProperty] private int _minSc;
+    [ObservableProperty] private int _primeCountSc;
+
     [ObservableProperty] private double _avgSw;     // Special weapon
     [ObservableProperty] private int _minSw;
+    [ObservableProperty] private int _primeCountSw;
+
     [ObservableProperty] private double _avgScm;    // Special character Mihoyo
     [ObservableProperty] private int _minScm;
+    [ObservableProperty] private int _primeCountScm;
+
     [ObservableProperty] private double _avgSwm;    // Special weapon Mihoyo
     [ObservableProperty] private int _minSwm;
+    [ObservableProperty] private int _primeCountSwm;
 
     public int SelectedBannerIndex { get; set; }
 
@@ -145,6 +156,62 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         {
             System.Windows.MessageBox.Show("游戏分辨率初始化失败：非16: 9分辨率全屏");
             Log.Warning("游戏分辨率初始化失败：非16: 9分辨率全屏");
+        }
+    }
+
+    public void ComputePrimeCount(int bannerIndex)
+    {
+        List<GachaItem> _history = [];
+        switch (bannerIndex)
+        {
+            case 0:
+                _history = SCharHistory;
+                break;
+            case 1:
+                _history = SWeaponHistory;
+                break;
+            case 2:
+                _history = SCharHistoryMihoyo;
+                break;
+            case 3:
+                _history = SWeaponHistoryMihoyo;
+                break;
+            case 4:
+                _history = CCharHistory;
+                break;
+            case 5:
+                _history = CWeaponHistory;
+                break;
+        }
+        int primeCount = 0;
+        foreach (GachaItem _item in _history)
+        {
+            if (_item.Star == 5) { break; }
+#if DEBUG
+            Log.Information($"Banner Index {bannerIndex}, item is {_item.Id}");
+#endif
+            primeCount++;
+        }
+        switch (bannerIndex)
+        {
+            case 0:
+                PrimeCountSc = primeCount;
+                break;
+            case 1:
+                PrimeCountSw = primeCount;
+                break;
+            case 2:
+                PrimeCountScm = primeCount;
+                break;
+            case 3:
+                PrimeCountSwm = primeCount;
+                break;
+            case 4:
+                PrimeCountCc = primeCount;
+                break;
+            case 5:
+                PrimeCountCw = primeCount;
+                break;
         }
     }
 
@@ -260,6 +327,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
         if (curDisplayHistory.Count <= 0)
         {
+            ComputePrimeCount(bannerIndex);
             return;
         }
 
@@ -291,6 +359,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 break;
 
         }
+        ComputePrimeCount(bannerIndex);
     }
     private void UpdateDisplayAll()
     {

@@ -73,6 +73,25 @@
                 <ui:Card Margin="5,5,5,0">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center">特选当期角色</TextBlock>
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Text="垫了" />
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="{Binding ViewModel.PrimeCountSc}" />
+
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="发" />
+                        </Grid>
+                        
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -180,6 +199,24 @@
                 <ui:Card Margin="5,5,5,0">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center">特选当期武器</TextBlock>
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+        Text="垫了" />
+
+                            <TextBlock
+        Grid.Column="1"
+        Text="{Binding ViewModel.PrimeCountSw}" />
+
+                            <TextBlock
+        Grid.Column="2"
+        Text="发" />
+                        </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -287,6 +324,24 @@
                 <ui:Card Margin="5,5,5,0">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center">常驻角色</TextBlock>
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+        Text="垫了" />
+
+                            <TextBlock
+        Grid.Column="1"
+        Text="{Binding ViewModel.PrimeCountCc}" />
+
+                            <TextBlock
+        Grid.Column="2"
+        Text="发" />
+                        </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -394,6 +449,24 @@
                 <ui:Card Margin="5,5,5,0">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center">常驻武器</TextBlock>
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+        Text="垫了" />
+
+                            <TextBlock
+        Grid.Column="1"
+        Text="{Binding ViewModel.PrimeCountCw}" />
+
+                            <TextBlock
+        Grid.Column="2"
+        Text="发" />
+                        </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -501,6 +574,24 @@
                 <ui:Card Margin="5,5,5,0">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center">当期角色</TextBlock>
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+        Text="垫了" />
+
+                            <TextBlock
+        Grid.Column="1"
+        Text="{Binding ViewModel.PrimeCountScm}" />
+
+                            <TextBlock
+        Grid.Column="2"
+        Text="发" />
+                        </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
@@ -608,6 +699,24 @@
                 <ui:Card Margin="5,5,5,0">
                     <StackPanel>
                         <TextBlock HorizontalAlignment="Center">当期武器</TextBlock>
+                        <Grid HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+        Text="垫了" />
+
+                            <TextBlock
+        Grid.Column="1"
+        Text="{Binding ViewModel.PrimeCountSwm}" />
+
+                            <TextBlock
+        Grid.Column="2"
+        Text="发" />
+                        </Grid>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
