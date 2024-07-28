@@ -25,4 +25,3 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
           MERGE_LABELS: "autorelease: pending"
-          MERGE_FILTER_AUTHOR: "Makstein"
