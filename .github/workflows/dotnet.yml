@@ -2,11 +2,14 @@
 
 name: Auto-Build
 
-on:
+on: |
   push:
     branches: ["main"]
-    paths:
-      - "**.cs"
+    paths-ignore:
+      - "**.md"
+      - "**.yml"
+
+  workflow_dispatch
 
 permissions:
   contents: write
