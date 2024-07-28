@@ -71,7 +71,7 @@ public class HistoryService : ISnowbreakHistory
         if (File.Exists(Global.UserPaths.DataFile))
         {
             var oldHistoryString = File.ReadAllText(Global.UserPaths.DataFile);
-            if (oldHistoryString == newHistoryString)
+            if (oldHistoryString == newHistoryString || oldHistoryString == "{}")
             {
                 return;
             }
