@@ -5,6 +5,8 @@ name: Auto-Build
 on:
   push:
     branches: ["main"]
+    paths:
+      - "**.cs"
 
 permissions:
   contents: write
