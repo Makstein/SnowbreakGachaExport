@@ -38,6 +38,7 @@
 - 游戏需全屏或全屏窗口，如果多显示器需与程序在同一屏幕
 - 游戏内需要预先打开抽卡记录页面，并在第一页开始获取，如下
 ![loading](Document/Images/FromWhereToStartGetGachaData.png)
+- 导出会默认使用当前时间戳命名，也可以自定义文件名
   
   
 
