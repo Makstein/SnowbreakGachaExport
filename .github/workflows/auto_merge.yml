@@ -15,6 +15,7 @@ on:
     types:
       - submitted
   status: {}
+  workflow_dispatch:
 
 jobs:
   auto-merge-filter-Makstein:
@@ -25,6 +26,17 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
           MERGE_FILTER_AUTHOR: "Makstein"
+          MERGE_LABELS: ""
+
+  auto-merge-filter-Kirisame:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Automerge
+        uses: "pascalgn/automerge-action@v0.14.3"
+        env:
+          GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
+          MERGE_FILTER_AUTHOR: "KirisameVanilla"
+          MERGE_LABELS: ""
 
   auto-merge-filter-tag-automerge:
     runs-on: ubuntu-latest
@@ -34,12 +46,3 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
           MERGE_LABELS: "automerge"
-
-  auto-merge-filter-tag-autorelease_pending:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Automerge
-        uses: "pascalgn/automerge-action@v0.14.3"
-        env:
-          GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
-          MERGE_LABELS: "autorelease: pending"
