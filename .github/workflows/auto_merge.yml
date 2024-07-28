@@ -25,4 +25,4 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
           MERGE_LABELS: ""
-          MERGE_FILTER_AUTHOR: "KirisameVanilla,Makstein"
+          MERGE_FILTER_AUTHOR: ["Makstein", "KirisameVanilla"]
