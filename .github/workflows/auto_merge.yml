@@ -5,10 +5,7 @@ on:
     types:
       - labeled
       - synchronize
-      - opened
-      - edited
       - ready_for_review
-      - reopened
       - unlocked
   pull_request_review:
     types:
@@ -17,25 +14,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  auto-merge-filter-Makstein:
+  auto-merge-filter-author:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        author: ["Makstein", "KirisameVanilla"]
     steps:
       - name: Automerge
         uses: "pascalgn/automerge-action@v0.14.3"
         env:
           GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
-          MERGE_FILTER_AUTHOR: "Makstein"
+          MERGE_FILTER_AUTHOR: ${{ matrix.author }}
           MERGE_LABELS: ""
 
-  auto-merge-filter-Kirisame:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Automerge
-        uses: "pascalgn/automerge-action@v0.14.3"
-        env:
-          GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
-          MERGE_FILTER_AUTHOR: "KirisameVanilla"
-          MERGE_LABELS: ""
 
   auto-merge-filter-tag-automerge:
     runs-on: ubuntu-latest
