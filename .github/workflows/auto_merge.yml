@@ -24,7 +24,8 @@ jobs:
         uses: "pascalgn/automerge-action@v0.14.3"
         env:
           GITHUB_TOKEN: "${{ secrets.RELEASE_TOKEN }}"
-          MERGE_LABELS: "okay"
+          MERGE_FILTER_AUTHOR: "Makstein"
+          MERGE_LABELS: ""
 
   auto-merge-filter-Kirisame:
     runs-on: ubuntu-latest
