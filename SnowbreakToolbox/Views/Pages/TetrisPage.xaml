@@ -39,7 +39,12 @@
                             VerticalAlignment="Stretch"
                             Appearance="Secondary"
                             Background="{Binding CellColor}"
-                            Command="{Binding ChangeCellStatusCommand}" />
+                            Command="{Binding ChangeCellStatusCommand}">
+                            <TextBlock
+                                Text="{Binding CellSerialNum}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </ui:Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ui:VirtualizingItemsControl>
