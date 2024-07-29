@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.0.2...v2.1.0) (2024-07-29)
+
+
+### Features
+
+* change tetris icon and add numbers on each type of tetris ([4ba9dd5](https://github.com/Makstein/SnowbreakGachaExport/commit/4ba9dd560e9cf2f1e3d276a918ba968578498c8d))
+
 ## [2.0.2](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.0.1...v2.0.2) (2024-07-28)
 
 
