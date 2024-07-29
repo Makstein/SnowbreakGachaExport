@@ -16,17 +16,17 @@ public partial class TetrisViewModel : ObservableObject
 
     private readonly List<Brush> _blockColors =
         [
-            new SolidColorBrush(Colors.LightSkyBlue),           // 1
-            new SolidColorBrush(Colors.MediumPurple),           // 2
-            new SolidColorBrush(Colors.DodgerBlue),             // 3
-            new SolidColorBrush(Colors.YellowGreen),            // 4
-            new SolidColorBrush(Colors.GreenYellow),            // 5
-            new SolidColorBrush(Colors.Yellow),                 // 6
-            new SolidColorBrush(Colors.Chocolate),              // 7
-            new SolidColorBrush(Colors.Gold),                   // 8
-            new SolidColorBrush(Colors.OrangeRed),              // 9
-            new SolidColorBrush(Colors.IndianRed),              // 10
-            new SolidColorBrush(Colors.MediumVioletRed),        // 11
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#97b6d0")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9596d6")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#93b6d2")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#94b9bb")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#bbc896")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99c395")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#cbba9c")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#c6c192")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#cfa6c6")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f7babb")),
+            new SolidColorBrush((Color)ColorConverter.ConvertFromString("#a2abcb")),
         ];
 
     public TetrisViewModel()
@@ -119,6 +119,7 @@ public partial class TetrisViewModel : ObservableObject
                 if (solution[i][j] == 0xff) continue;
 
                 Cells[i * 6 + j].CellColor = _blockColors[solution[i][j] - 1];
+                Cells[i * 6 + j].CellSerialNum = $"{solution[i][j]}";
             }
         }
     }

@@ -8,6 +8,9 @@ public partial class TetrisMapCell : ObservableObject
     
     [ObservableProperty]
     private Brush _cellColor = new SolidColorBrush(Colors.Azure);
+
+    [ObservableProperty]
+    private string _cellSerialNum = string.Empty;
     
     [RelayCommand]
     private void OnChangeCellStatus()
