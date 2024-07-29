@@ -474,7 +474,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     public void ClearUpData()
     {
         var result = System.Windows.MessageBox.Show("你确定要执行这个操作吗？\n该操作会清除所有记录，但会在Data目录保留备份", "确认", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if(result == System.Windows.MessageBoxResult.No) {  return; }
+        if(result == System.Windows.MessageBoxResult.No) { return; }
         SCharHistory = SWeaponHistory = SCharHistoryMihoyo = SWeaponHistoryMihoyo = CCharHistory = CWeaponHistory = [];
         _historyService.SaveGachaHistory([]);
         UpdateDisplayAll();
