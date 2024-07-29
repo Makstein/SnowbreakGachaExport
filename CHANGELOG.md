@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/KirisameVanilla/SnowbreakGachaExport/compare/v2.0.2...v2.0.3) (2024-07-29)
+
+
+### Bug Fixes
+
+* wont create backup file when current history is empty ([1180d1b](https://github.com/KirisameVanilla/SnowbreakGachaExport/commit/1180d1b12ff55dbd44b7bdd576dbe6a39052b483))
+
 ## [2.0.2](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.0.1...v2.0.2) (2024-07-28)
 
 
