@@ -71,12 +71,12 @@ public class HistoryService : ISnowbreakHistory
         if (File.Exists(Global.UserPaths.DataFile))
         {
             var oldHistoryString = File.ReadAllText(Global.UserPaths.DataFile);
-            if (oldHistoryString == newHistoryString || oldHistoryString == "{}")
+            if (oldHistoryString == newHistoryString)
             {
                 return;
             }
-
-            File.Copy(Global.UserPaths.DataFile, Global.UserPaths.DataPath + "\\" + DateTime.Now.ToString("yyyyMMddtthhmmss") + "_Backup" + ".json");
+            if (oldHistoryString != "{}" && oldHistoryString!= "{\r\n  \"SpecialCharacterHistory\": [],\r\n  \"SpecialWeaponHistory\": [],\r\n  \"SpecialCharacterHistoryMihoyo\": [],\r\n  \"SpecialWeaponHistoryMihoyo\": [],\r\n  \"CommonCharacterHistory\": [],\r\n  \"CommonWeaponHistory\": []\r\n}")
+                File.Copy(Global.UserPaths.DataFile, Global.UserPaths.DataPath + "\\" + DateTime.Now.ToString("yyyyMMddtthhmmss") + "_Backup" + ".json");
         }
 
         File.WriteAllText(Global.UserPaths.DataFile, newHistoryString);
