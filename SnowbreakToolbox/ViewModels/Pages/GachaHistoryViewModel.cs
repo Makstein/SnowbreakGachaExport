@@ -424,13 +424,14 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             {
                 throw new Exception("Wrong json");
             }
+
             CCharHistory = _gachaHistory.TryGetValue(NameResource.CommonCharacterHistoryName, out List<GachaItem>? localCcHistory) ? localCcHistory : [];
             SCharHistory = _gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
             CWeaponHistory = _gachaHistory.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
             SWeaponHistory = _gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
             SCharHistoryMihoyo = _gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo, out List<GachaItem>? localScmHistory) ? localScmHistory : [];
             SWeaponHistoryMihoyo = _gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo, out List<GachaItem>? localSwmHistory) ? localSwmHistory : [];
-
+            _historyService.SaveGachaHistory(_gachaHistory);
             UpdateDisplayAll();
         }
         catch (Exception) {
