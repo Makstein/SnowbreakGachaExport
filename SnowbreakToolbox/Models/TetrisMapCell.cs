@@ -25,5 +25,6 @@ public partial class TetrisMapCell : ObservableObject
             Value = 0;
             CellColor = new SolidColorBrush(Colors.Azure);
         }
+        CellSerialNum = string.Empty;
     }
 }
