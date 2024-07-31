@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.1.1...v2.1.2) (2024-07-31)
+
+
+### Bug Fixes
+
+* Import Gacha data func and Clear up history func ([f5eb774](https://github.com/Makstein/SnowbreakGachaExport/commit/f5eb7747d0fcc2c506f816bae5fb5a0fbab37a1c))
+
 ## [2.1.1](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.1.0...v2.1.1) (2024-07-31)
 
 
