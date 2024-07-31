@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.1.0...v2.1.1) (2024-07-31)
+
+
+### Bug Fixes
+
+* in 信源 part, after the result's been computed and displayed, change the block to empty block will not discard the result ([5ec14e3](https://github.com/Makstein/SnowbreakGachaExport/commit/5ec14e3fb434a3052c5cc22e341567a387a2e1ec))
+
 ## [2.1.0](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.0.2...v2.1.0) (2024-07-29)
 
 
