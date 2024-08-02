@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using OpenCvSharp.Internal.Vectors;
 using SnowbreakToolbox.Models;
 using SnowbreakToolbox.Services;
+using SnowbreakToolbox.Tools;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -78,6 +79,31 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware
             IsInitialized = true;
         }
     }
+
+    [RelayCommand]
+    public async Task TestModPak()
+    {
+        try
+        {
+            await Task.Run(() =>
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog()
+                {
+                    Title = "TestSelectModPak",
+                    Multiselect = false,
+                };
+                if (openFileDialog.ShowDialog() != true) return;
+
+                //var pak = PakOperations.ReadPakFromPathUnpack(openFileDialog.FileName);
+                var pak = PakOperations.ReadPakFromPathBrute(openFileDialog.FileName);
+            });
+        }
+        catch
+        {
+
+        }
+    }
+
 
     [RelayCommand]
     public void UpdateDisplay()
