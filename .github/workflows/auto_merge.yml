@@ -17,7 +17,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  auto-merge-filter-author:
+  auto-merge-filter-author-InBuildAndReleae:
+    if: github.event.pull_request.head.ref == 'release-please--branches--main--components--standard-version'
     runs-on: ubuntu-latest
     strategy:
       matrix:
