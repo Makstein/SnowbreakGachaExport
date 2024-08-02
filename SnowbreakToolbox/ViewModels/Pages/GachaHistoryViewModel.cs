@@ -34,6 +34,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     private readonly PaddleOrcService _paddleOrcService = (snowbreakOcr as PaddleOrcService)!;
     private readonly ISnowbreakConfig _configService = snowbreakConfig;
     private readonly ISnowbreakHistory _historyService = snowbreakHistory;
+    // The height of title bar in Windows is 30px
+    private readonly int WindowsTitleBarHeight = 30;
 
     private AppConfig? _config;
     private bool _initialized;
@@ -81,7 +83,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     [RelayCommand]
     private void OnGetHistory()
     {
-        try {
+        try
+        {
             var gameWindowHwnd = User32.FindWindow(null, _config!.GameWindowTitle);
             if (gameWindowHwnd == HWND.NULL)
                 gameWindowHwnd = User32.FindWindow(null, _config.GameWindowTitleCN);
@@ -91,8 +94,11 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             }
 
             User32.GetWindowRect(gameWindowHwnd, out var rect);
+            var bFullscreen = IsFullscreen(rect.Width, rect.Height);
+
             var gameWindowWidth = rect.Width;
-            var gameWindowHeight = rect.Height;
+            var gameWindowHeight = bFullscreen ? rect.Height : rect.Height - WindowsTitleBarHeight;
+
             User32.BringWindowToTop(gameWindowHwnd);
 
             _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
@@ -110,6 +116,17 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             _config.ClientRareColorPosX = (int)(_config.ReferenceRareColorPosX * _config.ClientGameScale);
             _config.ClientNextPageArrowX = (int)(_config.ReferenceNextPageArrowX * _config.ClientGameScale);
             _config.ClientNextPageArrowY = (int)(_config.ReferenceNextPageArrowY * _config.ClientGameScale);
+
+            if (!bFullscreen)
+            {
+                _config.ClientLogBoxY0 += WindowsTitleBarHeight;
+                _config.ClientNextPageArrowY += WindowsTitleBarHeight;
+
+                _config.ClientLogBoxY0 += rect.top;
+                _config.ClientLogBoxX0 += rect.left;
+                _config.ClientNextPageArrowY += rect.top;
+                _config.ClientNextPageArrowX += rect.left;
+            }
 
             App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
 
@@ -152,11 +169,22 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             MergeHistory(list);
 
             User32.ShowWindow(gameWindowHwnd, ShowWindowCommand.SW_MINIMIZE);
-        } catch (Exception)
+        }
+        catch (Exception ex)
         {
             System.Windows.MessageBox.Show("游戏分辨率初始化失败：非16: 9分辨率全屏");
             Log.Warning("游戏分辨率初始化失败：非16: 9分辨率全屏");
         }
+    }
+
+    private bool IsFullscreen(int gameWindowWidth, int gameWindowHeight)
+    {
+        if (gameWindowWidth < _config!.ClientScreenWidth || gameWindowHeight < _config.ClientScreenHeight)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public void ComputePrimeCount(int bannerIndex)
@@ -277,7 +305,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         var curHistory = new List<GachaItem>();
         var curDisplayHistory = new ObservableCollection<DisplayItem>();
 
-        switch(bannerIndex)
+        switch (bannerIndex)
         {
             case 0:
                 curHistory = SCharHistory;
@@ -400,7 +428,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     public void OnNavigatedFrom()
     {
-        
+
     }
 
     [RelayCommand]
@@ -416,11 +444,12 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             return;
         }
         var filename = openFileDialog.FileName;
-        try {
+        try
+        {
             var HistoryString = File.ReadAllText(filename);
             var _gachaHistory = JsonSerializer.Deserialize<Dictionary<string, List<GachaItem>>>(HistoryString);
 
-            if(_gachaHistory == null)
+            if (_gachaHistory == null)
             {
                 throw new Exception("Wrong json");
             }
@@ -434,7 +463,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             _historyService.SaveGachaHistory(_gachaHistory);
             UpdateDisplayAll();
         }
-        catch (Exception) {
+        catch (Exception)
+        {
             System.Windows.MessageBox.Show("Some error occured!");
         }
     }
@@ -456,7 +486,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             return;
         }
         var filename = saveFileDialog.FileName;
-        
+
         Dictionary<string, List<GachaItem>> newHistory = [];
 
         newHistory.Add(NameResource.SpecialCharacterHistoryName, SCharHistory);
@@ -475,7 +505,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     public void ClearUpData()
     {
         var result = System.Windows.MessageBox.Show("你确定要执行这个操作吗？\n该操作会清除所有记录，但会在Data目录保留备份", "确认", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if(result == System.Windows.MessageBoxResult.No) { return; }
+        if (result == System.Windows.MessageBoxResult.No) { return; }
         SCharHistory = SWeaponHistory = SCharHistoryMihoyo = SWeaponHistoryMihoyo = CCharHistory = CWeaponHistory = [];
         _historyService.SaveGachaHistory([]);
         UpdateDisplayAll();
