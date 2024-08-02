@@ -39,6 +39,13 @@ public partial class MainWindowViewModel : ObservableObject
         //    TargetPageType = typeof(Views.Pages.AutoControlPage),
         //    FontFamily = new FontFamily("Microsoft YaHei Semibold"),
         //}
+        new NavigationViewItem()
+        {
+            Content = "Mod管理",
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Eye24, FontWeight = FontWeights.SemiBold },
+            TargetPageType = typeof(Views.Pages.ModManagerPage),
+            FontFamily = new FontFamily("Microsoft YaHei Semibold"),
+        },
     ];
 
     [ObservableProperty]

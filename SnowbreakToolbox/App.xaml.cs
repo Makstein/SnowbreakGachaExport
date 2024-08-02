@@ -10,7 +10,6 @@ using SnowbreakToolbox.Views.Pages;
 using SnowbreakToolbox.Views.Windows;
 using System.IO;
 using System.Windows.Threading;
-using Vanara.PInvoke;
 using Wpf.Ui;
 
 namespace SnowbreakToolbox;
@@ -99,6 +98,8 @@ public partial class App
             services.AddSingleton<AutoControlViewModel>();
             services.AddSingleton<SettingsPage>();
             services.AddSingleton<SettingsViewModel>();
+            services.AddSingleton<ModManagerPage>();
+            services.AddSingleton<ModManagerViewModel>();
         }).Build();
 
     /// <summary>
