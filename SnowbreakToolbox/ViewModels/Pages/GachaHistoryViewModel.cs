@@ -173,7 +173,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         catch (Exception ex)
         {
             System.Windows.MessageBox.Show("游戏分辨率初始化失败：非16: 9分辨率全屏");
-            Log.Warning("游戏分辨率初始化失败：非16: 9分辨率全屏");
+            Log.Warning("游戏分辨率初始化失败：非16: 9分辨率全屏", ex);
         }
     }
 

@@ -18,7 +18,7 @@ public static class PakOperations
     /// <summary>
     /// For research pak file only
     /// May use less ram than Brute if pak file too large
-    /// OtherWise, Brute is more reliable
+    /// Otherwise, Brute is more reliable
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>

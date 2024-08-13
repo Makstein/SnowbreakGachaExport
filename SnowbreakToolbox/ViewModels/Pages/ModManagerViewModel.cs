@@ -28,10 +28,20 @@ public class DisplayMod
         IsEnabled = isEnabled;
     }
 }
+
+public class DisplayCharacterCategory
+{
+    public string Name { get; set; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
+    public ObservableCollection<DisplayMod> Mods { get; set; } = [];
+}
+
 public partial class ModManagerViewModel : ObservableObject, INavigationAware
 {
     public List<Mod> Mods = new List<Mod>();
     public ObservableCollection<DisplayMod> DisplayMods { get; set; } = [];
+
+    public ObservableCollection<DisplayCharacterCategory> CharacterMods { get; set; } = [];
 
     static string EnabledSuffix = ".pak";
     static string DisabledSuffix = ".pak.disable";
@@ -81,7 +91,7 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware
     }
 
     [RelayCommand]
-    public async Task TestModPak()
+    public async Task ImportModPak()
     {
         try
         {
@@ -89,7 +99,8 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog()
                 {
-                    Title = "TestSelectModPak",
+                    Title = "Import Mod Pak File",
+                    Filter = "Pak File|*.pak",
                     Multiselect = false,
                 };
                 if (openFileDialog.ShowDialog() != true) return;

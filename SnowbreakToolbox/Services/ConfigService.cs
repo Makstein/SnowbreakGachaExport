@@ -36,7 +36,21 @@ public class ConfigService : ISnowbreakConfig
                 else
                 {
                     var configStr = File.ReadAllText(Global.UserPaths.ConfFile);
+                    var charCodeStr = File.ReadAllText(Global.UserPaths.CharacterCodeFile);
                     _config = JsonSerializer.Deserialize<AppConfig>(configStr);
+                    var charCodes = JsonSerializer.Deserialize<Dictionary<string, string>>(charCodeStr);
+
+                    if (_config == null) throw new Exception("配置文件转换失败");
+                    if (charCodes == null) throw new Exception("角色代码文件转换失败");
+
+                    // Have new characters
+                    if (_config.CharacterCodeName.Count < charCodes.Count)
+                    {
+                        foreach (var (k, v) in charCodes)
+                        {
+                            _config.CharacterCodeName.TryAdd(k, v);
+                        }
+                    }
                 }
             }
         }
