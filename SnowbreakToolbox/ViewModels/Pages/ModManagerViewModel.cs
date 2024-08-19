@@ -1,97 +1,89 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Win32;
-using OpenCvSharp.Internal.Vectors;
+﻿using Microsoft.Win32;
+using SnowbreakToolbox.Interfaces;
 using SnowbreakToolbox.Models;
-using SnowbreakToolbox.Services;
 using SnowbreakToolbox.Tools;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using Wpf.Ui.Controls;
 
 namespace SnowbreakToolbox.ViewModels.Pages;
+
+public class DisplayCharacterCategory
+{
+    public string Code { get; set; } = string.Empty;
+    public ObservableCollection<DisplayMod> Mods { get; set; } = [];
+    public string Name { get; set; } = string.Empty;
+}
+
 public class DisplayMod
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public bool IsEnabled { get; set; } = true;
     public DisplayMod(Mod mod)
     {
         Name = mod.Name;
         Description = mod.Description;
         IsEnabled = mod.IsEnabled;
     }
+
     public DisplayMod(string name, string description, bool isEnabled)
     {
         Name = name;
         Description = description;
         IsEnabled = isEnabled;
     }
-}
 
-public class DisplayCharacterCategory
-{
+    public string Description { get; set; } = string.Empty;
+    public bool IsEnabled { get; set; } = true;
     public string Name { get; set; } = string.Empty;
-    public string Code { get; set; } = string.Empty;
-    public ObservableCollection<DisplayMod> Mods { get; set; } = [];
 }
 
 public partial class ModManagerViewModel : ObservableObject, INavigationAware
 {
-    public List<Mod> Mods = new List<Mod>();
-    public ObservableCollection<DisplayMod> DisplayMods { get; set; } = [];
-
-    public ObservableCollection<DisplayCharacterCategory> CharacterMods { get; set; } = [];
-
-    static string EnabledSuffix = ".pak";
-    static string DisabledSuffix = ".pak.disable";
+    private readonly static string DisabledSuffix = ".pak.disable";
+    private readonly static string EnabledSuffix = ".pak";
+    private AppConfig? _config;
     private bool IsInitialized = false;
-    string ModPath = string.Empty;
-
-    [RelayCommand]
-    public void SelectModFolder()
+    private string ModPath = string.Empty;
+    public ObservableCollection<DisplayCharacterCategory> CharacterMods { get; set; } = [];
+    public ObservableCollection<DisplayMod> DisplayMods { get; set; } = [];
+    public List<Mod> Mods { get; set; } = [];
+    public void OnNavigatedFrom()
     {
-        OpenFolderDialog openFolderDialog = new OpenFolderDialog();
-        openFolderDialog.Title = "请选择Mod文件夹";
-        openFolderDialog.Multiselect = false;
-        if (openFolderDialog.ShowDialog()!= true) return;
-        if (string.IsNullOrEmpty(openFolderDialog.FolderName)) return;
-        ModPath = openFolderDialog.FolderName;
-        ListAllMods(ModPath);
-        UpdateDisplay();
     }
 
-    public void ListAllMods(string modPath)
+    public void OnNavigatedTo()
     {
-        Mods.Clear();
-        var files = Directory.GetFiles(ModPath);
-        foreach(var file in files)
+        // Reload config every time, for hot reload
+        _config = App.GetService<ISnowbreakConfig>()?.GetConfig();
+
+        Initialize();
+    }
+    [RelayCommand]
+    private void Apply()
+    {
+        foreach (var displayMod in DisplayMods)
         {
-            if (file.EndsWith(DisabledSuffix))
+            var isEnable = displayMod.IsEnabled;
+            var files = Directory.GetFiles(ModPath);
+            foreach (var file in files)
             {
-                var name = file.Substring(ModPath.Length+1, file.Length - DisabledSuffix.Length - ModPath.Length -1);
-                Mods.Add(new Mod(name, string.Empty, false));
-            }
-            else if (file.EndsWith(EnabledSuffix))
-            {
-                var name = file.Substring(ModPath.Length+1, file.Length - EnabledSuffix.Length - ModPath.Length -1);
-                Mods.Add(new Mod(name, string.Empty, true));
+                var disableName = $"{ModPath}\\{displayMod.Name}{DisabledSuffix}";
+                var enableName = $"{ModPath}\\{displayMod.Name}{EnabledSuffix}";
+                if (file == disableName && displayMod.IsEnabled)
+                {
+                    File.Copy(file, $"{ModPath}\\{displayMod.Name}{EnabledSuffix}");
+                    File.Delete(file);
+                }
+                else if (file == enableName && !displayMod.IsEnabled)
+                {
+                    File.Copy(file, $"{ModPath}\\{displayMod.Name}{DisabledSuffix}");
+                    File.Delete(file);
+                }
             }
         }
     }
 
-    public void Initialize()
-    {
-        if (!IsInitialized)
-        {
-            ListAllMods(ModPath);
-            UpdateDisplay();
-            IsInitialized = true;
-        }
-    }
-
     [RelayCommand]
-    public async Task ImportModPak()
+    private async Task ImportModPak()
     {
         try
         {
@@ -111,13 +103,62 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware
         }
         catch
         {
-
         }
     }
 
+    private void InitCharacterMods()
+    {
+        if (_config == null) return;
+
+        var characters = _config.CharacterCodeName;
+        foreach (var (k, v) in characters)
+        {
+            CharacterMods.Add(new DisplayCharacterCategory() { Name = v, Code = k });
+        }
+    }
+
+    private void Initialize()
+    {
+        if (!IsInitialized)
+        {
+            //UpdateDisplay();
+            InitCharacterMods();
+            IsInitialized = true;
+        }
+    }
+    private void ListAllMods(string modPath)
+    {
+        Mods.Clear();
+        var files = Directory.GetFiles(ModPath);
+        foreach (var file in files)
+        {
+            if (file.EndsWith(DisabledSuffix))
+            {
+                var name = file.Substring(ModPath.Length + 1, file.Length - DisabledSuffix.Length - ModPath.Length - 1);
+                Mods.Add(new Mod(name, string.Empty, false));
+            }
+            else if (file.EndsWith(EnabledSuffix))
+            {
+                var name = file.Substring(ModPath.Length + 1, file.Length - EnabledSuffix.Length - ModPath.Length - 1);
+                Mods.Add(new Mod(name, string.Empty, true));
+            }
+        }
+    }
+    [RelayCommand]
+    private void SelectModFolder()
+    {
+        OpenFolderDialog openFolderDialog = new OpenFolderDialog();
+        openFolderDialog.Title = "请选择Mod文件夹";
+        openFolderDialog.Multiselect = false;
+        if (openFolderDialog.ShowDialog() != true) return;
+        if (string.IsNullOrEmpty(openFolderDialog.FolderName)) return;
+        ModPath = openFolderDialog.FolderName;
+        ListAllMods(ModPath);
+        UpdateDisplay();
+    }
 
     [RelayCommand]
-    public void UpdateDisplay()
+    private void UpdateDisplay()
     {
         DisplayMods.Clear();
         ListAllMods(ModPath);
@@ -125,38 +166,5 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware
         {
             DisplayMods.Insert(0, new DisplayMod(mod));
         }
-    }
-    [RelayCommand]
-    public void Apply()
-    {
-        foreach (var displayMod in DisplayMods)
-        {
-            var isEnable = displayMod.IsEnabled;
-            var files = Directory.GetFiles(ModPath);
-            foreach(var file in files)
-            {
-                var disableName = $"{ModPath}\\{displayMod.Name}{DisabledSuffix}";
-                var enableName = $"{ModPath}\\{displayMod.Name}{EnabledSuffix}";
-                if (file == disableName && displayMod.IsEnabled)
-                {
-                    File.Copy(file, $"{ModPath}\\{displayMod.Name}{EnabledSuffix}");
-                    File.Delete(file);
-                }
-                else if (file == enableName && !displayMod.IsEnabled)
-                {
-                    File.Copy(file, $"{ModPath}\\{displayMod.Name}{DisabledSuffix}");
-                    File.Delete(file);
-                }
-            }
-        }
-    }
-
-    public void OnNavigatedTo()
-    {
-        Initialize();
-    }
-
-    public void OnNavigatedFrom()
-    {
     }
 }

@@ -13,13 +13,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Wpf.Ui.Controls;
 
 namespace SnowbreakToolbox.Views.Pages
 {
     /// <summary>
     /// ModManagerPage.xaml 的交互逻辑
     /// </summary>
-    public partial class ModManagerPage : Page
+    public partial class ModManagerPage : INavigableView<ModManagerViewModel>
     {
         public ModManagerViewModel ViewModel { get; set; }
         public ModManagerPage(ModManagerViewModel viewModel)

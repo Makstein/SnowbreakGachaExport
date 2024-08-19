@@ -104,7 +104,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
             if (Math.Abs(_config.ReferenceScreenHeight * _config.ClientGameScale - gameWindowHeight) > 0.01)
             {
-                throw new Exception("游戏分辨率初始化失败：非16: 9分辨率");
+                throw new Exception($"游戏分辨率初始化失败：非16: 9分辨率，检测游戏窗口宽高 {gameWindowWidth} : {gameWindowHeight}, 全屏：{bFullscreen}");
             }
 
             _config.ClientGameWidth = gameWindowWidth;
@@ -124,6 +124,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
                 _config.ClientLogBoxY0 += rect.top;
                 _config.ClientLogBoxX0 += rect.left;
+                _config.ClientRareColorPosX += rect.left;
                 _config.ClientNextPageArrowY += rect.top;
                 _config.ClientNextPageArrowX += rect.left;
             }
@@ -172,8 +173,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         }
         catch (Exception ex)
         {
-            System.Windows.MessageBox.Show("游戏分辨率初始化失败：非16: 9分辨率全屏");
-            Log.Warning("游戏分辨率初始化失败：非16: 9分辨率全屏", ex);
+            System.Windows.MessageBox.Show(ex.Message);
+            Log.Warning(ex.Message, ex);
         }
     }
 
@@ -434,11 +435,13 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     [RelayCommand]
     public void ImportData()
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog();
-        openFileDialog.Title = "选择要导入的记录";
-        openFileDialog.Multiselect = false;
-        openFileDialog.Filter = "json文件|*.json";
-        openFileDialog.InitialDirectory = UserPaths.BasePath;
+        OpenFileDialog openFileDialog = new OpenFileDialog
+        {
+            Title = "选择要导入的记录",
+            Multiselect = false,
+            Filter = "json文件|*.json",
+            InitialDirectory = UserPaths.BasePath
+        };
         if (openFileDialog.ShowDialog() != true)
         {
             return;
@@ -473,14 +476,16 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     public void ExportData()
     {
         var curTimestamp = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
-        SaveFileDialog saveFileDialog = new SaveFileDialog();
-        saveFileDialog.Title = "选择要导出的位置";
-        saveFileDialog.InitialDirectory = UserPaths.BasePath;
-        saveFileDialog.OverwritePrompt = true;
-        saveFileDialog.AddExtension = true;
-        saveFileDialog.DefaultExt = "json";
-        saveFileDialog.Filter = "json文件|*.json";
-        saveFileDialog.FileName = $"{curTimestamp}_export.json";
+        SaveFileDialog saveFileDialog = new SaveFileDialog
+        {
+            Title = "选择要导出的位置",
+            InitialDirectory = UserPaths.BasePath,
+            OverwritePrompt = true,
+            AddExtension = true,
+            DefaultExt = "json",
+            Filter = "json文件|*.json",
+            FileName = $"{curTimestamp}_export.json"
+        };
         if (saveFileDialog.ShowDialog() != true)
         {
             return;

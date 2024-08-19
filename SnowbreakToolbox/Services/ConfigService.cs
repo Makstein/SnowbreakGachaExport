@@ -89,7 +89,12 @@ public class ConfigService : ISnowbreakConfig
             var curClientScreenHeight = User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN);
 
             if (config.ClientScreenWidth == curClientScreenWidth && config.ClientScreenHeight == curClientScreenHeight)
+            {
+                Log.Information("检测分辨率缩放成功，与配置文件相同，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
+                    config.ClientScreenWidth,
+                    config.ClientScreenHeight);
                 return;
+            }
 
             config.ClientScreenScale = (double)curClientScreenWidth / config.ReferenceScreenWidth;
             if (Math.Abs(config.ReferenceScreenHeight * config.ClientScreenScale - curClientScreenHeight) > 0.01)
@@ -100,7 +105,7 @@ public class ConfigService : ISnowbreakConfig
             config.ClientScreenWidth = curClientScreenWidth;
             config.ClientScreenHeight = curClientScreenHeight;
 
-            Log.Information("初始化设置分辨率缩放成功，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
+            Log.Information("检测并记录分辨率缩放成功，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
                 config.ClientScreenWidth,
                 config.ClientScreenHeight);
         }
