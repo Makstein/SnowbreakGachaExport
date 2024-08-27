@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:SnowbreakToolbox.Models"
     xmlns:pages="clr-namespace:SnowbreakToolbox.Views.Pages"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:viewmodels="clr-namespace:SnowbreakToolbox.ViewModels.Pages"
@@ -21,24 +22,18 @@
 
         <StackPanel Orientation="Horizontal">
             <Button
-                Height="78"
                 Margin="15"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Command="{Binding ViewModel.ImportModPakCommand}"
                 Content="导入Mod" />
-
             <Button
-                Height="78"
                 Margin="15"
                 VerticalAlignment="Top"
                 Command="{Binding ViewModel.SelectModFolderCommand}"
                 Content="SelectFolder"
                 RenderTransformOrigin="0.5,0.5" />
-            <!--<Button Command="{Binding ViewModel.UpdateDisplayCommand}"
-        Content="Update" Height="78" Margin="311,16,0,0" VerticalAlignment="Top" />-->
             <Button
-                Height="78"
                 Margin="15"
                 VerticalAlignment="Top"
                 Command="{Binding ViewModel.ApplyCommand}"
@@ -98,35 +93,110 @@
                     </Style>
                 </TabControl.ItemContainerStyle>
                 <TabControl.ContentTemplate>
-                    <DataTemplate>
-                        <ui:ListView ItemsSource="{Binding Mods}">
-                            <ui:ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:DisplayCharacterCategory}">
+                        <ItemsControl ItemsSource="{Binding Mods}">
+                            <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="3*" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <!--  Name and description  -->
+                                    <ui:CardExpander>
+                                        <ui:CardExpander.Header>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding Key}" />
+                                                <ui:ToggleSwitch Grid.Column="1" Margin="5" />
+                                            </Grid>
+                                        </ui:CardExpander.Header>
                                         <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="*" />
-                                                <RowDefinition Height="*" />
-                                            </Grid.RowDefinitions>
-                                            <ui:TextBlock Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{Binding Name}" />
-                                            <ui:TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding Description}" />
+                                            <ui:ListView ItemsSource="{Binding Value}">
+                                                <ui:ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="*" />
+                                                                    <RowDefinition Height="*" />
+                                                                </Grid.RowDefinitions>
+                                                                <ui:TextBlock
+                                                                    Margin="5"
+                                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                                    Text="{Binding Name}" />
+                                                                <ui:TextBlock
+                                                                    Grid.Row="1"
+                                                                    Margin="5"
+                                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                    Text="{Binding Description}" />
+                                                            </Grid>
+
+                                                            <ui:TextBlock
+                                                                Grid.Column="1"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Text="{Binding SkinIndex}" />
+
+                                                            <ui:ToggleSwitch
+                                                                Grid.Column="2"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                IsChecked="{Binding IsEnabled}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ui:ListView.ItemTemplate>
+                                            </ui:ListView>
                                         </Grid>
-
-                                        <!--  Skin  -->
-                                        <ui:TextBlock HorizontalAlignment="Center" Text="" />
-
-                                        <!--  Is enabled  -->
-                                        <ui:ToggleSwitch HorizontalAlignment="Center" IsChecked="{Binding IsEnabled}" />
-                                    </Grid>
+                                    </ui:CardExpander>
                                 </DataTemplate>
-                            </ui:ListView.ItemTemplate>
-                        </ui:ListView>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!-- <ui:ListView ItemsSource="{Binding Mods}"> -->
+                        <!--     <ui:ListView.ItemTemplate> -->
+                        <!--         <DataTemplate> -->
+                        <!--             <Grid> -->
+                        <!--                 <Grid.ColumnDefinitions> -->
+                        <!--                     <ColumnDefinition Width="3*" /> -->
+                        <!--                     <ColumnDefinition Width="*" /> -->
+                        <!--                     <ColumnDefinition Width="*" /> -->
+                        <!--                 </Grid.ColumnDefinitions> -->
+                        <!--  ~1~  Name and description  @1@  -->
+                        <!--                 <Grid> -->
+                        <!--                     <Grid.RowDefinitions> -->
+                        <!--                         <RowDefinition Height="*" /> -->
+                        <!--                         <RowDefinition Height="*" /> -->
+                        <!--                     </Grid.RowDefinitions> -->
+                        <!--  <ui:TextBlock  -->
+                        <!--  Margin="5"  -->
+                        <!--  Foreground="{DynamicResource TextFillColorPrimaryBrush}"  -->
+                        <!--  Text="{Binding Name}" />  -->
+                        <!--  <ui:TextBlock  -->
+                        <!--  Grid.Row="1"  -->
+                        <!--  Margin="5"  -->
+                        <!--  Foreground="{DynamicResource TextFillColorSecondaryBrush}"  -->
+                        <!--  Text="{Binding Description}" />  -->
+                        <!--                 </Grid> -->
+                        <!--    -->
+                        <!--  ~1~  Skin  @1@  -->
+                        <!--  <ui:TextBlock  -->
+                        <!--  Grid.Column="1"  -->
+                        <!--  HorizontalAlignment="Center"  -->
+                        <!--  VerticalAlignment="Center"  -->
+                        <!--  Text="{Binding SkinIndex}" />  -->
+                        <!--    -->
+                        <!--  ~1~  Is enabled  @1@  -->
+                        <!--  <ui:ToggleSwitch  -->
+                        <!--  Grid.Column="2"  -->
+                        <!--  HorizontalAlignment="Center"  -->
+                        <!--  IsChecked="{Binding IsEnabled}" />  -->
+                        <!--             </Grid> -->
+                        <!--         </DataTemplate> -->
+                        <!--     </ui:ListView.ItemTemplate> -->
+                        <!-- </ui:ListView> -->
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>

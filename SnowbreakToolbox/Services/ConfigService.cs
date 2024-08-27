@@ -9,7 +9,7 @@ namespace SnowbreakToolbox.Services;
 
 public class ConfigService : ISnowbreakConfig
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new()
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -38,17 +38,17 @@ public class ConfigService : ISnowbreakConfig
                     var configStr = File.ReadAllText(Global.UserPaths.ConfFile);
                     var charCodeStr = File.ReadAllText(Global.UserPaths.CharacterCodeFile);
                     _config = JsonSerializer.Deserialize<AppConfig>(configStr);
-                    var charCodes = JsonSerializer.Deserialize<Dictionary<string, string>>(charCodeStr);
-
                     if (_config == null) throw new Exception("配置文件转换失败");
+
+                    var charCodes = JsonSerializer.Deserialize<List<Character>>(charCodeStr);
                     if (charCodes == null) throw new Exception("角色代码文件转换失败");
 
                     // Have new characters
-                    if (_config.CharacterCodeName.Count < charCodes.Count)
+                    if (_config.Characters.Count < charCodes.Count)
                     {
-                        foreach (var (k, v) in charCodes)
+                        for (var i = _config.Characters.Count - 1; i < charCodes.Count; i++)
                         {
-                            _config.CharacterCodeName.TryAdd(k, v);
+                            _config.Characters.Add(charCodes[i]);
                         }
                     }
                 }
@@ -68,7 +68,7 @@ public class ConfigService : ISnowbreakConfig
 
     public void Save()
     {
-        File.WriteAllText(Global.UserPaths.ConfFile, JsonSerializer.Serialize(_config, _jsonOptions));
+        File.WriteAllText(Global.UserPaths.ConfFile, JsonSerializer.Serialize(_config, JsonOptions));
     }
 
     /// <summary>

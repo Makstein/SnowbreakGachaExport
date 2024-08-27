@@ -65,5 +65,5 @@ public class AppConfig
     public string RareGoldColor { get; set; } = "#e99b37";
 
     // Character Mod
-    public Dictionary<string, string> CharacterCodeName { get; set; } = [];
+    public List<Character> Characters { get; set; } = [];
 }

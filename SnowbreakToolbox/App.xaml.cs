@@ -49,27 +49,20 @@ public partial class App
         .ConfigureServices((context, services) =>
         {
             services.AddHostedService<ApplicationHostService>();
-
             // Page resolver service
             services.AddSingleton<IPageService, PageService>();
-
             // Theme manipulation
             services.AddSingleton<IThemeService, ThemeService>();
-
             // TaskBar manipulation
             services.AddSingleton<ITaskBarService, TaskBarService>();
-
             // Service containing navigation, same as INavigationWindow... but without window
             services.AddSingleton<INavigationService, NavigationService>();
-
             // Dialog
             services.AddSingleton<IContentDialogService, ContentDialogService>();
-
             services.AddSingleton<ISnowbreakOcr, PaddleOrcService>();
-
             services.AddSingleton<ISnowbreakConfig, ConfigService>();
-
             services.AddSingleton<ISnowbreakHistory, HistoryService>();
+            services.AddSingleton<IModService, ModService>();
 
             // Suppress the .net host messages when starting. ("...press Ctrl + c to stop...", etc)
             services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
@@ -139,6 +132,7 @@ public partial class App
         GetService<ISnowbreakConfig>()!.Save();
         GetService<DashboardViewModel>()!.Dispose();
         GetService<GachaHistoryViewModel>()!.Dispose();
+        GetService<ModManagerViewModel>()!.Dispose();
 
         await _host.StopAsync();
 
