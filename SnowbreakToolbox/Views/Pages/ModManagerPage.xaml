@@ -29,64 +29,16 @@
                 Content="导入Mod" />
             <Button
                 Margin="15"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Command="{Binding ViewModel.SelectModFolderCommand}"
-                Content="SelectFolder"
-                RenderTransformOrigin="0.5,0.5" />
-            <Button
-                Margin="15"
-                VerticalAlignment="Top"
-                Command="{Binding ViewModel.ApplyCommand}"
-                Content="Apply" />
+                Command="{Binding ViewModel.RefreshModsCommand}"
+                Content="更新Mod列表" />
         </StackPanel>
-        <ui:Card
-            Grid.Row="1"
-            Margin="0,30,0,0"
-            VerticalAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            Visibility="Collapsed">
-            <ui:ListView Margin="0,0,0,-6" ItemsSource="{Binding ViewModel.DisplayMods}">
-                <ui:ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:DisplayMod}">
-                        <Grid Margin="8,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                FontWeight="Bold"
-                                Text="{Binding Name, Mode=OneWay}" />
-
-                            <CheckBox
-                                Grid.Column="1"
-                                Margin="0,12"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                IsChecked="{Binding IsEnabled}" />
-                        </Grid>
-                    </DataTemplate>
-                </ui:ListView.ItemTemplate>
-            </ui:ListView>
-        </ui:Card>
         <Grid Grid.Row="1">
             <TabControl
                 ItemsSource="{Binding ViewModel.CharacterMods}"
                 Style="{StaticResource LeftAvatarTabControl}"
                 TabStripPlacement="Left">
-                <!--<TabItem Header="STest1" Style="{StaticResource LeftAvatarTabItem}">
-                    <Grid>
-                        <TextBlock Text="Test1" />
-                    </Grid>
-                </TabItem>
-
-                <TabItem Header="STest2" Style="{StaticResource LeftAvatarTabItem}">
-                    <Grid>
-                        <TextBlock Text="Test2" />
-                    </Grid>
-                </TabItem>-->
                 <TabControl.ItemContainerStyle>
                     <Style BasedOn="{StaticResource LeftAvatarTabItem}" TargetType="TabItem">
                         <Setter Property="Header" Value="{Binding Name}" />
@@ -105,7 +57,7 @@
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock VerticalAlignment="Center" Text="{Binding Key}" />
-                                                <ui:ToggleSwitch Grid.Column="1" Margin="5" />
+                                                <!-- <ui:ToggleSwitch Grid.Column="1" Margin="5" /> -->
                                             </Grid>
                                         </ui:CardExpander.Header>
                                         <Grid>
@@ -155,48 +107,6 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <!-- <ui:ListView ItemsSource="{Binding Mods}"> -->
-                        <!--     <ui:ListView.ItemTemplate> -->
-                        <!--         <DataTemplate> -->
-                        <!--             <Grid> -->
-                        <!--                 <Grid.ColumnDefinitions> -->
-                        <!--                     <ColumnDefinition Width="3*" /> -->
-                        <!--                     <ColumnDefinition Width="*" /> -->
-                        <!--                     <ColumnDefinition Width="*" /> -->
-                        <!--                 </Grid.ColumnDefinitions> -->
-                        <!--  ~1~  Name and description  @1@  -->
-                        <!--                 <Grid> -->
-                        <!--                     <Grid.RowDefinitions> -->
-                        <!--                         <RowDefinition Height="*" /> -->
-                        <!--                         <RowDefinition Height="*" /> -->
-                        <!--                     </Grid.RowDefinitions> -->
-                        <!--  <ui:TextBlock  -->
-                        <!--  Margin="5"  -->
-                        <!--  Foreground="{DynamicResource TextFillColorPrimaryBrush}"  -->
-                        <!--  Text="{Binding Name}" />  -->
-                        <!--  <ui:TextBlock  -->
-                        <!--  Grid.Row="1"  -->
-                        <!--  Margin="5"  -->
-                        <!--  Foreground="{DynamicResource TextFillColorSecondaryBrush}"  -->
-                        <!--  Text="{Binding Description}" />  -->
-                        <!--                 </Grid> -->
-                        <!--    -->
-                        <!--  ~1~  Skin  @1@  -->
-                        <!--  <ui:TextBlock  -->
-                        <!--  Grid.Column="1"  -->
-                        <!--  HorizontalAlignment="Center"  -->
-                        <!--  VerticalAlignment="Center"  -->
-                        <!--  Text="{Binding SkinIndex}" />  -->
-                        <!--    -->
-                        <!--  ~1~  Is enabled  @1@  -->
-                        <!--  <ui:ToggleSwitch  -->
-                        <!--  Grid.Column="2"  -->
-                        <!--  HorizontalAlignment="Center"  -->
-                        <!--  IsChecked="{Binding IsEnabled}" />  -->
-                        <!--             </Grid> -->
-                        <!--         </DataTemplate> -->
-                        <!--     </ui:ListView.ItemTemplate> -->
-                        <!-- </ui:ListView> -->
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>

@@ -130,9 +130,10 @@ public partial class App
     private async void OnExit(object sender, ExitEventArgs e)
     {
         GetService<ISnowbreakConfig>()!.Save();
+        GetService<ModManagerViewModel>()!.Dispose();
+        GetService<IModService>()!.Save();
         GetService<DashboardViewModel>()!.Dispose();
         GetService<GachaHistoryViewModel>()!.Dispose();
-        GetService<ModManagerViewModel>()!.Dispose();
 
         await _host.StopAsync();
 

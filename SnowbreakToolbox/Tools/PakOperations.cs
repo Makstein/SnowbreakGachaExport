@@ -21,7 +21,7 @@ public static class PakOperations
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static ModPakInfo ReadPakFromPathUnpack(string path)
+    public static ModPakInfo? ReadPakFromPathUnpack(string path)
     {
         using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
         fs.Seek(-MagicOffsetVersion10, SeekOrigin.End);
@@ -89,34 +89,39 @@ public static class PakOperations
         return new ModPakInfo();
     }
 
-    public static ModPakInfo ReadPakFromPathBrute(string path)
+    public static ModPakInfo? ReadPakFromPathBrute(string path)
     {
         var str = File.ReadAllText(path);
         var modPakInfo = GetModPakInfoFromDirectoryName(str);
+        if (modPakInfo == null) return null;
         modPakInfo.Name = Path.GetFileNameWithoutExtension(path);
         modPakInfo.ModPath = path;
         return modPakInfo;
     }
 
-    private static ModPakInfo GetModPakInfoFromDirectoryName(string str)
+    private static ModPakInfo? GetModPakInfoFromDirectoryName(string str)
     {
         var modPakInfo = new ModPakInfo();
         var index = str.IndexOf(CharacterPrefix, StringComparison.Ordinal);
+        if (index == -1)
+        {
+            return null;
+        }
         if (str[index + 7] == 'a' || str[index + 7] == 'b') // 5-star
         {
             modPakInfo.CharacterCode = str.Substring(index, 8);
-            if (str[index + 8] == '_')
-            {
-                modPakInfo.SkinIndex = int.Parse(str.Substring(index + 9, 2));
-            }
+            if (str[index + 8] != '_') return modPakInfo;
+            var skinStr = str.Substring(index + 9, 2);
+            if (skinStr == "bo") return modPakInfo; // girlxxx_body
+            modPakInfo.SkinIndex = int.Parse(skinStr); // girlxxx_yy_body
         }
         else // 4-star
         {
             modPakInfo.CharacterCode = str.Substring(index, 7);
-            if (str[index + 7] == '_')
-            {
-                modPakInfo.SkinIndex = int.Parse(str.Substring(index + 8, 2));
-            }
+            if (str[index + 7] != '_') return modPakInfo;
+            var skinStr = str.Substring(index + 8, 2);
+            if (skinStr == "bo") return modPakInfo;
+            modPakInfo.SkinIndex = int.Parse(str.Substring(index + 8, 2));
         }
 
         return modPakInfo;

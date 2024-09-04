@@ -44,15 +44,15 @@
     "Code": "girl006",
     "ArmorCodeNames": {
       "girl006": "旧日王牌",
-      "girl006a": "忘了叫啥"
+      "girl006a": "藏锋"
     }
   },
   {
     "Name": "琴诺",
     "Code": "girl007",
     "ArmorCodeNames": {
-      "girl007": "星期三",
-      "girl007a": "狂猎"
+      "girl007": "双面",
+      "girl007a": "悖谬"
     }
   },
   {
@@ -61,31 +61,68 @@
     "ArmorCodeNames": {
       "girl008": "黄金狮子",
       "girl008a": "咎冠",
-      "girl008b": "忘了"
+      "girl008b": "辉耀"
     }
   },
   {
     "Name": "肴",
-    "Code": "girl009",
+    "Code": "girl010",
     "ArmorCodeNames": {
-      "girl009": "养生专家",
-      "girl009a": "冬至"
+      "girl010": "养生专家",
+      "girl010a": "冬至"
     }
   },
   {
     "Name": "恩雅",
-    "Code": "girl010",
+    "Code": "girl011",
     "ArmorCodeNames": {
-      "girl010": "姐姐大人",
-      "girl010a": "忘了"
+      "girl011": "姐姐大人",
+      "girl011a": "羽蜕"
     }
   },
   {
     "Name": "猫汐尔",
-    "Code": "girl011",
+    "Code": "girl012",
     "ArmorCodeNames": {
-      "girl011": "星期三",
-      "girl011a": "狂猎"
+      "girl012": "猫猫",
+      "girl012a": "溯影"
+    }
+  },
+  {
+    "Name": "瑟瑞丝",
+    "Code": "girl013",
+    "ArmorCodeNames": {
+      "girl013": "小金鱼",
+      "girl013a": "瞬刻"
+    }
+  },
+  {
+    "Name": "辰星",
+    "Code": "girl014",
+    "ArmorCodeNames": {
+      "girl014": "观测者",
+      "girl014a": "云篆"
+    }
+  },
+  {
+    "Name": "凯西娅",
+    "Code": "girl015",
+    "ArmorCodeNames": {
+      "girl015": "蓝闪"
+    }
+  },
+  {
+    "Name": "伊切尔",
+    "Code": "girl016",
+    "ArmorCodeNames": {
+      "girl016": "豹豹"
+    }
+  },
+  {
+    "Name": "苔丝",
+    "Code": "girl017",
+    "ArmorCodeNames": {
+      "girl017": "魔术师"
     }
   }
 ]
