@@ -38,7 +38,8 @@ public class AppConfig
     public int ReferenceLogBoxY0 { get; private set; } = 188;
     public int ReferenceLogBoxWidth { get; private set; } = 1260;
     public int ReferenceLogBoxHeight { get; private set; } = 680;
-    public int ReferenceRareColorPosX { get; private set; } = 27;
+    public int ReferenceRareColorPosX { get; private set; } = 28;
+    public int ReferenceRareColorPosXWindowed { get; private set; } = 34;
     public int ReferenceNextPageArrowX { get; private set; } = 1665;
     public int ReferenceNextPageArrowY { get; private set; } = 600;
 
@@ -56,7 +57,8 @@ public class AppConfig
     public int ClientLogBoxY0 { get; set; } = 188;
     public int ClientLogBoxWidth { get; set; } = 1260;      // History region box width
     public int ClientLogBoxHeight { get; set; } = 680;      // History region box height
-    public int ClientRareColorPosX { get; set; } = 27;      // The rare color position X according to left border of log box
+    public int ClientRareColorPosX { get; set; } = 22;      // The rare color position X according to left border of log box
+    public int ClientRareColorPosXWindowed { get; set; } = 22;      // The rare color position X according to left border of log box
     public int ClientNextPageArrowX { get; set; } = 1665;
     public int ClientNextPageArrowY { get; set; } = 600;
 

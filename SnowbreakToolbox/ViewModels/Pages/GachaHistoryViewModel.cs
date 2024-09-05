@@ -124,9 +124,9 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
                 _config.ClientLogBoxY0 += rect.top;
                 _config.ClientLogBoxX0 += rect.left;
-                _config.ClientRareColorPosX += rect.left;
                 _config.ClientNextPageArrowY += rect.top;
                 _config.ClientNextPageArrowX += rect.left;
+                _config.ClientRareColorPosXWindowed = (int)(_config.ReferenceRareColorPosXWindowed * _config.ClientGameScale);
             }
 
             App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
@@ -149,14 +149,14 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                     }
                 }
 
-                lastCapturedImage = new(image);
+                lastCapturedImage = new Bitmap(image);
 
                 //_paddleOrcService.GetText(image);
                 var regions = _paddleOrcService.GetRegions(image);
 
                 foreach (var region in regions)
                 {
-                    var color = image.GetPixel(_config.ClientRareColorPosX, (int)region[0].Rect.Center.Y);
+                    var color = image.GetPixel(bFullscreen ? _config.ClientRareColorPosX : _config.ClientRareColorPosXWindowed, (int)region[0].Rect.Center.Y);
                     var rare = GetRare(color);
                     var item = new GachaItem(region[0].Text, region[2].Text, region[1].Text == "武器" ? ItemType.Weapon : ItemType.Character, rare);
                     list.Add(item);
@@ -433,7 +433,7 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     }
 
     [RelayCommand]
-    public void ImportData()
+    private void ImportData()
     {
         OpenFileDialog openFileDialog = new OpenFileDialog
         {
@@ -503,11 +503,10 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
         var newHistoryString = JsonSerializer.Serialize(newHistory, HistoryService._jsonOptions);
         File.WriteAllText(filename, newHistoryString);
-        return;
     }
 
     [RelayCommand]
-    public void ClearUpData()
+    private void ClearUpData()
     {
         var result = System.Windows.MessageBox.Show("你确定要执行这个操作吗？\n该操作会清除所有记录，但会在Data目录保留备份", "确认", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (result == System.Windows.MessageBoxResult.No) { return; }

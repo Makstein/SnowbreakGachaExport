@@ -35,17 +35,21 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
 
     [ObservableProperty] private string _dialogModPath = string.Empty;
 
+    public ModManagerViewModel(ISnowbreakConfig snowbreakConfig, IModService modService)
+    {
+        _config = snowbreakConfig.GetConfig();
+        _modConfig = modService.GetModConfig();
+        
+        Initialize();
+    }
+
     public void OnNavigatedFrom()
     {
     }
 
     public void OnNavigatedTo()
     {
-        // Reload config every time, for hot reload
-        _config = App.GetService<ISnowbreakConfig>()?.GetConfig();
-        _modConfig = App.GetService<IModService>()?.GetModConfig();
-
-        Initialize();
+        
     }
     
     private void Initialize()
@@ -292,6 +296,8 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
+        
         if (_modConfig == null) return;
 
         var allMods = new List<ModPakInfo>();
@@ -304,7 +310,5 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
         }
 
         _modConfig.Mods = allMods;
-
-        GC.SuppressFinalize(this);
     }
 }
