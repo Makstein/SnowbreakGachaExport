@@ -2,7 +2,7 @@
 
 public class ModConfig
 {
-    public List<Character> Characters { get; set; } = [];
+    public List<Character> Characters { get; init; } = [];
     
     public List<ModPakInfo> Mods { get; set; } = [];
 }

@@ -10,7 +10,7 @@
 	Title="GachaHistoryPage"
 	d:DataContext="{d:DesignInstance local:GachaHistoryPage,
 	                                 IsDesignTimeCreatable=False}"
-	d:DesignHeight="450"
+	d:DesignHeight="700"
 	d:DesignWidth="800"
 	mc:Ignorable="d">
 	<Grid>
@@ -73,24 +73,19 @@
 				<ui:Card Margin="5,5,5,0">
 					<StackPanel>
 						<TextBlock HorizontalAlignment="Center">特选当期角色</TextBlock>
-						<!-- <Grid HorizontalAlignment="Center"> -->
-						<!--     <Grid.ColumnDefinitions> -->
-						<!--         <ColumnDefinition Width="auto" /> -->
-						<!--         <ColumnDefinition Width="auto" /> -->
-						<!--         <ColumnDefinition Width="auto" /> -->
-						<!--     </Grid.ColumnDefinitions> -->
-						<!--    -->
-						<!--  <TextBlock  -->
-						<!--  Text="垫了" />  -->
-						<!--    -->
-						<!--  <TextBlock  -->
-						<!--  Grid.Column="1"  -->
-						<!--  Text="{Binding ViewModel.PrimeCountSc}" />  -->
-						<!--    -->
-						<!--  <TextBlock  -->
-						<!--  Grid.Column="2"  -->
-						<!--  Text="发" />  -->
-						<!-- </Grid> -->
+						<Grid HorizontalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Text="垫了" />
+
+							<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountSc}" />
+
+							<TextBlock Grid.Column="2" Text="发" />
+						</Grid>
 
 						<Grid>
 							<Grid.ColumnDefinitions>
@@ -175,6 +170,7 @@
 											Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
 											Text="{Binding CharacterName, Mode=OneWay}" />
 										<TextBlock
+											Grid.Row="0"
 											Grid.RowSpan="2"
 											Grid.Column="1"
 											Margin="0,12"
@@ -199,19 +195,19 @@
 				<ui:Card Margin="5,5,5,0">
 					<StackPanel>
 						<TextBlock HorizontalAlignment="Center">特选当期武器</TextBlock>
-						<!-- <Grid HorizontalAlignment="Center"> -->
-						<!--     <Grid.ColumnDefinitions> -->
-						<!--         <ColumnDefinition Width="auto" /> -->
-						<!--         <ColumnDefinition Width="auto" /> -->
-						<!--         <ColumnDefinition Width="auto" /> -->
-						<!--     </Grid.ColumnDefinitions> -->
-						<!--    -->
-						<!--     <TextBlock Text="垫了" /> -->
-						<!--    -->
-						<!--     <TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountSw}" /> -->
-						<!--    -->
-						<!--     <TextBlock Grid.Column="2" Text="发" /> -->
-						<!-- </Grid> -->
+						<Grid HorizontalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Text="垫了" />
+
+							<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountSw}" />
+
+							<TextBlock Grid.Column="2" Text="发" />
+						</Grid>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="auto" />
@@ -295,6 +291,7 @@
 											Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
 											Text="{Binding CharacterName, Mode=OneWay}" />
 										<TextBlock
+											Grid.Row="0"
 											Grid.RowSpan="2"
 											Grid.Column="1"
 											Margin="0,12"
@@ -319,19 +316,19 @@
 				<ui:Card Margin="5,5,5,0">
 					<StackPanel>
 						<TextBlock HorizontalAlignment="Center">常驻角色</TextBlock>
-						<!-- <Grid HorizontalAlignment="Center"> -->
-						<!-- 	<Grid.ColumnDefinitions> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 	</Grid.ColumnDefinitions> -->
-						<!--    -->
-						<!-- 	<TextBlock Text="垫了" /> -->
-						<!--    -->
-						<!-- 	<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountCc}" /> -->
-						<!--    -->
-						<!-- 	<TextBlock Grid.Column="2" Text="发" /> -->
-						<!-- </Grid> -->
+						<Grid HorizontalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Text="垫了" />
+
+							<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountCc}" />
+
+							<TextBlock Grid.Column="2" Text="发" />
+						</Grid>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="auto" />
@@ -415,6 +412,7 @@
 											Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
 											Text="{Binding CharacterName, Mode=OneWay}" />
 										<TextBlock
+											Grid.Row="0"
 											Grid.RowSpan="2"
 											Grid.Column="1"
 											Margin="0,12"
@@ -535,6 +533,7 @@
 											Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
 											Text="{Binding CharacterName, Mode=OneWay}" />
 										<TextBlock
+											Grid.Row="0"
 											Grid.RowSpan="2"
 											Grid.Column="1"
 											Margin="0,12"
@@ -559,19 +558,19 @@
 				<ui:Card Margin="5,5,5,0">
 					<StackPanel>
 						<TextBlock HorizontalAlignment="Center">当期角色</TextBlock>
-						<!-- <Grid HorizontalAlignment="Center"> -->
-						<!-- 	<Grid.ColumnDefinitions> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 	</Grid.ColumnDefinitions> -->
-						<!--    -->
-						<!-- 	<TextBlock Text="垫了" /> -->
-						<!--    -->
-						<!-- 	<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountScm}" /> -->
-						<!--    -->
-						<!-- 	<TextBlock Grid.Column="2" Text="发" /> -->
-						<!-- </Grid> -->
+						<Grid HorizontalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Text="垫了" />
+
+							<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountScm}" />
+
+							<TextBlock Grid.Column="2" Text="发" />
+						</Grid>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="auto" />
@@ -655,6 +654,7 @@
 											Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
 											Text="{Binding CharacterName, Mode=OneWay}" />
 										<TextBlock
+											Grid.Row="0"
 											Grid.RowSpan="2"
 											Grid.Column="1"
 											Margin="0,12"
@@ -679,19 +679,19 @@
 				<ui:Card Margin="5,5,5,0">
 					<StackPanel>
 						<TextBlock HorizontalAlignment="Center">当期武器</TextBlock>
-						<!-- <Grid HorizontalAlignment="Center"> -->
-						<!-- 	<Grid.ColumnDefinitions> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 		<ColumnDefinition Width="auto" /> -->
-						<!-- 	</Grid.ColumnDefinitions> -->
-						<!--    -->
-						<!-- 	<TextBlock Text="垫了" /> -->
-						<!--    -->
-						<!-- 	<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountSwm}" /> -->
-						<!--    -->
-						<!-- 	<TextBlock Grid.Column="2" Text="发" /> -->
-						<!-- </Grid> -->
+						<Grid HorizontalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="auto" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Text="垫了" />
+
+							<TextBlock Grid.Column="1" Text="{Binding ViewModel.PrimeCountSwm}" />
+
+							<TextBlock Grid.Column="2" Text="发" />
+						</Grid>
 						<Grid>
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="auto" />
@@ -775,6 +775,7 @@
 											Foreground="{ui:ThemeResource TextFillColorSecondaryBrush}"
 											Text="{Binding CharacterName, Mode=OneWay}" />
 										<TextBlock
+											Grid.Row="0"
 											Grid.RowSpan="2"
 											Grid.Column="1"
 											Margin="0,12"

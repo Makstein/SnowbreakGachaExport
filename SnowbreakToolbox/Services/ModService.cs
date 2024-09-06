@@ -65,6 +65,7 @@ public class ModService : IModService
 
     public void Save()
     {
+        if (_modConfig == null) return;
         File.WriteAllText(Global.UserPaths.ModConfFile, JsonSerializer.Serialize(_modConfig, JsonOptions));
     }
 }

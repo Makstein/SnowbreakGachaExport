@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Threading;
 using Serilog;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -35,23 +34,18 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
 
     [ObservableProperty] private string _dialogModPath = string.Empty;
 
-    public ModManagerViewModel(ISnowbreakConfig snowbreakConfig, IModService modService)
-    {
-        _config = snowbreakConfig.GetConfig();
-        _modConfig = modService.GetModConfig();
-        
-        Initialize();
-    }
-
     public void OnNavigatedFrom()
     {
     }
 
     public void OnNavigatedTo()
     {
-        
+        _config = App.GetService<ISnowbreakConfig>()!.GetConfig();
+        _modConfig = App.GetService<IModService>()!.GetModConfig();
+
+        Initialize();
     }
-    
+
     private void Initialize()
     {
         if (_isInitialized) return;
@@ -103,6 +97,7 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
             {
                 throw new Exception($"Mod文件读取失败，可能是因为此为非角色Mod: {modName}");
             }
+
             if (Path.GetExtension(modPath) == ".pak")
             {
                 modInfo.IsEnabled = true;
@@ -209,7 +204,7 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
                     Log.Error($"Error in refresh mod pak file: {ex.Message}", ex);
                 }
             }
-            
+
             var msgBox = new MessageBox()
             {
                 Title = "消息",
@@ -224,7 +219,7 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
         catch (Exception ex)
         {
             Log.Error($"Error in refresh mod pak file: {ex.Message}", ex);
-            
+
             var msgBox = new MessageBox()
             {
                 Title = "导入Mod失败",
@@ -264,6 +259,7 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
             {
                 return;
             }
+
             _config.ModPath = Path.Combine(DialogModPath, "~mods");
             Directory.CreateDirectory(_config.ModPath);
         }
@@ -297,7 +293,8 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        
+
+        if (!_isInitialized) return;
         if (_modConfig == null) return;
 
         var allMods = new List<ModPakInfo>();

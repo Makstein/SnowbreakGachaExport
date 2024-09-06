@@ -48,9 +48,9 @@ public class ConfigService : ISnowbreakConfig
         }
 
         // Re-calculate game scale every time call GetConfig()
-        InitConfigResolutionScale(ref _config!);
+        InitConfigResolutionScale(ref _config);
 
-        return _config!;
+        return _config;
     }
 
     public void Save()

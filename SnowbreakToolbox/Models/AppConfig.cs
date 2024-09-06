@@ -25,8 +25,8 @@ public class AppConfig
     public string GameWindowTitleCN { get; set; } = "尘白禁区";
     public string LauncherWindowTitle { get; set; } = "SnowBreak";
     public string GameSteamId { get; set; } = "2668080";
-    public bool CloseLauncherWhenGameExit { get; set; } = false;
-    public bool RunGameOnStart { get; set; } = false;
+    public bool CloseLauncherWhenGameExit { get; set; }
+    public bool RunGameOnStart { get; set; }
     public GamePlatform GamePlatform { get; set; } = GamePlatform.Default;
 
     // Reference settings
