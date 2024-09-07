@@ -16,15 +16,18 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TabPanel
-                            x:Name="HeadersPanel"
-                            Grid.Column="0"
-                            Margin="0"
-                            Background="Transparent"
-                            IsItemsHost="True" />
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <TabPanel
+                                x:Name="HeadersPanel"
+                                Grid.Column="0"
+                                Margin="0"
+                                Background="Transparent"
+                                IsItemsHost="True" />
+                        </ScrollViewer>
                         <Border
                             x:Name="Border"
                             Grid.Column="1"
+                            Margin="5"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0,1,0,0"

@@ -24,6 +24,7 @@ public class ModPakInfo
             if (_isEnabled == value) return;
             _isEnabled = value;
             var newPath = Path.ChangeExtension(ModPath, _isEnabled ? "pak" : "disabled");
+            if (newPath.Equals(ModPath, StringComparison.Ordinal)) return;
             File.Move(ModPath, newPath);
             ModPath = newPath;
         }

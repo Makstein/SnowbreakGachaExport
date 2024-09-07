@@ -6,15 +6,20 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
 using Serilog;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 using Wpf.Ui.Extensions;
+using Exception = System.Exception;
 using MessageBox = Wpf.Ui.Controls.MessageBox;
 using TextBox = Wpf.Ui.Controls.TextBox;
 
 namespace SnowbreakToolbox.ViewModels.Pages;
 
+/// <summary>
+/// The class used in the "Mod Manager" page to display mods per character
+/// </summary>
 public partial class DisplayCharacterCategory : ObservableObject
 {
     public string Code { get; init; } = string.Empty;
@@ -27,10 +32,11 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
 {
     private AppConfig? _config;
     private ModConfig? _modConfig;
+    private IContentDialogService? _contentDialogService;
     private bool _isInitialized;
     private StackPanel? _selectModPathPanel;
 
-    public ObservableCollection<DisplayCharacterCategory> CharacterMods { get; set; } = [];
+    public ObservableCollection<DisplayCharacterCategory> CharacterMods { get; } = [];
 
     [ObservableProperty] private string _dialogModPath = string.Empty;
 
@@ -40,10 +46,41 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
 
     public void OnNavigatedTo()
     {
-        _config = App.GetService<ISnowbreakConfig>()!.GetConfig();
-        _modConfig = App.GetService<IModService>()!.GetModConfig();
-
-        Initialize();
+        _contentDialogService ??= App.GetService<IContentDialogService>();
+        
+        // Show progress ring
+        var grid = new Grid
+        {
+            VerticalAlignment = VerticalAlignment.Stretch,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            Focusable = false
+        };
+        grid.SetResourceReference(Panel.BackgroundProperty, "ContentDialogSmokeFill");
+        var progressRing = new ProgressRing
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            IsIndeterminate = true,
+            Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#1677ff")!
+        };
+        grid.Children.Add(progressRing);
+        var contentPresenter = _contentDialogService!.GetDialogHost();
+        contentPresenter!.Content = grid;
+        
+        // Load mod config
+        var t = App.GetService<IModService>()!.GetModConfigAsync();
+        t.ContinueWith(task =>
+        {
+            _modConfig = task.Result;
+            _config = App.GetService<ISnowbreakConfig>()!.GetConfig();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Initialize();
+                
+                // Hide progressRing
+                contentPresenter.Content = null;
+            });
+        });
     }
 
     private void Initialize()
@@ -68,20 +105,12 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
             if (openFileDialog.ShowDialog() != true) return;
 
             await AddMod(openFileDialog.FileName);
+            await ShowMessage("消息", "导入成功");
         }
         catch (Exception ex)
         {
             Log.Error($"Error in import mod pak file: {ex.Message}", ex);
-
-            var msgBox = new MessageBox()
-            {
-                Title = "导入失败",
-                Content = ex.Message,
-                CloseButtonText = "确定",
-                IsPrimaryButtonEnabled = false
-            };
-
-            await msgBox.ShowDialogAsync();
+            await ShowMessage("错误", $"导入失败 {ex.Message}");
         }
     }
 
@@ -188,8 +217,18 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
     {
         try
         {
+            if (_modConfig == null) throw new Exception("Mod配置文件读取失败");
+            
             await EnsureModPath();
 
+            // Remove deleted mods from the mod list
+            for (var i = _modConfig.Mods.Count - 1; i >= 0; i--)
+            {
+                if (!File.Exists(_modConfig.Mods[i].ModPath)) _modConfig.Mods.RemoveAt(i);
+            }
+            InitCharacterMods();
+            
+            // Add new mods to the mod list
             var modFolder = _config!.ModPath;
             foreach (var modFile in Directory.GetFiles(modFolder))
             {
@@ -205,30 +244,12 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
                 }
             }
 
-            var msgBox = new MessageBox()
-            {
-                Title = "消息",
-                MinWidth = 120,
-                Content = "导入完成",
-                CloseButtonText = "确定",
-                IsPrimaryButtonEnabled = false
-            };
-
-            await msgBox.ShowDialogAsync();
+            await ShowMessage("消息", "刷新完成");
         }
         catch (Exception ex)
         {
             Log.Error($"Error in refresh mod pak file: {ex.Message}", ex);
-
-            var msgBox = new MessageBox()
-            {
-                Title = "导入Mod失败",
-                Content = ex.Message,
-                CloseButtonText = "确定",
-                IsPrimaryButtonEnabled = false
-            };
-
-            await msgBox.ShowDialogAsync();
+            await ShowMessage("错误", $"刷新失败 {ex.Message}");
         }
     }
 
@@ -276,6 +297,7 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
     {
         if (_modConfig == null) return;
 
+        CharacterMods.Clear();
         var characters = _modConfig.Characters;
         foreach (var character in characters)
         {
@@ -288,6 +310,20 @@ public partial class ModManagerViewModel : ObservableObject, INavigationAware, I
 
             CharacterMods.Add(displayCharacter);
         }
+    }
+
+    private static async Task ShowMessage(string title, string content)
+    {
+        var msgBox = new MessageBox()
+        {
+            Title = title,
+            MinWidth = 120,
+            Content = content,
+            CloseButtonText = "确定",
+            IsPrimaryButtonEnabled = false
+        };
+
+        await msgBox.ShowDialogAsync();
     }
 
     public void Dispose()

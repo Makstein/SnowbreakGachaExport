@@ -25,6 +25,7 @@ public class ModService : IModService
                 if (!Directory.Exists(Global.UserPaths.ConfPath)) { Directory.CreateDirectory(Global.UserPaths.ConfPath); }
             
                 // Get latest character code file
+                if (!File.Exists(Global.UserPaths.CharacterCodeFile)) throw new Exception("未找到角色代码文件 CharacterCode.json");
                 var charCodeStr = File.ReadAllText(Global.UserPaths.CharacterCodeFile);
                 var charCodes = JsonSerializer.Deserialize<List<Character>>(charCodeStr);
                 if (charCodes == null) throw new Exception("角色代码文件转换失败");
@@ -42,7 +43,13 @@ public class ModService : IModService
                 {
                     var modConfigStr = File.ReadAllText(Global.UserPaths.ModConfFile);
                     _modConfig = JsonSerializer.Deserialize<ModConfig>(modConfigStr);
-                    if (_modConfig == null) throw new Exception("Mod配置文件转换失败");
+                    if (_modConfig == null)
+                    {
+                        var modConfigBackup = Path.ChangeExtension(Global.UserPaths.ModConfFile, ".backup.json");
+                        File.Move(Global.UserPaths.ModConfFile, modConfigBackup);
+                        _modConfig = new ModConfig();
+                        throw new Exception("现有Mod配置文件读取失败，使用默认空配置");
+                    }
 
                     // Have new characters
                     if (_modConfig.Characters.Count < charCodes.Count)
@@ -57,10 +64,25 @@ public class ModService : IModService
         }
         catch (Exception ex)
         {
-            Log.Error("读取Mod信息失败 " + ex.Message, ex);
+            Log.Error("加载Mod信息失败 " + ex.Message, ex);
+            var msgBox = new Wpf.Ui.Controls.MessageBox()
+            {
+                Title = "警告",
+                MinWidth = 120,
+                Content = "加载Mod信息失败 " + ex.Message,
+                CloseButtonText = "确定",
+                IsPrimaryButtonEnabled = false
+            };
+
+            _ = msgBox.ShowDialogAsync();
         }
 
         return _modConfig!;
+    }
+
+    public async Task<ModConfig> GetModConfigAsync()
+    {
+        return await Task.Run(GetModConfig);
     }
 
     public void Save()

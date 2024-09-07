@@ -124,5 +124,12 @@
     "ArmorCodeNames": {
       "girl017": "魔术师"
     }
+  },
+  {
+    "Name": "薇蒂雅",
+    "Code": "girl018",
+    "ArmorCodeNames": {
+      "girl018": "龙舌兰"
+    }
   }
 ]

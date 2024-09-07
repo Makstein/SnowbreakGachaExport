@@ -36,14 +36,16 @@
         </StackPanel>
         <Grid Grid.Row="1">
             <TabControl
+                x:Name="ModTab"
+                DisplayMemberPath="Name"
                 ItemsSource="{Binding ViewModel.CharacterMods}"
                 Style="{StaticResource LeftAvatarTabControl}"
                 TabStripPlacement="Left">
-                <TabControl.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource LeftAvatarTabItem}" TargetType="TabItem">
-                        <Setter Property="Header" Value="{Binding Name}" />
-                    </Style>
-                </TabControl.ItemContainerStyle>
+                <!-- <TabControl.ItemContainerStyle> -->
+                <!--     <Style BasedOn="{StaticResource LeftAvatarTabItem}" TargetType="TabItem"> -->
+                <!--         <Setter Property="Header" Value="{Binding Name}" /> -->
+                <!--     </Style> -->
+                <!-- </TabControl.ItemContainerStyle> -->
                 <TabControl.ContentTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:DisplayCharacterCategory}">
                         <ItemsControl ItemsSource="{Binding Mods}">

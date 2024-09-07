@@ -29,5 +29,10 @@ namespace SnowbreakToolbox.Views.Pages
             DataContext = this;
             InitializeComponent();
         }
+
+        // private void ModManagerPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        // {
+        //     
+        // }
     }
 }
