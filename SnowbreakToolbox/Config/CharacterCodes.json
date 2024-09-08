@@ -1,0 +1,135 @@
+[
+  {
+    "Name": "安卡希雅",
+    "Code": "girl001",
+    "ArmorCodeNames": {
+      "girl001": "不予显示",
+      "girl001a": "辉夜"
+    }
+  },
+  {
+    "Name": "里芙",
+    "Code": "girl002",
+    "ArmorCodeNames": {
+      "girl002": "星期三",
+      "girl002a": "狂猎",
+      "girl002b": "无限之视"
+    }
+  },
+  {
+    "Name": "妮塔",
+    "Code": "girl003",
+    "ArmorCodeNames": {
+      "girl003": "四手"
+    }
+  },
+  {
+    "Name": "芙提雅",
+    "Code": "girl004",
+    "ArmorCodeNames": {
+      "girl004": "小太阳",
+      "girl004a": "缄默"
+    }
+  },
+  {
+    "Name": "玛丽安",
+    "Code": "girl005",
+    "ArmorCodeNames": {
+      "girl005": "绷带小姐",
+      "girl005a": "雨燕"
+    }
+  },
+  {
+    "Name": "晴",
+    "Code": "girl006",
+    "ArmorCodeNames": {
+      "girl006": "旧日王牌",
+      "girl006a": "藏锋"
+    }
+  },
+  {
+    "Name": "琴诺",
+    "Code": "girl007",
+    "ArmorCodeNames": {
+      "girl007": "双面",
+      "girl007a": "悖谬"
+    }
+  },
+  {
+    "Name": "芬妮",
+    "Code": "girl008",
+    "ArmorCodeNames": {
+      "girl008": "黄金狮子",
+      "girl008a": "咎冠",
+      "girl008b": "辉耀"
+    }
+  },
+  {
+    "Name": "肴",
+    "Code": "girl010",
+    "ArmorCodeNames": {
+      "girl010": "养生专家",
+      "girl010a": "冬至"
+    }
+  },
+  {
+    "Name": "恩雅",
+    "Code": "girl011",
+    "ArmorCodeNames": {
+      "girl011": "姐姐大人",
+      "girl011a": "羽蜕"
+    }
+  },
+  {
+    "Name": "猫汐尔",
+    "Code": "girl012",
+    "ArmorCodeNames": {
+      "girl012": "猫猫",
+      "girl012a": "溯影"
+    }
+  },
+  {
+    "Name": "瑟瑞丝",
+    "Code": "girl013",
+    "ArmorCodeNames": {
+      "girl013": "小金鱼",
+      "girl013a": "瞬刻"
+    }
+  },
+  {
+    "Name": "辰星",
+    "Code": "girl014",
+    "ArmorCodeNames": {
+      "girl014": "观测者",
+      "girl014a": "云篆"
+    }
+  },
+  {
+    "Name": "凯西娅",
+    "Code": "girl015",
+    "ArmorCodeNames": {
+      "girl015": "蓝闪"
+    }
+  },
+  {
+    "Name": "伊切尔",
+    "Code": "girl016",
+    "ArmorCodeNames": {
+      "girl016": "豹豹"
+    }
+  },
+  {
+    "Name": "苔丝",
+    "Code": "girl017",
+    "ArmorCodeNames": {
+      "girl017": "魔术师"
+    }
+  },
+  {
+    "Name": "薇蒂雅",
+    "Code": "girl018",
+    "ArmorCodeNames": {
+      "girl018": "龙舌兰"
+    }
+  }
+]

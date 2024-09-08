@@ -9,7 +9,7 @@ namespace SnowbreakToolbox.Services;
 
 public class ConfigService : ISnowbreakConfig
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new()
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -37,6 +37,7 @@ public class ConfigService : ISnowbreakConfig
                 {
                     var configStr = File.ReadAllText(Global.UserPaths.ConfFile);
                     _config = JsonSerializer.Deserialize<AppConfig>(configStr);
+                    if (_config == null) throw new Exception("配置文件转换失败");
                 }
             }
         }
@@ -47,14 +48,14 @@ public class ConfigService : ISnowbreakConfig
         }
 
         // Re-calculate game scale every time call GetConfig()
-        InitConfigResolutionScale(ref _config!);
+        InitConfigResolutionScale(ref _config);
 
-        return _config!;
+        return _config;
     }
 
     public void Save()
     {
-        File.WriteAllText(Global.UserPaths.ConfFile, JsonSerializer.Serialize(_config, _jsonOptions));
+        File.WriteAllText(Global.UserPaths.ConfFile, JsonSerializer.Serialize(_config, JsonOptions));
     }
 
     /// <summary>
@@ -75,7 +76,12 @@ public class ConfigService : ISnowbreakConfig
             var curClientScreenHeight = User32.GetSystemMetrics(User32.SystemMetric.SM_CYSCREEN);
 
             if (config.ClientScreenWidth == curClientScreenWidth && config.ClientScreenHeight == curClientScreenHeight)
+            {
+                Log.Information("检测分辨率缩放成功，与配置文件相同，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
+                    config.ClientScreenWidth,
+                    config.ClientScreenHeight);
                 return;
+            }
 
             config.ClientScreenScale = (double)curClientScreenWidth / config.ReferenceScreenWidth;
             if (Math.Abs(config.ReferenceScreenHeight * config.ClientScreenScale - curClientScreenHeight) > 0.01)
@@ -86,7 +92,7 @@ public class ConfigService : ISnowbreakConfig
             config.ClientScreenWidth = curClientScreenWidth;
             config.ClientScreenHeight = curClientScreenHeight;
 
-            Log.Information("初始化设置分辨率缩放成功，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
+            Log.Information("检测并记录分辨率缩放成功，当前客户端系统分辨率：{ClientScreenWidth} x {ClientScreenHeight}",
                 config.ClientScreenWidth,
                 config.ClientScreenHeight);
         }

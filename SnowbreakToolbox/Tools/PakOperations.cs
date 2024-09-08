@@ -10,27 +10,26 @@ namespace SnowbreakToolbox.Tools;
 public static class PakOperations
 {
     // All ue pak has this magic number
-    private static readonly int _magic = 0x5A6F12E1;
-
-    private static readonly int _magicOffsetVersion10 = 204;
-    private static readonly string _characterPrefix = "girl";
+    private const int Magic = 0x5A6F12E1;
+    private const int MagicOffsetVersion10 = 204;
+    private const string CharacterPrefix = "girl";
 
     /// <summary>
     /// For research pak file only
     /// May use less ram than Brute if pak file too large
-    /// OtherWise, Brute is more reliable
+    /// Otherwise, Brute is more reliable
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static ModPakInfo ReadPakFromPathUnpack(string path)
+    public static ModPakInfo? ReadPakFromPathUnpack(string path)
     {
         using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-        fs.Seek(-_magicOffsetVersion10, SeekOrigin.End);
+        fs.Seek(-MagicOffsetVersion10, SeekOrigin.End);
         using var reader = new BinaryReader(fs, Encoding.ASCII, false);
 
         // Pak info
         var magic = reader.ReadInt32();
-        if (magic != _magic)
+        if (magic != Magic)
         {
             // if magic error, may be version incorrect, should change _magicOffsetVersionX
             throw new Exception("Read pak error, magic error");
@@ -46,7 +45,7 @@ public static class PakOperations
         var mountPoint = Encoding.ASCII.GetString(mountPointBytes);
 
         // If pak only contain character
-        if (mountPoint.Contains(_characterPrefix))
+        if (mountPoint.Contains(CharacterPrefix))
         {
             var modPakInfo = GetModPakInfoFromDirectoryName(mountPoint);
             return modPakInfo;
@@ -72,53 +71,57 @@ public static class PakOperations
         reader.BaseStream.Seek(fullDirectoryIndexOffset, SeekOrigin.Begin);
 
         var directoryCount = reader.ReadUInt32();
-        for (int i = 0; i < directoryCount; i++)
+        for (var i = 0; i < directoryCount; i++)
         {
             var directoryNameSize = reader.ReadInt32();
             var directoryNameBytes = reader.ReadBytes(directoryNameSize);
             var directoryName = Encoding.ASCII.GetString(directoryNameBytes, 0, directoryNameSize - 1);
 
-            if (!directoryName.Contains(_characterPrefix))
+            if (directoryName.Contains(CharacterPrefix)) return GetModPakInfoFromDirectoryName(directoryName);
+            
+            var fileCount = reader.ReadUInt32();
+            if (fileCount != 0)
             {
-                var fileCount = reader.ReadUInt32();
-                if (fileCount != 0)
-                {
-                    throw new Exception("Read pak error, unexpected directory order");
-                }
-                continue;
+                throw new Exception("Read pak error, unexpected directory order");
             }
-
-            return GetModPakInfoFromDirectoryName(directoryName);
         }
 
         return new ModPakInfo();
     }
 
-    public static ModPakInfo ReadPakFromPathBrute(string path)
+    public static ModPakInfo? ReadPakFromPathBrute(string path)
     {
         var str = File.ReadAllText(path);
-        return GetModPakInfoFromDirectoryName(str);
+        var modPakInfo = GetModPakInfoFromDirectoryName(str);
+        if (modPakInfo == null) return null;
+        modPakInfo.Name = Path.GetFileNameWithoutExtension(path);
+        modPakInfo.ModPath = path;
+        return modPakInfo;
     }
 
-    private static ModPakInfo GetModPakInfoFromDirectoryName(string str)
+    private static ModPakInfo? GetModPakInfoFromDirectoryName(string str)
     {
         var modPakInfo = new ModPakInfo();
-        var index = str.IndexOf(_characterPrefix);
-        if (str[index + 7] == 'a') // 5-star
+        var index = str.IndexOf(CharacterPrefix, StringComparison.Ordinal);
+        if (index == -1)
+        {
+            return null;
+        }
+        if (str[index + 7] == 'a' || str[index + 7] == 'b') // 5-star
         {
             modPakInfo.CharacterCode = str.Substring(index, 8);
-            if (str[index + 8] == '_')
-            {
-                modPakInfo.SkinIndex = int.Parse(str.Substring(index + 9, 2));
-            }
+            if (str[index + 8] != '_') return modPakInfo;
+            var skinStr = str.Substring(index + 9, 2);
+            if (skinStr == "bo") return modPakInfo; // girlxxx_body
+            modPakInfo.SkinIndex = int.Parse(skinStr); // girlxxx_yy_body
         }
         else // 4-star
         {
             modPakInfo.CharacterCode = str.Substring(index, 7);
-            if (str[index + 7] == '_')
-            {
-                modPakInfo.SkinIndex = int.Parse(str.Substring(index + 8, 2));
-            }
+            if (str[index + 7] != '_') return modPakInfo;
+            var skinStr = str.Substring(index + 8, 2);
+            if (skinStr == "bo") return modPakInfo;
+            modPakInfo.SkinIndex = int.Parse(str.Substring(index + 8, 2));
         }
 
         return modPakInfo;

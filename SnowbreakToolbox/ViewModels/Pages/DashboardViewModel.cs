@@ -8,7 +8,6 @@ using System.IO;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Threading;
 using Vanara.PInvoke;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
@@ -19,7 +18,7 @@ namespace SnowbreakToolbox.ViewModels.Pages;
 
 public partial class DashboardViewModel : ObservableObject, INavigationAware, IDisposable
 {
-    private readonly StackPanel SelectGamePathPanel = new();
+    private readonly StackPanel _selectGamePathPanel = new();
 
     private AppConfig? _config;
     private IContentDialogService? _contentDialogService;
@@ -28,7 +27,7 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
     [ObservableProperty]
     private string _dialogGamePath = string.Empty;
 
-    private bool _initialized = false;
+    private bool _initialized;
 
     public void Dispose()
     {
@@ -96,13 +95,13 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
             Command = SelectGameFolderCommand,
             Content = "..."
         };
-        SelectGamePathPanel.VerticalAlignment = VerticalAlignment.Center;
-        SelectGamePathPanel.HorizontalAlignment = HorizontalAlignment.Center;
-        SelectGamePathPanel.Orientation = Orientation.Horizontal;
-        SelectGamePathPanel.Children.Add(textBlock);
-        SelectGamePathPanel.Children.Add(textBox);
-        SelectGamePathPanel.Children.Add(button);
-        SelectGamePathPanel.Visibility = Visibility.Visible;
+        _selectGamePathPanel.VerticalAlignment = VerticalAlignment.Center;
+        _selectGamePathPanel.HorizontalAlignment = HorizontalAlignment.Center;
+        _selectGamePathPanel.Orientation = Orientation.Horizontal;
+        _selectGamePathPanel.Children.Add(textBlock);
+        _selectGamePathPanel.Children.Add(textBox);
+        _selectGamePathPanel.Children.Add(button);
+        _selectGamePathPanel.Visibility = Visibility.Visible;
     }
 
     [RelayCommand]
@@ -152,7 +151,7 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
                     new SimpleContentDialogCreateOptions()
                     {
                         Title = "选择游戏路径",
-                        Content = SelectGamePathPanel,
+                        Content = _selectGamePathPanel,
                         PrimaryButtonText = "启动",
                         CloseButtonText = "取消"
                     }
@@ -166,7 +165,7 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
 
 #if DEBUG
             // Display all windows titles
-            User32.EnumWindows((hwnd, param) =>
+            User32.EnumWindows((hwnd, _) =>
             {
                 if (!User32.IsWindowVisible(hwnd)) return true;
 
@@ -200,7 +199,7 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
                 var clientLauncherStartBtnPosX = rect.Left + _config.LauncherStartBtnPosX;
                 var clientLauncherStartBtnPosY = rect.top + _config.LauncherStartBtnPosY;
 
-                // Try run the game
+                // Try to run the game
                 var count = 0;
                 while ((User32.FindWindow(null, _config.GameWindowTitle) == HWND.NULL) && (User32.FindWindow(null, _config.GameWindowTitleCN) == HWND.NULL))
                 {
@@ -224,12 +223,12 @@ public partial class DashboardViewModel : ObservableObject, INavigationAware, ID
                     _gameHwnd = User32.FindWindow(null, _config.GameWindowTitleCN);
                 }
 
-                var threadID = User32.GetWindowThreadProcessId(_gameHwnd, out var processId);
-                if (threadID == 0) return;
+                var threadId = User32.GetWindowThreadProcessId(_gameHwnd, out var processId);
+                if (threadId == 0) return;
 
                 var hookInstance = User32.SetWinEventHook(User32.EventConstants.EVENT_OBJECT_DESTROY
                     ,User32.EventConstants.EVENT_OBJECT_DESTROY, HINSTANCE.NULL
-                    ,WinEventProc, processId, threadID, User32.WINEVENT.WINEVENT_OUTOFCONTEXT);
+                    ,WinEventProc, processId, threadId, User32.WINEVENT.WINEVENT_OUTOFCONTEXT);
 
                 Debug.WriteLine(hookInstance == IntPtr.Zero ? "Hook failed" : "Hook success");
             });

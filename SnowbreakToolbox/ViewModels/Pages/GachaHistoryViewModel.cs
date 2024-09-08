@@ -15,70 +15,70 @@ using Wpf.Ui.Controls;
 
 namespace SnowbreakToolbox.ViewModels.Pages;
 
-public class DisplayItem
+public class DisplayItem(string armorName, string characterName, int count)
 {
-    public string ArmorName { get; set; }
-    public string CharacterName { get; set; }
-    public int Count { get; set; }              // Count since last 5 star character
-
-    public DisplayItem(string armorName, string characterName, int count)
-    {
-        ArmorName = armorName;
-        CharacterName = characterName;
-        Count = count;
-    }
+    public string ArmorName { get; } = armorName;
+    public string CharacterName { get; } = characterName;
+    public int Count { get; } = count; // Count since last 5-star character
 }
 
-public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbreakConfig snowbreakConfig, ISnowbreakHistory snowbreakHistory) : ObservableObject, INavigationAware, IDisposable
+public partial class GachaHistoryViewModel(
+    ISnowbreakOcr snowbreakOcr,
+    ISnowbreakConfig snowbreakConfig,
+    ISnowbreakHistory snowbreakHistory) : ObservableObject, INavigationAware, IDisposable
 {
     private readonly PaddleOrcService _paddleOrcService = (snowbreakOcr as PaddleOrcService)!;
     private readonly ISnowbreakConfig _configService = snowbreakConfig;
+
     private readonly ISnowbreakHistory _historyService = snowbreakHistory;
+
     // The height of title bar in Windows is 30px
-    private readonly int WindowsTitleBarHeight = 30;
+    private const int WindowsTitleBarHeight = 30;
 
     private AppConfig? _config;
     private bool _initialized;
 
-    [ObservableProperty] private double _avgCc;     // Common character
+    [ObservableProperty] private double _avgCc; // Common character
     [ObservableProperty] private int _minCc;
     [ObservableProperty] private int _primeCountCc;
 
-    [ObservableProperty] private double _avgCw;     // Common weapon
+    [ObservableProperty] private double _avgCw; // Common weapon
     [ObservableProperty] private int _minCw;
     [ObservableProperty] private int _primeCountCw;
 
-    [ObservableProperty] private double _avgSc;     // Special character
+    [ObservableProperty] private double _avgSc; // Special character
     [ObservableProperty] private int _minSc;
     [ObservableProperty] private int _primeCountSc;
 
-    [ObservableProperty] private double _avgSw;     // Special weapon
+    [ObservableProperty] private double _avgSw; // Special weapon
     [ObservableProperty] private int _minSw;
     [ObservableProperty] private int _primeCountSw;
 
-    [ObservableProperty] private double _avgScm;    // Special character Mihoyo
+    [ObservableProperty] private double _avgScm; // Special character Mihoyo
     [ObservableProperty] private int _minScm;
     [ObservableProperty] private int _primeCountScm;
 
-    [ObservableProperty] private double _avgSwm;    // Special weapon Mihoyo
+    [ObservableProperty] private double _avgSwm; // Special weapon Mihoyo
     [ObservableProperty] private int _minSwm;
     [ObservableProperty] private int _primeCountSwm;
 
     public int SelectedBannerIndex { get; set; }
 
-    public List<GachaItem> CCharHistory { get; private set; } = [];                     // Common Character
-    public List<GachaItem> SCharHistory { get; private set; } = [];                     // Special Character
-    public List<GachaItem> CWeaponHistory { get; private set; } = [];
-    public List<GachaItem> SWeaponHistory { get; private set; } = [];
-    public List<GachaItem> SCharHistoryMihoyo { get; private set; } = [];
-    public List<GachaItem> SWeaponHistoryMihoyo { get; private set; } = [];
+    private List<GachaItem> CCharHistory { get; set; } = []; // Common Character
+    private List<GachaItem> SCharHistory { get; set; } = []; // Special Character
+    private List<GachaItem> CWeaponHistory { get; set; } = [];
+    private List<GachaItem> SWeaponHistory { get; set; } = [];
+    private List<GachaItem> SCharHistoryMihoyo { get; set; } = [];
+    private List<GachaItem> SWeaponHistoryMihoyo { get; set; } = [];
 
-    public ObservableCollection<DisplayItem> DisplayCCharHistory { get; private set; } = [];            // Collection for display in page(to show count)
-    public ObservableCollection<DisplayItem> DisplaySCharHistory { get; private set; } = [];
-    public ObservableCollection<DisplayItem> DisplayCWeaponHistory { get; private set; } = [];
-    public ObservableCollection<DisplayItem> DisplaySWeaponHistory { get; private set; } = [];
-    public ObservableCollection<DisplayItem> DisplaySCharHistoryMihoyo { get; private set; } = [];
-    public ObservableCollection<DisplayItem> DisplaySWeaponHistoryMihoyo { get; private set; } = [];
+    public ObservableCollection<DisplayItem> DisplayCCharHistory { get; } =
+        []; // Collection for display in page(to show count)
+
+    public ObservableCollection<DisplayItem> DisplaySCharHistory { get; } = [];
+    public ObservableCollection<DisplayItem> DisplayCWeaponHistory { get; } = [];
+    public ObservableCollection<DisplayItem> DisplaySWeaponHistory { get; } = [];
+    public ObservableCollection<DisplayItem> DisplaySCharHistoryMihoyo { get; } = [];
+    public ObservableCollection<DisplayItem> DisplaySWeaponHistoryMihoyo { get; } = [];
 
     [RelayCommand]
     private void OnGetHistory()
@@ -104,7 +104,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             _config.ClientGameScale = (double)gameWindowWidth / _config.ReferenceScreenWidth;
             if (Math.Abs(_config.ReferenceScreenHeight * _config.ClientGameScale - gameWindowHeight) > 0.01)
             {
-                throw new Exception("游戏分辨率初始化失败：非16: 9分辨率");
+                throw new Exception(
+                    $"游戏分辨率初始化失败：非16: 9分辨率，检测游戏窗口宽高 {gameWindowWidth} : {gameWindowHeight}, 全屏：{bFullscreen}");
             }
 
             _config.ClientGameWidth = gameWindowWidth;
@@ -126,6 +127,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 _config.ClientLogBoxX0 += rect.left;
                 _config.ClientNextPageArrowY += rect.top;
                 _config.ClientNextPageArrowX += rect.left;
+                _config.ClientRareColorPosXWindowed =
+                    (int)(_config.ReferenceRareColorPosXWindowed * _config.ClientGameScale);
             }
 
             App.GetService<ISnowbreakConfig>()?.SetConfig(_config);
@@ -137,7 +140,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
             while (true)
             {
                 var image =
-                ScreenOperations.CaptureRegion(_config.ClientLogBoxX0, _config.ClientLogBoxY0, _config.ClientLogBoxWidth, _config.ClientLogBoxHeight);
+                    ScreenOperations.CaptureRegion(_config.ClientLogBoxX0, _config.ClientLogBoxY0,
+                        _config.ClientLogBoxWidth, _config.ClientLogBoxHeight);
 
                 if (lastCapturedImage != null)
                 {
@@ -148,16 +152,19 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                     }
                 }
 
-                lastCapturedImage = new(image);
+                lastCapturedImage = new Bitmap(image);
 
                 //_paddleOrcService.GetText(image);
                 var regions = _paddleOrcService.GetRegions(image);
 
                 foreach (var region in regions)
                 {
-                    var color = image.GetPixel(_config.ClientRareColorPosX, (int)region[0].Rect.Center.Y);
+                    var color = image.GetPixel(
+                        bFullscreen ? _config.ClientRareColorPosX : _config.ClientRareColorPosXWindowed,
+                        (int)region[0].Rect.Center.Y);
                     var rare = GetRare(color);
-                    var item = new GachaItem(region[0].Text, region[2].Text, region[1].Text == "武器" ? ItemType.Weapon : ItemType.Character, rare);
+                    var item = new GachaItem(region[0].Text, region[2].Text,
+                        region[1].Text == "武器" ? ItemType.Weapon : ItemType.Character, rare);
                     list.Add(item);
                 }
 
@@ -172,54 +179,50 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         }
         catch (Exception ex)
         {
-            System.Windows.MessageBox.Show("游戏分辨率初始化失败：非16: 9分辨率全屏");
-            Log.Warning("游戏分辨率初始化失败：非16: 9分辨率全屏");
+            System.Windows.MessageBox.Show(ex.Message);
+            Log.Warning(ex.Message, ex);
         }
     }
 
     private bool IsFullscreen(int gameWindowWidth, int gameWindowHeight)
     {
-        if (gameWindowWidth < _config!.ClientScreenWidth || gameWindowHeight < _config.ClientScreenHeight)
-        {
-            return false;
-        }
-
-        return true;
+        return gameWindowWidth >= _config!.ClientScreenWidth && gameWindowHeight >= _config.ClientScreenHeight;
     }
 
-    public void ComputePrimeCount(int bannerIndex)
+    private void ComputePrimeCount(int bannerIndex)
     {
-        List<GachaItem> _history = [];
+        List<GachaItem> history = [];
         switch (bannerIndex)
         {
             case 0:
-                _history = SCharHistory;
+                history = SCharHistory;
                 break;
             case 1:
-                _history = SWeaponHistory;
+                history = SWeaponHistory;
                 break;
             case 2:
-                _history = SCharHistoryMihoyo;
+                history = SCharHistoryMihoyo;
                 break;
             case 3:
-                _history = SWeaponHistoryMihoyo;
+                history = SWeaponHistoryMihoyo;
                 break;
             case 4:
-                _history = CCharHistory;
+                history = CCharHistory;
                 break;
             case 5:
-                _history = CWeaponHistory;
+                history = CWeaponHistory;
                 break;
         }
-        int primeCount = 0;
-        foreach (GachaItem _item in _history)
+
+        var primeCount = 0;
+        foreach (var item in history.TakeWhile(x => x.Star != 5))
         {
-            if (_item.Star == 5) { break; }
 #if DEBUG
-            Log.Information($"Banner Index {bannerIndex}, item is {_item.Id}");
+            Log.Information($"Banner Index {bannerIndex}, item is {item.Id}");
 #endif
             primeCount++;
         }
+
         switch (bannerIndex)
         {
             case 0:
@@ -256,7 +259,8 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         return 3;
     }
 
-    private static double ColorMse(Color a, Color b) => Vector3.Distance(new Vector3(a.R, a.G, a.B), new Vector3(b.R, b.G, b.B));
+    private static double ColorMse(Color a, Color b) =>
+        Vector3.Distance(new Vector3(a.R, a.G, a.B), new Vector3(b.R, b.G, b.B));
 
     private void MergeHistory(List<GachaItem> newHistory)
     {
@@ -337,20 +341,19 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         for (var i = curHistory.Count - 1; i >= 0; i--)
         {
             count++;
-            if (curHistory[i].Star == 5)
+            if (curHistory[i].Star != 5) continue;
+            if (curHistory[i].Type == ItemType.Character)
             {
-                if (curHistory[i].Type == ItemType.Character)
-                {
-                    var names = curHistory[i].Name.Split('-');
-                    curDisplayHistory.Insert(0, new DisplayItem(names[0], names[1], count));
-                }
-                else
-                {
-                    string[] names = [curHistory[i].Name, "武器"];
-                    curDisplayHistory.Insert(0, new DisplayItem(names[0], names[1], count));
-                }
-                count = 0;
+                var names = curHistory[i].Name.Split('-');
+                curDisplayHistory.Insert(0, new DisplayItem(names[0], names[1], count));
             }
+            else
+            {
+                string[] names = [curHistory[i].Name, "武器"];
+                curDisplayHistory.Insert(0, new DisplayItem(names[0], names[1], count));
+            }
+
+            count = 0;
         }
 
         if (curDisplayHistory.Count <= 0)
@@ -385,10 +388,11 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
                 AvgCw = curDisplayHistory.Average(x => x.Count);
                 MinCw = curDisplayHistory.MinBy(x => x.Count)!.Count;
                 break;
-
         }
+
         ComputePrimeCount(bannerIndex);
     }
+
     private void UpdateDisplayAll()
     {
         UpdateDisplay(0);
@@ -401,21 +405,34 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     private void InitializeViewModel()
     {
-        if (!_initialized)
-        {
-            // Load local history cache
-            var historyItems = _historyService.GetGachaHistory();
-            CCharHistory = historyItems.TryGetValue(NameResource.CommonCharacterHistoryName, out List<GachaItem>? localCcHistory) ? localCcHistory : [];
-            SCharHistory = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
-            CWeaponHistory = historyItems.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
-            SWeaponHistory = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
-            SCharHistoryMihoyo = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo, out List<GachaItem>? localScmHistory) ? localScmHistory : [];
-            SWeaponHistoryMihoyo = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo, out List<GachaItem>? localSwmHistory) ? localSwmHistory : [];
+        if (_initialized) return;
 
-            UpdateDisplayAll();
+        // Load local history cache
+        var historyItems = _historyService.GetGachaHistory();
+        CCharHistory = historyItems.TryGetValue(NameResource.CommonCharacterHistoryName, out var localCcHistory)
+            ? localCcHistory
+            : [];
+        SCharHistory = historyItems.TryGetValue(NameResource.SpecialCharacterHistoryName, out var localScHistory)
+            ? localScHistory
+            : [];
+        CWeaponHistory = historyItems.TryGetValue(NameResource.CommonWeaponHistoryName, out var localCwHistory)
+            ? localCwHistory
+            : [];
+        SWeaponHistory = historyItems.TryGetValue(NameResource.SpecialWeaponHistoryName, out var localSwHistory)
+            ? localSwHistory
+            : [];
+        SCharHistoryMihoyo =
+            historyItems.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo, out var localScmHistory)
+                ? localScmHistory
+                : [];
+        SWeaponHistoryMihoyo =
+            historyItems.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo, out var localSwmHistory)
+                ? localSwmHistory
+                : [];
 
-            _initialized = true;
-        }
+        UpdateDisplayAll();
+
+        _initialized = true;
     }
 
     public void OnNavigatedTo()
@@ -428,39 +445,61 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
     public void OnNavigatedFrom()
     {
-
     }
 
     [RelayCommand]
-    public void ImportData()
+    private void ImportData()
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog();
-        openFileDialog.Title = "选择要导入的记录";
-        openFileDialog.Multiselect = false;
-        openFileDialog.Filter = "json文件|*.json";
-        openFileDialog.InitialDirectory = UserPaths.BasePath;
+        var openFileDialog = new OpenFileDialog
+        {
+            Title = "选择要导入的记录",
+            Multiselect = false,
+            Filter = "json文件|*.json",
+            InitialDirectory = UserPaths.BasePath
+        };
         if (openFileDialog.ShowDialog() != true)
         {
             return;
         }
+
         var filename = openFileDialog.FileName;
         try
         {
-            var HistoryString = File.ReadAllText(filename);
-            var _gachaHistory = JsonSerializer.Deserialize<Dictionary<string, List<GachaItem>>>(HistoryString);
+            var historyString = File.ReadAllText(filename);
+            var gachaHistory = JsonSerializer.Deserialize<Dictionary<string, List<GachaItem>>>(historyString);
 
-            if (_gachaHistory == null)
+            if (gachaHistory == null)
             {
                 throw new Exception("Wrong json");
             }
 
-            CCharHistory = _gachaHistory.TryGetValue(NameResource.CommonCharacterHistoryName, out List<GachaItem>? localCcHistory) ? localCcHistory : [];
-            SCharHistory = _gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryName, out List<GachaItem>? localScHistory) ? localScHistory : [];
-            CWeaponHistory = _gachaHistory.TryGetValue(NameResource.CommonWeaponHistoryName, out List<GachaItem>? localCwHistory) ? localCwHistory : [];
-            SWeaponHistory = _gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryName, out List<GachaItem>? localSwHistory) ? localSwHistory : [];
-            SCharHistoryMihoyo = _gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo, out List<GachaItem>? localScmHistory) ? localScmHistory : [];
-            SWeaponHistoryMihoyo = _gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo, out List<GachaItem>? localSwmHistory) ? localSwmHistory : [];
-            _historyService.SaveGachaHistory(_gachaHistory);
+            CCharHistory =
+                gachaHistory.TryGetValue(NameResource.CommonCharacterHistoryName, out var localCcHistory)
+                    ? localCcHistory
+                    : [];
+            SCharHistory =
+                gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryName, out var localScHistory)
+                    ? localScHistory
+                    : [];
+            CWeaponHistory =
+                gachaHistory.TryGetValue(NameResource.CommonWeaponHistoryName, out var localCwHistory)
+                    ? localCwHistory
+                    : [];
+            SWeaponHistory =
+                gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryName, out var localSwHistory)
+                    ? localSwHistory
+                    : [];
+            SCharHistoryMihoyo =
+                gachaHistory.TryGetValue(NameResource.SpecialCharacterHistoryNameMihoyo,
+                    out var localScmHistory)
+                    ? localScmHistory
+                    : [];
+            SWeaponHistoryMihoyo =
+                gachaHistory.TryGetValue(NameResource.SpecialWeaponHistoryNameMihoyo,
+                    out var localSwmHistory)
+                    ? localSwmHistory
+                    : [];
+            _historyService.SaveGachaHistory(gachaHistory);
             UpdateDisplayAll();
         }
         catch (Exception)
@@ -470,21 +509,24 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
     }
 
     [RelayCommand]
-    public void ExportData()
+    private void ExportData()
     {
         var curTimestamp = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000;
-        SaveFileDialog saveFileDialog = new SaveFileDialog();
-        saveFileDialog.Title = "选择要导出的位置";
-        saveFileDialog.InitialDirectory = UserPaths.BasePath;
-        saveFileDialog.OverwritePrompt = true;
-        saveFileDialog.AddExtension = true;
-        saveFileDialog.DefaultExt = "json";
-        saveFileDialog.Filter = "json文件|*.json";
-        saveFileDialog.FileName = $"{curTimestamp}_export.json";
+        var saveFileDialog = new SaveFileDialog
+        {
+            Title = "选择要导出的位置",
+            InitialDirectory = UserPaths.BasePath,
+            OverwritePrompt = true,
+            AddExtension = true,
+            DefaultExt = "json",
+            Filter = "json文件|*.json",
+            FileName = $"{curTimestamp}_export.json"
+        };
         if (saveFileDialog.ShowDialog() != true)
         {
             return;
         }
+
         var filename = saveFileDialog.FileName;
 
         Dictionary<string, List<GachaItem>> newHistory = [];
@@ -498,26 +540,25 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
 
         var newHistoryString = JsonSerializer.Serialize(newHistory, HistoryService._jsonOptions);
         File.WriteAllText(filename, newHistoryString);
-        return;
     }
 
     [RelayCommand]
-    public void ClearUpData()
+    private void ClearUpData()
     {
-        var result = System.Windows.MessageBox.Show("你确定要执行这个操作吗？\n该操作会清除所有记录，但会在Data目录保留备份", "确认", System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if (result == System.Windows.MessageBoxResult.No) { return; }
+        var result = System.Windows.MessageBox.Show("你确定要执行这个操作吗？\n该操作会清除所有记录，但会在Data目录保留备份", "确认",
+            System.Windows.MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (result == System.Windows.MessageBoxResult.No)
+        {
+            return;
+        }
+
         SCharHistory = SWeaponHistory = SCharHistoryMihoyo = SWeaponHistoryMihoyo = CCharHistory = CWeaponHistory = [];
         _historyService.SaveGachaHistory([]);
         UpdateDisplayAll();
     }
 
-    public void Dispose()
+    private void SaveHistory()
     {
-        if (!_initialized)
-        {
-            return;
-        }
-
         Dictionary<string, List<GachaItem>> newHistory = [];
 
         newHistory.Add(NameResource.SpecialCharacterHistoryName, SCharHistory);
@@ -528,7 +569,17 @@ public partial class GachaHistoryViewModel(ISnowbreakOcr snowbreakOcr, ISnowbrea
         newHistory.Add(NameResource.CommonWeaponHistoryName, CWeaponHistory);
 
         _historyService.SaveGachaHistory(newHistory);
+    }
 
+    public void Dispose()
+    {
         GC.SuppressFinalize(this);
+
+        if (!_initialized)
+        {
+            return;
+        }
+
+        SaveHistory();
     }
 }

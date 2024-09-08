@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:SnowbreakToolbox.Models"
     xmlns:pages="clr-namespace:SnowbreakToolbox.Views.Pages"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:viewmodels="clr-namespace:SnowbreakToolbox.ViewModels.Pages"
@@ -14,55 +15,103 @@
     mc:Ignorable="d">
 
     <Grid>
-        <Button
-            VerticalAlignment="Top"
-            Command="{Binding ViewModel.TestModPakCommand}"
-            Content="TestModPak" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <Button
-            Height="78"
-            Margin="124,16,0,0"
-            VerticalAlignment="Top"
-            Command="{Binding ViewModel.SelectModFolderCommand}"
-            Content="SelectFolder"
-            RenderTransformOrigin="0.5,0.5" />
-        <!--<Button Command="{Binding ViewModel.UpdateDisplayCommand}"
-                Content="Update" Height="78" Margin="311,16,0,0" VerticalAlignment="Top" />-->
-        <Button
-            Height="78"
-            Margin="490,16,0,0"
-            VerticalAlignment="Top"
-            Command="{Binding ViewModel.ApplyCommand}"
-            Content="Apply" />
-        <ui:Card
-            Margin="0,124,0,0"
-            VerticalAlignment="Stretch"
-            VerticalContentAlignment="Stretch">
-            <ui:ListView Margin="0,0,0,-6" ItemsSource="{Binding ViewModel.DisplayMods}">
-                <ui:ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:DisplayMod}">
-                        <Grid Margin="8,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button
+                Margin="15"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Command="{Binding ViewModel.ImportModPakCommand}"
+                Content="导入Mod" />
+            <Button
+                Margin="15"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Command="{Binding ViewModel.RefreshModsCommand}"
+                Content="更新Mod列表" />
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <TabControl
+                x:Name="ModTab"
+                DisplayMemberPath="Name"
+                ItemsSource="{Binding ViewModel.CharacterMods}"
+                Style="{StaticResource LeftAvatarTabControl}"
+                TabStripPlacement="Left">
+                <!-- <TabControl.ItemContainerStyle> -->
+                <!--     <Style BasedOn="{StaticResource LeftAvatarTabItem}" TargetType="TabItem"> -->
+                <!--         <Setter Property="Header" Value="{Binding Name}" /> -->
+                <!--     </Style> -->
+                <!-- </TabControl.ItemContainerStyle> -->
+                <TabControl.ContentTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:DisplayCharacterCategory}">
+                        <ItemsControl ItemsSource="{Binding Mods}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ui:CardExpander>
+                                        <ui:CardExpander.Header>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock VerticalAlignment="Center" Text="{Binding Key}" />
+                                                <!-- <ui:ToggleSwitch Grid.Column="1" Margin="5" /> -->
+                                            </Grid>
+                                        </ui:CardExpander.Header>
+                                        <Grid>
+                                            <ui:ListView ItemsSource="{Binding Value}">
+                                                <ui:ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="3*" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
 
-                            <TextBlock
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                FontWeight="Bold"
-                                Text="{Binding Name, Mode=OneWay}" />
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="*" />
+                                                                    <RowDefinition Height="*" />
+                                                                </Grid.RowDefinitions>
+                                                                <ui:TextBlock
+                                                                    Margin="5"
+                                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                                    Text="{Binding Name}" />
+                                                                <ui:TextBlock
+                                                                    Grid.Row="1"
+                                                                    Margin="5"
+                                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                    Text="{Binding Description}" />
+                                                            </Grid>
 
-                            <CheckBox
-                                Grid.Column="1"
-                                Margin="0,12"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                IsChecked="{Binding IsEnabled}" />
-                        </Grid>
+                                                            <ui:TextBlock
+                                                                Grid.Column="1"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Text="{Binding SkinIndex}" />
+
+                                                            <ui:ToggleSwitch
+                                                                Grid.Column="2"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                IsChecked="{Binding IsEnabled}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ui:ListView.ItemTemplate>
+                                            </ui:ListView>
+                                        </Grid>
+                                    </ui:CardExpander>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </DataTemplate>
-                </ui:ListView.ItemTemplate>
-            </ui:ListView>
-        </ui:Card>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </Grid>
     </Grid>
 </Page>
