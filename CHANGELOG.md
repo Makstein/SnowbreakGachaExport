@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.2.0](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.1.2...v2.2.0) (2024-09-08)
+
+
+### Features
+
+* Mod Manager ([96e84b7](https://github.com/Makstein/SnowbreakGachaExport/commit/96e84b7b1f7584a51f2129fab88f0499b5b65f4b))
+
+
+### Bug Fixes
+
+* Get history in 900p windowed mode ([76dbf4e](https://github.com/Makstein/SnowbreakGachaExport/commit/76dbf4e98deb3a0a30e0b71c991e989cc3648452))
+* unexpected behavior of mod manager page ([94f8385](https://github.com/Makstein/SnowbreakGachaExport/commit/94f8385dd959336f485958c56e5060ed57967247))
+
+
+### Performance Improvements
+
+* loading time of local mod config cache ([30bd8e7](https://github.com/Makstein/SnowbreakGachaExport/commit/30bd8e7529203850b84baa1cd809fc93c92a4e09))
+
 ## [2.1.2](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.1.1...v2.1.2) (2024-07-31)
 
 
