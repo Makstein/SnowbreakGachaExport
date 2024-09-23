@@ -37,7 +37,7 @@
 - 刷新前在程序中手动选择当前记录对应卡池
 - 游戏需全屏或全屏窗口，如果多显示器需与程序在同一屏幕
 - 游戏内需要预先打开抽卡记录页面，并在第一页开始获取，如下
-![loading](Document/Images/FromWhereToStartGetGachaData.png)
+  ![loading](Document/Images/FromWhereToStartGetGachaData.png)
 - 导出会默认使用当前时间戳命名，也可以自定义文件名
   
   
@@ -49,8 +49,18 @@
 - 右侧可切换是否必选此类型
 
 - 点击格子可设置是否可用
-  
-  
+
+
+
+### MOD管理
+
+- 点击导入，可以导入单个.pak文件
+
+- 刷新可以读取设置目录下的所有MOD
+
+- 目前仅支持角色MOD
+
+
 
 ## Credits
 
