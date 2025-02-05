@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Vanara.PInvoke;
 using Wpf.Ui.Controls;
 
@@ -73,6 +74,10 @@ public partial class GachaHistoryViewModel(
 
     public ObservableCollection<DisplayItem> DisplayCCharHistory { get; } =
         []; // Collection for display in page(to show count)
+
+    // Use for detect armor name
+    private const string DashPattern = @"[\u2012\u2013\u2014\u2015]";
+    private static Regex _dashRegex = new(DashPattern);
 
     public ObservableCollection<DisplayItem> DisplaySCharHistory { get; } = [];
     public ObservableCollection<DisplayItem> DisplayCWeaponHistory { get; } = [];
@@ -344,6 +349,7 @@ public partial class GachaHistoryViewModel(
             if (curHistory[i].Star != 5) continue;
             if (curHistory[i].Type == ItemType.Character)
             {
+                curHistory[i].Name = _dashRegex.Replace(curHistory[i].Name, "-");
                 var names = curHistory[i].Name.Contains("——")
                     ? curHistory[i].Name.Split("——")
                     : curHistory[i].Name.Split('-');
