@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.2.0...v2.2.1) (2025-02-05)
+
+
+### Bug Fixes
+
+* unexpected behavior when detecting character armor name ([a6c723e](https://github.com/Makstein/SnowbreakGachaExport/commit/a6c723e1d429c0bce3b22613e679d63a20bb2fd5))
+
 ## [2.2.0](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.1.2...v2.2.0) (2024-09-08)
 
 
