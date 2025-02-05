@@ -344,7 +344,9 @@ public partial class GachaHistoryViewModel(
             if (curHistory[i].Star != 5) continue;
             if (curHistory[i].Type == ItemType.Character)
             {
-                var names = curHistory[i].Name.Split('-');
+                var names = curHistory[i].Name.Contains("——")
+                    ? curHistory[i].Name.Split("——")
+                    : curHistory[i].Name.Split('-');
                 curDisplayHistory.Insert(0, new DisplayItem(names[0], names[1], count));
             }
             else
