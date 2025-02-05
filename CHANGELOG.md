@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.2.1...v2.2.2) (2025-02-05)
+
+
+### Bug Fixes
+
+* en dash and em dash in armor name detecting ([96fb0e8](https://github.com/Makstein/SnowbreakGachaExport/commit/96fb0e8fb5dd3ce8f69f6783675db3ce2e60384a))
+
 ## [2.2.1](https://github.com/Makstein/SnowbreakGachaExport/compare/v2.2.0...v2.2.1) (2025-02-05)
 
 
